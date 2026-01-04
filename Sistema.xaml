@@ -1,0 +1,39 @@
+﻿<Window x:Class="Imob.Sistema"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Imob"
+        mc:Ignorable="d"
+        Title="Sistema" Height="1080" Width="1920" Icon="/IcoImob.png">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="191*"/>
+            <ColumnDefinition Width="193*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.Background>
+            <ImageBrush ImageSource="/LogoImob.png" Stretch="None"/>
+        </Grid.Background>
+        <Grid x:Name="NavBar" HorizontalAlignment="Right" Height="66" VerticalAlignment="Top" Width="1920" Grid.ColumnSpan="2" Panel.ZIndex="2" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="-1.123"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.48"/>
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFC7A486"/>
+                    <GradientStop Color="#FFF77A10" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Image x:Name="LogoNav" Height="56" Width="176" Source="/LogoImob.png" OpacityMask="Black" HorizontalAlignment="Left"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            </StackPanel>
+            <Label x:Name="UsuarioAtivo" Content="UsuarioAtivo" HorizontalAlignment="Left" Height="58" Margin="1705,0,0,0" VerticalAlignment="Center" Width="211" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" Foreground="White" FontSize="20"/>
+        </Grid>
+
+    </Grid>
+</Window>

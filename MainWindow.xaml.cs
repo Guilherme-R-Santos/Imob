@@ -1,0 +1,108 @@
+﻿using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Security;
+
+namespace Imob
+{
+    public partial class MainWindow : Window
+    {
+        private readonly HttpClient client;
+        private bool sucessoConect = false;
+
+        public MainWindow()
+        {
+            client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:7251/");
+            InitializeComponent();
+            WindowState = WindowState.Maximized;
+            Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var response = await client.GetAsync("Usuario/Connect");
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    MessageBox.Show("Não foi possível carregar os usuários.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    sucessoConect = true;
+                    btnEntrar.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF77A10"));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao carregar usuários: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var login = txtUsuario.Text;
+            var senha = txtSenha.Password;
+            var sucessoLogin = false;
+
+            if(sucessoConect)
+            {
+                client.GetAsync($"Usuario/Login?login={login}&senha={senha}").ContinueWith(responseTask =>
+                {
+                    var response = responseTask.Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        sucessoLogin = true;
+                    }
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        if (sucessoLogin)
+                        {
+                            var sistemaWindow = new Sistema();
+                            sistemaWindow.SetUsuarioLogado(login);
+                            sistemaWindow.SetSenhaUsuarioLogado(senha);
+                            sistemaWindow.Show();
+                            this.Close();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Usuário ou senha incorretos. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    });
+                });
+
+            } else
+            {
+                MessageBox.Show("Não foi possível carregar os usuários. Entre em contato com o administrador do sistema", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+        }
+
+
+        private void btnCriar_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Implementar funcionalidade de novo acesso
+            MessageBox.Show("Funcionalidade de novo acesso será implementada aqui.", "Novo acesso", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void EsqueciSenha_Click(object sender, MouseButtonEventArgs e)
+        {
+            //TODO: Implementar funcionalidade de recuperação de senha
+            MessageBox.Show("Funcionalidade de recuperação de senha será implementada aqui.", "Recuperar Senha", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        }
+    }
+}
