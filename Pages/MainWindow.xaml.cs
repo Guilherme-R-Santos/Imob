@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Security;
+using Imob.Models;
+using Newtonsoft.Json;
 
 namespace Imob
 {
@@ -52,43 +54,46 @@ namespace Imob
             }
         }
 
-        private void ButtonLogin_Click(object sender, RoutedEventArgs e)
+        private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
             var login = txtUsuario.Text;
             var senha = txtSenha.Password;
-            var sucessoLogin = false;
 
-            if(sucessoConect)
-            {
-                client.GetAsync($"Usuario/Login?login={login}&senha={senha}").ContinueWith(responseTask =>
-                {
-                    var response = responseTask.Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        sucessoLogin = true;
-                    }
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        if (sucessoLogin)
-                        {
-                            var sistemaWindow = new Sistema();
-                            sistemaWindow.SetUsuarioLogado(login);
-                            sistemaWindow.SetSenhaUsuarioLogado(senha);
-                            sistemaWindow.Show();
-                            this.Close();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Usuário ou senha incorretos. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
-                    });
-                });
-
-            } else
+            if (!sucessoConect)
             {
                 MessageBox.Show("Não foi possível carregar os usuários. Entre em contato com o administrador do sistema", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
+            try
+            {
+                var response = await client.GetAsync($"Usuario/Login?login={login}&senha={senha}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Usuário ou senha incorretos. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var userResponse = await client.GetAsync($"Usuario/ObterPorLogin/{login}");
+                if (!userResponse.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Não foi possível obter os dados do usuário. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var usuarioJson = await userResponse.Content.ReadAsStringAsync();
+                var usuarioLogado = JsonConvert.DeserializeObject<UsuarioDAO>(usuarioJson);
+
+                var sistemaWindow = new Sistema();
+                sistemaWindow.SetUsuarioLogado(usuarioLogado);
+                sistemaWindow.NavMenu.Visibility = Visibility.Hidden;
+                sistemaWindow.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 

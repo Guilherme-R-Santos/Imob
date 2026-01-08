@@ -148,6 +148,7 @@
                        Style="{StaticResource ModernButton}"
                        Height="48"
                        Margin="0,0,0,0"
+                       IsDefault="True"
                        Click="ButtonLogin_Click"/>
                 <Button x:Name="btnCriar" 
                        Content="NOVO ACESSO" 
