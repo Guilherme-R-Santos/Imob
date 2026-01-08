@@ -51,5 +51,10 @@ namespace Imob
             JanelaCadastrarUsuario.Show();
 
         }
+
+        private void Teste_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

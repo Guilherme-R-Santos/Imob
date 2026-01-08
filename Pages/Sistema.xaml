@@ -112,7 +112,7 @@
             <Menu.Effect>
                 <DropShadowEffect Opacity="0.5" BlurRadius="20"/>
             </Menu.Effect>
-            <MenuItem x:Name="Teste" Height="43" Width="320" Background="#FFD2643B" BorderBrush="#FFBB0303" Foreground="#FFF1862A" FontSize="36">Teste</MenuItem>
+            <MenuItem x:Name="Teste" Height="43" Width="320" Background="#FFD2643B" BorderBrush="#FFBB0303" Foreground="#FFF1862A" FontSize="36" Click="Teste_Click" Header="Teste" HorizontalAlignment="Center"></MenuItem>
         </Menu>
     </Grid>
 </Window>
