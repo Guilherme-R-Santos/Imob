@@ -50,13 +50,19 @@ namespace Imob
             ImgPwrOff.MouseEnter += (s, e) =>
             {
                 var circle = CircPwrOff;
+                Mouse.OverrideCursor = Cursors.Hand;
                 circle.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
+
             };
+
             ImgPwrOff.MouseLeave += (s, e) =>
             {
                 var circle = CircPwrOff;
+
+                Mouse.OverrideCursor = Cursors.Arrow;
                 circle.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
             };
+
             ImgPwrOff.MouseDown += (s, e) =>
             {
                 var result = MessageBox.Show("Tem certeza que deseja sair do sistema?", "Sair", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -66,6 +72,29 @@ namespace Imob
                     loginWindow.Show();
                     this.Close();
                 }
+            };
+
+            RetangLogo.MouseEnter += (s, e) => {
+                var ret = RetangLogo;
+                Mouse.OverrideCursor = Cursors.Hand;
+            };
+
+            RetangLogo.MouseLeave += (s, e) =>
+            {
+                var ret = RetangLogo;
+                Mouse.OverrideCursor = Cursors.Arrow;
+            };
+
+            LogoNav.MouseEnter += (s, e) =>
+            {
+                var ret = RetangLogo;
+                Mouse.OverrideCursor = Cursors.Hand;
+            };
+
+            LogoNav.MouseLeave += (s, e) =>
+            {
+                var ret = RetangLogo;
+                Mouse.OverrideCursor = Cursors.Arrow;
             };
 
             LogoNav.MouseDown += (s, e) =>
@@ -92,6 +121,16 @@ namespace Imob
             var JanelaCadastrarUsuario = new JanelaCadastroUsuario();
             JanelaCadastrarUsuario.Show();
 
+        }
+
+        private void ContratosTreeListar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ContratosPanel.Visibility = Visibility.Visible;
+        }
+
+        private void ProprietariosTreeListar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ProprietariosPanel.Visibility = Visibility.Visible;
         }
     }
 }

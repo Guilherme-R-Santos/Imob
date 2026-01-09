@@ -96,7 +96,6 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <!-- Lateral expander mais simples (similar ao ícone padrão) -->
                                     <ToggleButton x:Name="Expander" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
                                         <Path x:Name="ExpanderPath" Data="M 2 0 L 10 8 L 2 16 Z" Fill="#666" RenderTransformOrigin="0.5,0.5"/>
                                     </ToggleButton>
@@ -205,37 +204,374 @@
             </Grid.Background>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             </StackPanel>
-            <Label x:Name="UsuarioAtivo" Content="UsuarioAtivo" HorizontalAlignment="Left" Height="58" Margin="1630,0,0,0" VerticalAlignment="Center" Width="211" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" Foreground="White" FontSize="20"/>
-            <Rectangle x:Name="RetangLogo" HorizontalAlignment="Left" Height="58" Margin="45,0,0,0" VerticalAlignment="Center" Width="228" Fill="White" RadiusY="10" RadiusX="10"/>
-            <Image x:Name="LogoNav" Height="56" Width="118" Source="/LogoImob.png" OpacityMask="Black" HorizontalAlignment="Left" Margin="96,5,0,5"/>
-            <Ellipse x:Name="CircPwrOff" HorizontalAlignment="Left" Height="49" Margin="1832,0,0,0" VerticalAlignment="Center" Width="49" Fill="#FFEFEFEF"/>
-            <Image x:Name="ImgPwrOff" HorizontalAlignment="Left" Height="50" Margin="1857,0,0,0"Margin="1832,0,0,0" VerticalAlignment="Center" Width="52" Source="/Pages/icons8-power-off-64.png"/>
+            <Label x:Name="UsuarioAtivo" Content="UsuarioAtivo" HorizontalAlignment="Left" Height="58" Margin="1637,0,0,0" VerticalAlignment="Center" Width="211" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" Foreground="White" FontSize="20"/>
+            <Rectangle x:Name="RetangLogo" HorizontalAlignment="Left" Height="58" Margin="5,0,0,0" VerticalAlignment="Center" Width="228" Fill="White" RadiusY="10" RadiusX="10"/>
+            <Image x:Name="LogoNav" Height="56" Width="118" Source="/LogoImob.png" OpacityMask="Black" HorizontalAlignment="Left" Margin="56,3,0,7"/>
+            <Ellipse x:Name="CircPwrOff" HorizontalAlignment="Left" Height="49" Margin="1856,0,0,0" VerticalAlignment="Center" Width="49" Fill="#FFEFEFEF"/>
+            <Image x:Name="ImgPwrOff" HorizontalAlignment="Left" Height="50" Margin="1855,0,0,0" VerticalAlignment="Center" Width="52" Source="/Pages/icons8-power-off-64.png" />
         </Grid>
-        <TreeView x:Name="MenuNav" Margin="-1,66,635,532">
+
+        <TreeView x:Name="MenuNav" Margin="-1,66,720,532">
             <TreeView.Effect>
-                <DropShadowEffect BlurRadius="20" ShadowDepth="3"/>
+                <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
+            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
             <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ContratosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="ContratosCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDoubleClick="ContratosTreeListar_MouseDoubleClick"/>
+                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
             </TreeViewItem>
-            <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ProprietariosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="ProprietariosTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-            </TreeViewItem>
-            <TreeViewItem x:Name="LocatariosTree" Header="Locatários" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="LocatariosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="LocatariosTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-            </TreeViewItem>
-            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ImoveisTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="ImoveisTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
             </TreeViewItem>
             <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
                 <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
                 <TreeViewItem x:Name="VistoriaTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
             </TreeViewItem>
         </TreeView>
+
+
+        <Border x:Name="ProprietariosPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Proprietarios" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de Proprietarios" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarProprietario" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Proprietario</Button>
+                </Grid>
+
+                <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <!-- Editar aqui -->
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="LocatariosPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Locatários" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de Locatários" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarLocatario" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Locatário</Button>
+                </Grid>
+
+                <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <!-- Editar aqui -->
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="FiadoresPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Fiadores" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de Fiadores" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarFiador" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Fiador</Button>
+                </Grid>
+
+                <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <!-- Editar aqui -->
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="ImoveisPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarImovel" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Imóvel</Button>
+                </Grid>
+
+                <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <!-- Editar aqui -->
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="ContratosPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Contratos" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de contratos" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarContrato" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Contrato</Button>
+                </Grid>
+
+                <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="VistoriasPanel" Grid.ColumnSpan="2" Margin="240,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="220"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock Text="Vistorias" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de Vistorias" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+
+                    <Button x:Name="BtnAdicionarVistoria" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Nova Vistoria</Button>
+                </Grid>
+
+                <DataGrid x:Name="VistoriasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <!-- Editar aqui -->
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
+                        <DataGridTemplateColumn Header="Ações" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+
+
+        <!-- Overlays para replicar-->
+        <Grid x:Name="ContratoModalOverlay" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Visualização do Contrato" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="ContratoPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalContratos" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ProprietarioModalOverlay" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Visualização do Proprietário" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="ProprietarioPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalProprietario" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
         <Image Height="100" Width="100"/>
     </Grid>
 </Window>
