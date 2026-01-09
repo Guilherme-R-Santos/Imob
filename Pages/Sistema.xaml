@@ -77,9 +77,110 @@
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
+
+        <!-- Estilo moderno para TreeViewItem: hover, clique transitório, sombra leve -->
+        <Style TargetType="TreeViewItem">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="#FFF27F1D"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="4,6"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TreeViewItem">
+                        <StackPanel>
+                            <Border x:Name="Bd" CornerRadius="8" Padding="6" Background="{x:Null}" SnapsToDevicePixels="True">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="24"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Lateral expander mais simples (similar ao ícone padrão) -->
+                                    <ToggleButton x:Name="Expander" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Path x:Name="ExpanderPath" Data="M 2 0 L 10 8 L 2 16 Z" Fill="#666" RenderTransformOrigin="0.5,0.5"/>
+                                    </ToggleButton>
+
+                                    <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+
+                            <ItemsPresenter x:Name="ItemsHost" Margin="28,4,0,0" Visibility="Collapsed"/>
+                        </StackPanel>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ExpanderPath" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="90"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+
+                            <!-- Esconder expander para itens folha -->
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="Expander" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+
+                            <!-- Hover: efeito sutil com sombra e pequena escala (reverte no Exit) -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="#FFFDF6F0"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#80000000" BlurRadius="12" ShadowDepth="4"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.02" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.02" Duration="0:0:0.12"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="1.0" Duration="0:0:0.12"/>
+                                            <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="1.0" Duration="0:0:0.12"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+
+                            <!-- Clique transitório: pequena contração rápida e retorno (não persiste) -->
+                            <EventTrigger RoutedEvent="PreviewMouseLeftButtonDown">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" To="0.98" Duration="0:0:0.08" AutoReverse="True"/>
+                                        <DoubleAnimation Storyboard.TargetName="Bd" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" To="0.98" Duration="0:0:0.08" AutoReverse="True"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+
+                            <!-- Ensure the border has a ScaleTransform to animate -->
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter TargetName="Bd" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.0" ScaleY="1.0"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Bd" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
-    <Grid>
+    <Grid HorizontalAlignment="Center" Cursor="">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="191*"/>
             <ColumnDefinition Width="193*"/>
@@ -102,17 +203,39 @@
                     <GradientStop Color="#FFF77A10" Offset="1"/>
                 </LinearGradientBrush>
             </Grid.Background>
-            <Image x:Name="LogoNav" Height="56" Width="176" Source="/LogoImob.png" OpacityMask="Black" HorizontalAlignment="Left" Margin="10,4,0,6"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
             </StackPanel>
-            <Label x:Name="UsuarioAtivo" Content="UsuarioAtivo" HorizontalAlignment="Left" Height="58" Margin="1705,0,0,0" VerticalAlignment="Center" Width="211" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" Foreground="White" FontSize="20"/>
+            <Label x:Name="UsuarioAtivo" Content="UsuarioAtivo" HorizontalAlignment="Left" Height="58" Margin="1630,0,0,0" VerticalAlignment="Center" Width="211" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" BorderBrush="White" Foreground="White" FontSize="20"/>
+            <Rectangle x:Name="RetangLogo" HorizontalAlignment="Left" Height="58" Margin="45,0,0,0" VerticalAlignment="Center" Width="228" Fill="White" RadiusY="10" RadiusX="10"/>
+            <Image x:Name="LogoNav" Height="56" Width="118" Source="/LogoImob.png" OpacityMask="Black" HorizontalAlignment="Left" Margin="96,5,0,5"/>
+            <Ellipse x:Name="CircPwrOff" HorizontalAlignment="Left" Height="49" Margin="1832,0,0,0" VerticalAlignment="Center" Width="49" Fill="#FFEFEFEF"/>
+            <Image x:Name="ImgPwrOff" HorizontalAlignment="Left" Height="50" Margin="1857,0,0,0"Margin="1832,0,0,0" VerticalAlignment="Center" Width="52" Source="/Pages/icons8-power-off-64.png"/>
         </Grid>
-        <!-- Removido CornerRadius do Menu, pois não é suportado -->
-        <Menu x:Name="NavMenu" HorizontalAlignment="Left" Height="558" Margin="0,66,0,0" VerticalAlignment="Top" Width="320" Background="#FFF3F3F3" Foreground="#FFF47D18" BorderBrush="Coral" RenderTransformOrigin="1,1">
-            <Menu.Effect>
-                <DropShadowEffect Opacity="0.5" BlurRadius="20"/>
-            </Menu.Effect>
-            <MenuItem x:Name="Teste" Height="43" Width="320" Background="#FFD2643B" BorderBrush="#FFBB0303" Foreground="#FFF1862A" FontSize="36" Click="Teste_Click" Header="Teste" HorizontalAlignment="Center"></MenuItem>
-        </Menu>
+        <TreeView x:Name="MenuNav" Margin="-1,66,635,532">
+            <TreeView.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="3"/>
+            </TreeView.Effect>
+            <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="ContratosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ContratosCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            </TreeViewItem>
+            <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="ProprietariosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ProprietariosTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            </TreeViewItem>
+            <TreeViewItem x:Name="LocatariosTree" Header="Locatários" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="LocatariosTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="LocatariosTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            </TreeViewItem>
+            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="ImoveisTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ImoveisTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            </TreeViewItem>
+            <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            </TreeViewItem>
+        </TreeView>
+        <Image Height="100" Width="100"/>
     </Grid>
 </Window>

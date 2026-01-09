@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Imob.Models
 {
-    internal class ClienteDAO
+    public class ClienteDAO
     {
         public int Id { get; set; }
         public TipoClienteDAO TipoCliente { get; set; }

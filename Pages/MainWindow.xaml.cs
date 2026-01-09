@@ -86,7 +86,7 @@ namespace Imob
 
                 var sistemaWindow = new Sistema();
                 sistemaWindow.SetUsuarioLogado(usuarioLogado);
-                sistemaWindow.NavMenu.Visibility = Visibility.Hidden;
+                sistemaWindow.MenuNav.Visibility = Visibility.Hidden;
                 sistemaWindow.Show();
                 this.Close();
             }

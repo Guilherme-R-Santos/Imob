@@ -29,18 +29,60 @@ namespace Imob
             InitializeComponent();
             WindowState = WindowState.Maximized;
 
-            LogoNav.MouseDown += (s, e) =>
+            RetangLogo.MouseDown += (s, e) =>
             {
-                //MessageBox.Show("Funcionalidade de retornar para o Home será implementada aqui.", "Retornar para o Home", MessageBoxButton.OK, MessageBoxImage.Information);
-                var visibilidadeMenu = NavMenu.Visibility;
+                var ret = RetangLogo;
+
+                var visibilidadeMenu = MenuNav.Visibility;
                 if (visibilidadeMenu == Visibility.Visible)
                 {
-                    NavMenu.Visibility = Visibility.Collapsed;
+                    MenuNav.Visibility = Visibility.Collapsed;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
 
                 }
                 else
                 {
-                    NavMenu.Visibility = Visibility.Visible;
+                    MenuNav.Visibility = Visibility.Visible;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
+                }
+            };
+
+            ImgPwrOff.MouseEnter += (s, e) =>
+            {
+                var circle = CircPwrOff;
+                circle.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
+            };
+            ImgPwrOff.MouseLeave += (s, e) =>
+            {
+                var circle = CircPwrOff;
+                circle.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            };
+            ImgPwrOff.MouseDown += (s, e) =>
+            {
+                var result = MessageBox.Show("Tem certeza que deseja sair do sistema?", "Sair", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    var loginWindow = new MainWindow();
+                    loginWindow.Show();
+                    this.Close();
+                }
+            };
+
+            LogoNav.MouseDown += (s, e) =>
+            {
+                var ret = RetangLogo;
+                
+                var visibilidadeMenu = MenuNav.Visibility;
+                if (visibilidadeMenu == Visibility.Visible)
+                {
+                    MenuNav.Visibility = Visibility.Collapsed;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+
+                }
+                else
+                {
+                    MenuNav.Visibility = Visibility.Visible;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
                 }
             };
         }
@@ -49,11 +91,6 @@ namespace Imob
         {
             var JanelaCadastrarUsuario = new JanelaCadastroUsuario();
             JanelaCadastrarUsuario.Show();
-
-        }
-
-        private void Teste_Click(object sender, RoutedEventArgs e)
-        {
 
         }
     }
