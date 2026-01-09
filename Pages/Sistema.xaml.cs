@@ -11,6 +11,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Imob.Components;
 using Imob.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Identity.Client;
 
 namespace Imob
 {
@@ -24,28 +26,32 @@ namespace Imob
             UsuarioAtivo.Content = UsuarioLogado.Login;
         }
 
+        // Funções auxilires Inicio
+
+        public void checarMenusAtivos()
+        {
+
+        }
+
+        public void FecharMenusAbertos()
+        {
+
+        }
+
+        public void ResetarMenus()
+        {
+
+        }
+
+        // Funções auxilires Fim
+
         public Sistema()
         {
+
             InitializeComponent();
             WindowState = WindowState.Maximized;
 
-            RetangLogo.MouseDown += (s, e) =>
-            {
-                var ret = RetangLogo;
-
-                var visibilidadeMenu = MenuNav.Visibility;
-                if (visibilidadeMenu == Visibility.Visible)
-                {
-                    MenuNav.Visibility = Visibility.Collapsed;
-                    ret.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-
-                }
-                else
-                {
-                    MenuNav.Visibility = Visibility.Visible;
-                    ret.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-                }
-            };
+            // Mouse Enter and Leave Events Inicio
 
             ImgPwrOff.MouseEnter += (s, e) =>
             {
@@ -61,17 +67,6 @@ namespace Imob
 
                 Mouse.OverrideCursor = Cursors.Arrow;
                 circle.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            };
-
-            ImgPwrOff.MouseDown += (s, e) =>
-            {
-                var result = MessageBox.Show("Tem certeza que deseja sair do sistema?", "Sair", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                {
-                    var loginWindow = new MainWindow();
-                    loginWindow.Show();
-                    this.Close();
-                }
             };
 
             RetangLogo.MouseEnter += (s, e) => {
@@ -97,6 +92,39 @@ namespace Imob
                 Mouse.OverrideCursor = Cursors.Arrow;
             };
 
+            // Mouse Enter and Leave Events Fim
+
+            //Click Events Inicio
+
+            RetangLogo.MouseDown += (s, e) =>
+            {
+                var ret = RetangLogo;
+
+                var visibilidadeMenu = MenuNav.Visibility;
+                if (visibilidadeMenu == Visibility.Visible)
+                {
+                    MenuNav.Visibility = Visibility.Collapsed;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+
+                }
+                else
+                {
+                    MenuNav.Visibility = Visibility.Visible;
+                    ret.Fill = new SolidColorBrush(Color.FromRgb(200, 200, 200));
+                }
+            };
+
+            ImgPwrOff.MouseDown += (s, e) =>
+            {
+                var result = MessageBox.Show("Tem certeza que deseja sair do sistema?", "Sair", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    var loginWindow = new MainWindow();
+                    loginWindow.Show();
+                    this.Close();
+                }
+            };
+
             LogoNav.MouseDown += (s, e) =>
             {
                 var ret = RetangLogo;
@@ -116,21 +144,46 @@ namespace Imob
             };
         }
 
-        private void btnCriarUsuario_Click(object sender, RoutedEventArgs e)
+        private void ImoveisTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var JanelaCadastrarUsuario = new JanelaCadastroUsuario();
-            JanelaCadastrarUsuario.Show();
 
         }
 
-        private void ContratosTreeListar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ContratosTreeCompraVenda_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ContratosPanel.Visibility = Visibility.Visible;
+
         }
 
-        private void ProprietariosTreeListar_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ContratosTreeLocacao_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ProprietariosPanel.Visibility = Visibility.Visible;
+
         }
+
+        private void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void LocatariosTree_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void FiadoresTree_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void VistoriaTreeListar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void VistoriaTreeCriar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        //Click Events Fim
     }
 }

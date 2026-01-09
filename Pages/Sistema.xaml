@@ -215,19 +215,19 @@
             <TreeView.Effect>
                 <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
-            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ImoveisTree_MouseDown"/>
             <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDoubleClick="ContratosTreeListar_MouseDoubleClick"/>
-                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeCompraVenda_MouseDown"/>
+                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeLocacao_MouseDown"/>
             </TreeViewItem>
             <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ProprietariosTree_MouseDown"/>
+                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown"/>
+                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown"/>
             </TreeViewItem>
             <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
-                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Novo" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand"/>
+                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeListar_MouseDown"/>
+                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Realizar vistoria" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeCriar_MouseDown"/>
             </TreeViewItem>
         </TreeView>
 
