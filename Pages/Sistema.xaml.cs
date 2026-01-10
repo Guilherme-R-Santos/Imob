@@ -28,17 +28,29 @@ namespace Imob
 
         // Funções auxilires Inicio
 
-        public void checarMenusAtivos()
+        public void FecharPanelsAtivos()
+        {
+            if (ProprietariosPanel.Visibility == Visibility.Visible) ProprietariosPanel.Visibility = Visibility.Hidden;
+            
+            if (LocatariosPanel.Visibility == Visibility.Visible) LocatariosPanel.Visibility = Visibility.Hidden;
+            
+            if (FiadoresPanel.Visibility == Visibility.Visible) FiadoresPanel.Visibility = Visibility.Hidden;
+            
+            if (ImoveisPanel.Visibility == Visibility.Visible) ImoveisPanel.Visibility = Visibility.Hidden;
+            
+            if (ContratosPanel.Visibility == Visibility.Visible) ContratosPanel.Visibility = Visibility.Hidden;
+            
+            if (VistoriasPanel.Visibility == Visibility.Visible) VistoriasPanel.Visibility = Visibility.Hidden;
+        }
+        
+        // TODO: Implementar resetar filtros e valores dos panels
+        public void ResetarPanels()
         {
 
         }
 
-        public void FecharMenusAbertos()
-        {
-
-        }
-
-        public void ResetarMenus()
+        // TODO: Implementar obtenção de informações da API
+        public void GetInformacoesApi(string panelAtivo)
         {
 
         }
@@ -146,42 +158,66 @@ namespace Imob
 
         private void ImoveisTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer todos os imóveis
+            ResetarPanels();
+            ImoveisPanel.Visibility = Visibility.Visible;
         }
 
         private void ContratosTreeCompraVenda_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer contratos com filtro de tipo Compra e Venda
+            ResetarPanels();
+            ContratosPanel.Visibility = Visibility.Visible;
         }
 
         private void ContratosTreeLocacao_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer contratos com filtro de tipo locação
+            ResetarPanels();
+            ContratosPanel.Visibility = Visibility.Visible;
         }
 
         private void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer todos os proprietários
+            ResetarPanels();
+            ProprietariosPanel.Visibility = Visibility.Visible;
         }
 
         private void LocatariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer todos os locatários
+            ResetarPanels();
+            LocatariosPanel.Visibility = Visibility.Visible;
         }
 
         private void FiadoresTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer todos os fiadores
+            ResetarPanels();
+            FiadoresPanel.Visibility = Visibility.Visible;
         }
 
         private void VistoriaTreeListar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer todas as vistorias
+            ResetarPanels();
+            VistoriasPanel.Visibility = Visibility.Visible;
         }
 
         private void VistoriaTreeCriar_MouseDown(object sender, MouseButtonEventArgs e)
         {
-
+            FecharPanelsAtivos();
+            // TODO: Resetar valores e trazer painel de criação de vistoria
+            ResetarPanels();
+            VistoriasPanel.Visibility = Visibility.Visible;
         }
 
         //Click Events Fim

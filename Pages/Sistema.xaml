@@ -215,19 +215,19 @@
             <TreeView.Effect>
                 <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
-            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ImoveisTree_MouseDown"/>
+            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ImoveisTree_MouseDown" MouseDoubleClick="ImoveisTree_MouseDown"/>
             <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeCompraVenda_MouseDown"/>
-                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeLocacao_MouseDown"/>
+                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeCompraVenda_MouseDown" MouseDoubleClick="ContratosTreeCompraVenda_MouseDown"/>
+                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeLocacao_MouseDown" MouseDoubleClick="ContratosTreeLocacao_MouseDown"/>
             </TreeViewItem>
             <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ProprietariosTree_MouseDown"/>
-                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown"/>
-                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown"/>
+                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ProprietariosTree_MouseDown" MouseDoubleClick="ProprietariosTree_MouseDown"/>
+                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown" MouseDoubleClick="LocatariosTree_MouseDown"/>
+                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown" MouseDoubleClick="FiadoresTree_MouseDown"/>
             </TreeViewItem>
             <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeListar_MouseDown"/>
-                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Realizar vistoria" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeCriar_MouseDown"/>
+                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeListar_MouseDown" MouseDoubleClick="VistoriaTreeListar_MouseDown"/>
+                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Realizar vistoria" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeCriar_MouseDown" MouseDoubleClick="VistoriaTreeCriar_MouseDown"/>
             </TreeViewItem>
         </TreeView>
 
@@ -528,7 +528,29 @@
 
 
         <!-- Overlays para replicar-->
-        <Grid x:Name="ContratoModalOverlay" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ContratoModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Novo Contrato" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+
+                    <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="ContratoPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ContratoModalOverlayVisualizar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -540,11 +562,11 @@
                     <TextBlock Text="Visualização do Contrato" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
 
                     <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
-                        <TextBlock x:Name="ContratoPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                        <TextBlock x:Name="ContratoPreviewTextVisualizar" TextWrapping="Wrap" Foreground="#333"/>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalContratos" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                        <Button x:Name="BtnFecharModalContratosVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
                     </StackPanel>
                 </Grid>
             </Border>
