@@ -220,6 +220,18 @@ namespace Imob
             VistoriasPanel.Visibility = Visibility.Visible;
         }
 
+        private void BtnAdicionarImovel_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO: Finalizar
+            ImoveilModalOverlayCriar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalImovel_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO: Resetar valores do modal
+            ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
+        }
+
         //Click Events Fim
     }
 }
