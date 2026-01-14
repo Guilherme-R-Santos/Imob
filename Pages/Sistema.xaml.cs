@@ -13,6 +13,7 @@ using Imob.Components;
 using Imob.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
+using Newtonsoft.Json;
 
 namespace Imob
 {
@@ -42,7 +43,47 @@ namespace Imob
             
             if (VistoriasPanel.Visibility == Visibility.Visible) VistoriasPanel.Visibility = Visibility.Hidden;
         }
-        
+
+        public void AdicionarItensGridImoveis()
+        {
+            List<ImovelDAO> listaImoveis =  ImovelDAO.GetImoveis();
+
+            foreach (ImovelDAO imovel in listaImoveis)
+            {
+                //ImoveisDataGrid
+                // TODO: Finalizar
+            }
+        }
+
+        public void AdicionarItensComboProprietarios()
+        {
+            List<ClienteDAO> listaClientes = ClienteDAO.GetClientes();
+
+            foreach (ClienteDAO cliente in listaClientes)
+            {
+                ComboProprietarios.Items.Add(cliente.Nome.ToString());
+            }
+        }
+
+        public void AdicionarItensComboIntencoes()
+        {
+            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao();
+
+            foreach (IntencaoDAO intencao in ListaIntencoes)
+            {
+                ComboIntencao.Items.Add(intencao.Nome.ToString());
+            }
+        }
+
+        public void AdicionarItensComboTiposImovel()
+        {
+            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel();
+            foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
+            {
+                ComboTipoImovel.Items.Add(tipoImovel.Nome.ToString());
+            }
+        }
+
         // TODO: Implementar resetar filtros e valores dos panels
         public void ResetarPanels()
         {
@@ -223,6 +264,9 @@ namespace Imob
         private void BtnAdicionarImovel_Click(object sender, RoutedEventArgs e)
         {
             //TODO: Finalizar
+            AdicionarItensComboProprietarios();
+            AdicionarItensComboIntencoes();
+            AdicionarItensComboTiposImovel();
             ImoveilModalOverlayCriar.Visibility = Visibility.Visible;
         }
 
@@ -230,6 +274,15 @@ namespace Imob
         {
             // TODO: Resetar valores do modal
             ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
+            ComboProprietarios.Items.Clear();
+            ComboIntencao.Items.Clear();
+            ComboTipoImovel.Items.Clear();
+        }
+
+        private void CadastrarImovelBanco(object sender, RoutedEventArgs e)
+        {
+            
+
         }
 
         //Click Events Fim

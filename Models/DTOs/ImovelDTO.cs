@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
+using Azure;
+using Newtonsoft.Json;
 
 namespace Imob.Models
 {
-    public class ImovelDAO
+    public class ImovelDTO
     {
+        public ImovelDTO() 
+        {
+            //TODO: Finalizar construtor
+        }
+
         public int Id { get; set; }
         public bool Ativo { get; set; }
         public string Nome { get; set; }
@@ -21,7 +29,7 @@ namespace Imob.Models
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public string Pais { get; set; }
-        public string ? Complemento { get; set; }
+        public string? Complemento { get; set; }
         public decimal Metragem { get; set; }
         public decimal Valor { get; set; }
         public decimal? Condominio { get; set; }
@@ -32,5 +40,10 @@ namespace Imob.Models
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
+
+        //TODO: Implementar método para envio de dados para a API
+
+        
     }
+
 }
