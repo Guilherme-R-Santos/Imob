@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Azure;
 using Newtonsoft.Json;
 
@@ -9,19 +11,11 @@ namespace Imob.Models
 {
     public class ImovelDTO
     {
-        public ImovelDTO() 
-        {
-            //TODO: Finalizar construtor
-        }
-
-        public int Id { get; set; }
-        public bool Ativo { get; set; }
-        public string Nome { get; set; }
         public string Descricao { get; set; }
         public string Observacao { get; set; }
-        public ClienteDAO Proprietario { get; set; }
-        public TipoImovelDAO TipoImovel { get; set; }
-        public IntencaoDAO Intencao { get; set; }
+        public int Proprietario { get; set; }
+        public int TipoImovel { get; set; }
+        public int Intencao { get; set; }
         public string Cep { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }
@@ -36,12 +30,53 @@ namespace Imob.Models
         public decimal? Iptu { get; set; }
         public decimal? TaxaIncendio { get; set; }
         public decimal? Foro { get; set; }
-        public UsuarioDAO Cadastrador { get; set; }
-        public DateTime? DataCadastro { get; set; }
-        public DateTime? DataAtualizacao { get; set; }
-        public DateTime? DataInativacao { get; set; }
+        public int Cadastrador { get; set; }
 
-        //TODO: Implementar método para envio de dados para a API
+        public async Task CadastrarImovel()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var imovelJson = new
+                {
+                    Descricao = this.Descricao,
+                    Observacao = this.Observacao,
+                    Proprietario = new { Id = this.Proprietario },
+                    TipoImovel = new { Id = this.TipoImovel },
+                    Intencao = new { Id = this.Intencao },
+                    Cep = this.Cep,
+                    Logradouro = this.Logradouro,
+                    Numero = this.Numero,
+                    Bairro = this.Bairro,
+                    Cidade = this.Cidade,
+                    Estado = this.Estado,
+                    Pais = this.Pais,
+                    Complemento = this.Complemento,
+                    Metragem = this.Metragem,
+                    Valor = this.Valor,
+                    Condominio = this.Condominio,
+                    Iptu = this.Iptu,
+                    TaxaIncendio = this.TaxaIncendio,
+                    Foro = this.Foro,
+                    Cadastrador = new { Id = this.Cadastrador }
+                };
+
+                var json = JsonConvert.SerializeObject(imovelJson);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync("Imovel/Criar", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var respBody = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Erro ao cadastrar imóvel: {response.StatusCode} - {respBody}");
+                }
+            }
+        }
 
         
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Windows.Media.Animation;
 using Azure;
 using Newtonsoft.Json;
 
@@ -15,8 +16,29 @@ namespace Imob.Models
         public string Descricao { get; set; }
         public string Observacao { get; set; }
         public ClienteDAO Proprietario { get; set; }
+        public string NomeProprietario
+        {
+            get
+            {
+                return Proprietario != null ? Proprietario.Nome : string.Empty;
+            }
+        }
         public TipoImovelDAO TipoImovel { get; set; }
+        public string NomeTipoImovel
+        {
+            get
+            {
+                return TipoImovel != null ? TipoImovel.Nome : string.Empty;
+            }
+        }
         public IntencaoDAO Intencao { get; set; }
+        public string NomeIntencao
+        {
+            get
+            {
+                return Intencao != null ? Intencao.Nome : string.Empty;
+            }
+        }
         public string Cep { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }
@@ -36,17 +58,18 @@ namespace Imob.Models
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
 
-        public static List<ImovelDAO> GetImoveis()
+        public static async Task<List<ImovelDAO>> GetImoveis()
         {
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7251/");
 
-                var response = client.GetAsync("Imovel/ObterTodos").Result;
+                var response = await client.GetAsync("Imovel/ObterTodos");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<List<ImovelDAO>>(response.Content.ReadAsStringAsync().Result);
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<ImovelDAO>>(json);
                 }
                 else
                 {
@@ -55,5 +78,4 @@ namespace Imob.Models
             }
         }
     }
-
 }

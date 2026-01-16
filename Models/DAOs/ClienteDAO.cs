@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -32,7 +33,7 @@ namespace Imob.Models
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
 
-        public static ClienteDAO GetPorNome(string nome)
+        public static List<ClienteDAO> GetPorNome(string nome)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -42,13 +43,19 @@ namespace Imob.Models
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<ClienteDAO>(response.Content.ReadAsStringAsync().Result);
+                    return JsonConvert.DeserializeObject<List<ClienteDAO>>(response.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
-                    throw new Exception("Erro ao obter informações do cliente: " + response.StatusCode);
+                    throw new Exception("Erro ao obter informações do Tipo do imóvel: " + response.StatusCode);
                 }
             }
+        }
+
+        public static int GetIdPorNome(string nome)
+        {
+            var clientes = GetPorNome(nome);
+            return clientes?.FirstOrDefault()?.Id ?? 0;
         }
 
         public static List<ClienteDAO> GetClientes()

@@ -16,7 +16,7 @@ namespace Imob.Models
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static TipoImovelDAO GetPorNome(string nome)
+        public static List<TipoImovelDAO> GetPorNome(string nome)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -26,7 +26,7 @@ namespace Imob.Models
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<TipoImovelDAO>(response.Content.ReadAsStringAsync().Result);
+                    return JsonConvert.DeserializeObject<List<TipoImovelDAO>>(response.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
@@ -52,6 +52,12 @@ namespace Imob.Models
                     throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
                 }
             }
+        }
+
+        public static int GetIdPorNome(string nome)
+        {
+            var tipoImovel = GetPorNome(nome);
+            return tipoImovel?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

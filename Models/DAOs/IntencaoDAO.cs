@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Imob.Models
 {
@@ -16,22 +17,27 @@ namespace Imob.Models
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static IntencaoDAO GetPorNome(string nome)
+        public static List<IntencaoDAO> GetPorNome(string nome)
         {
-            using (HttpClient client = new HttpClient())
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
+            var response = client.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}").Result;
+            response.EnsureSuccessStatusCode();
+
+            var content = response.Content.ReadAsStringAsync().Result;
+            var token = Newtonsoft.Json.Linq.JToken.Parse(content);
+
+            if (token.Type == Newtonsoft.Json.Linq.JTokenType.Array)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("Intencao/ObterPorNome/" + nome).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<IntencaoDAO>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter informações do Tipo: " + response.StatusCode);
-                }
+                return token.ToObject<List<IntencaoDAO>>();
+            }
+            else if (token.Type == Newtonsoft.Json.Linq.JTokenType.Object)
+            {
+                var single = token.ToObject<IntencaoDAO>();
+                return single == null ? new List<IntencaoDAO>() : new List<IntencaoDAO> { single };
+            }
+            else
+            {
+                return new List<IntencaoDAO>();
             }
         }
 
@@ -52,6 +58,36 @@ namespace Imob.Models
                     throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
                 }
             }
+        }
+
+        public static async Task<List<IntencaoDAO>> GetPorNomeAsync(string nome)
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
+            var response = await client.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}");
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadAsStringAsync();
+            var token = Newtonsoft.Json.Linq.JToken.Parse(content);
+
+            if (token.Type == Newtonsoft.Json.Linq.JTokenType.Array)
+            {
+                return token.ToObject<List<IntencaoDAO>>();
+            }
+            else if (token.Type == Newtonsoft.Json.Linq.JTokenType.Object)
+            {
+                var single = token.ToObject<IntencaoDAO>();
+                return single == null ? new List<IntencaoDAO>() : new List<IntencaoDAO> { single };
+            }
+            else
+            {
+                return new List<IntencaoDAO>();
+            }
+        }
+
+        public static int GetIdPorNome(string nome)
+        {
+            var intecoes = GetPorNome(nome);
+            return intecoes?.FirstOrDefault()?.Id ?? 0;
         }
     }
 }

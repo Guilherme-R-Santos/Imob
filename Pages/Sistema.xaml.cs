@@ -1,5 +1,12 @@
-﻿using System;
+﻿using Imob.Components;
+using Imob.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Identity.Client;
+using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,11 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Imob.Components;
-using Imob.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Identity.Client;
-using Newtonsoft.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Imob
 {
@@ -44,14 +47,16 @@ namespace Imob
             if (VistoriasPanel.Visibility == Visibility.Visible) VistoriasPanel.Visibility = Visibility.Hidden;
         }
 
-        public void AdicionarItensGridImoveis()
+        public async Task AdicionarItensGridImoveis()
         {
-            List<ImovelDAO> listaImoveis =  ImovelDAO.GetImoveis();
-
-            foreach (ImovelDAO imovel in listaImoveis)
+            try
             {
-                //ImoveisDataGrid
-                // TODO: Finalizar
+                var listaImoveis = await ImovelDAO.GetImoveis();
+                ImoveisDataGrid.ItemsSource = listaImoveis;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar imóveis: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -103,6 +108,11 @@ namespace Imob
 
             InitializeComponent();
             WindowState = WindowState.Maximized;
+
+            //Loaded += async (s, e) =>
+            //{
+            //    await AdicionarItensGridImoveis();
+            //};
 
             // Mouse Enter and Leave Events Inicio
 
@@ -197,12 +207,16 @@ namespace Imob
             };
         }
 
-        private void ImoveisTree_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void ImoveisTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
             // TODO: Resetar valores e trazer todos os imóveis
             ResetarPanels();
+            await AdicionarItensGridImoveis();
             ImoveisPanel.Visibility = Visibility.Visible;
+
+            // recarrega a grid
+            await AdicionarItensGridImoveis();
         }
 
         private void ContratosTreeCompraVenda_MouseDown(object sender, MouseButtonEventArgs e)
@@ -279,9 +293,121 @@ namespace Imob
             ComboTipoImovel.Items.Clear();
         }
 
-        private void CadastrarImovelBanco(object sender, RoutedEventArgs e)
+        private async void CadastrarImovelBanco(object sender, RoutedEventArgs e)
         {
-            
+            var clienteSelecionado = ComboProprietarios.SelectedItem as string;
+            var intencaoSelecionada = ComboIntencao.SelectedItem as string;
+            var tipoImovelSelecionado = ComboTipoImovel.SelectedItem as string;
+
+            if (string.IsNullOrWhiteSpace(clienteSelecionado) ||
+                string.IsNullOrWhiteSpace(intencaoSelecionada) ||
+                string.IsNullOrWhiteSpace(tipoImovelSelecionado) ||
+                string.IsNullOrWhiteSpace(TxtBoxCep.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxLogradouro.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxNumero.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxPais.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxEstado.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxCidade.Text) ||
+                string.IsNullOrWhiteSpace(TxtBoxBairro.Text))
+            {
+                MessageBox.Show("Por favor, preencha todos os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!int.TryParse(TxtBoxMetragem.Text, out int metragem))
+            {
+                MessageBox.Show("Metragem inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxValor.Text, out double valor)) {
+                MessageBox.Show("Valor inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxIptu.Text, out double iptu)) {
+                MessageBox.Show("IPTU inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxTaxaIncendio.Text, out double taxaIncendio))
+            {
+                MessageBox.Show("Taxa de Incêndio inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxForo.Text, out double foro)) {
+                MessageBox.Show("Foro inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var complemento = TxtBoxComplemento.Text;
+            var condominio = TxtBoxCondominio.Text;
+            var observacao = TxtBoxObservacoes.Text;
+            var descricao = TxtBoxDescricao.Text;
+
+            ImovelDTO imovel = new ImovelDTO();
+
+            if (observacao != null)
+            {
+                imovel.Observacao = observacao;
+            }
+
+            if (descricao != null)
+            {
+                imovel.Descricao = descricao;
+            }
+
+            if (complemento != null)
+            {
+                imovel.Complemento = complemento;
+            }
+
+            //TODO: Fix
+            imovel.Proprietario = ClienteDAO.GetIdPorNome(clienteSelecionado);
+            imovel.TipoImovel = TipoImovelDAO.GetIdPorNome(tipoImovelSelecionado);
+            imovel.Intencao = IntencaoDAO.GetIdPorNome(intencaoSelecionada);
+            imovel.Cep = TxtBoxCep.Text;
+            imovel.Logradouro = TxtBoxLogradouro.Text;
+            imovel.Numero = int.Parse(TxtBoxNumero.Text);
+            imovel.Bairro = TxtBoxBairro.Text;
+            imovel.Cidade = TxtBoxCidade.Text;
+            imovel.Estado = TxtBoxEstado.Text;
+            imovel.Pais = TxtBoxPais.Text;
+            imovel.Metragem = metragem;
+            imovel.Valor = (decimal)valor;
+            imovel.Condominio = string.IsNullOrWhiteSpace(condominio) ? null : (decimal?)Convert.ToDecimal(condominio);
+            imovel.Iptu = (decimal?)iptu;
+            imovel.TaxaIncendio = (decimal?)taxaIncendio;
+            imovel.Foro = (decimal?)foro;
+            imovel.Cadastrador = UsuarioLogado.Id;
+
+            await imovel.CadastrarImovel();
+
+            MessageBox.Show("Imóvel cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            ComboProprietarios.SelectedIndex = -1;
+            ComboIntencao.SelectedIndex = -1;
+            ComboTipoImovel.SelectedIndex = -1;
+            TxtBoxCep.Clear();
+            TxtBoxLogradouro.Clear();
+            TxtBoxNumero.Clear();
+            TxtBoxPais.Clear();
+            TxtBoxEstado.Clear();
+            TxtBoxCidade.Clear();
+            TxtBoxBairro.Clear();
+            TxtBoxComplemento.Clear();
+            TxtBoxCondominio.Clear();
+            TxtBoxObservacoes.Clear();
+            TxtBoxDescricao.Clear();
+            TxtBoxMetragem.Clear();
+            TxtBoxValor.Clear();
+            TxtBoxIptu.Clear();
+            TxtBoxTaxaIncendio.Clear();
+            TxtBoxForo.Clear();
+
+
+            ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
 
         }
 
