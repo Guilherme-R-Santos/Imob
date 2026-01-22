@@ -77,5 +77,25 @@ namespace Imob.Models
                 }
             }
         }
+
+        public static async Task<ImovelDAO> GetImovelPorId(int id)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:7251/");
+
+                var response = await client.GetAsync($"Imovel/ObterPorId/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<ImovelDAO>(json);
+                }
+                else
+                {
+                    throw new Exception("Erro ao obter imóvel: " + response.StatusCode);
+                }
+            }
+        }
     }
 }

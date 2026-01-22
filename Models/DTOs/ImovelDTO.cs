@@ -78,7 +78,70 @@ namespace Imob.Models
             }
         }
 
-        
+        public async Task AtualizarImovel(int id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var imovelJson = new
+                {
+                    Descricao = this.Descricao,
+                    Observacao = this.Observacao,
+                    Proprietario = new { Id = this.Proprietario },
+                    TipoImovel = new { Id = this.TipoImovel },
+                    Intencao = new { Id = this.Intencao },
+                    Cep = this.Cep,
+                    Logradouro = this.Logradouro,
+                    Numero = this.Numero,
+                    Bairro = this.Bairro,
+                    Cidade = this.Cidade,
+                    Estado = this.Estado,
+                    Pais = this.Pais,
+                    Complemento = this.Complemento,
+                    Metragem = this.Metragem,
+                    Valor = this.Valor,
+                    Condominio = this.Condominio,
+                    Iptu = this.Iptu,
+                    TaxaIncendio = this.TaxaIncendio,
+                    Foro = this.Foro,
+                };
+
+                var json = JsonConvert.SerializeObject(imovelJson);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PutAsync($"Imovel/Atualizar/{id}", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var respBody = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Erro ao atualizar imóvel: {response.StatusCode} - {respBody}");
+                }
+            }
+        }
+
+        public async Task InativarImovel(int id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+
+                var content = new StringContent(string.Empty);
+
+                var response = await httpClient.PostAsync($"Imovel/Inativar/{id}", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var respBody = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Erro ao excluir imóvel: {response.StatusCode} - {respBody}");
+                }
+            }
+
+        }
+
     }
 
 }

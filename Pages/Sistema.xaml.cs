@@ -89,18 +89,6 @@ namespace Imob
             }
         }
 
-        // TODO: Implementar resetar filtros e valores dos panels
-        public void ResetarPanels()
-        {
-
-        }
-
-        // TODO: Implementar obtenção de informações da API
-        public void GetInformacoesApi(string panelAtivo)
-        {
-
-        }
-
         // Funções auxilires Fim
 
         public Sistema()
@@ -108,13 +96,6 @@ namespace Imob
 
             InitializeComponent();
             WindowState = WindowState.Maximized;
-
-            //Loaded += async (s, e) =>
-            //{
-            //    await AdicionarItensGridImoveis();
-            //};
-
-            // Mouse Enter and Leave Events Inicio
 
             ImgPwrOff.MouseEnter += (s, e) =>
             {
@@ -210,74 +191,55 @@ namespace Imob
         private async void ImoveisTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer todos os imóveis
-            ResetarPanels();
+
             await AdicionarItensGridImoveis();
             ImoveisPanel.Visibility = Visibility.Visible;
-
-            // recarrega a grid
-            await AdicionarItensGridImoveis();
         }
 
         private void ContratosTreeCompraVenda_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer contratos com filtro de tipo Compra e Venda
-            ResetarPanels();
             ContratosPanel.Visibility = Visibility.Visible;
         }
 
         private void ContratosTreeLocacao_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer contratos com filtro de tipo locação
-            ResetarPanels();
             ContratosPanel.Visibility = Visibility.Visible;
         }
 
         private void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer todos os proprietários
-            ResetarPanels();
             ProprietariosPanel.Visibility = Visibility.Visible;
         }
 
         private void LocatariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer todos os locatários
-            ResetarPanels();
             LocatariosPanel.Visibility = Visibility.Visible;
         }
 
         private void FiadoresTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer todos os fiadores
-            ResetarPanels();
             FiadoresPanel.Visibility = Visibility.Visible;
         }
 
         private void VistoriaTreeListar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer todas as vistorias
-            ResetarPanels();
             VistoriasPanel.Visibility = Visibility.Visible;
         }
 
         private void VistoriaTreeCriar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            // TODO: Resetar valores e trazer painel de criação de vistoria
-            ResetarPanels();
             VistoriasPanel.Visibility = Visibility.Visible;
         }
 
         private void BtnAdicionarImovel_Click(object sender, RoutedEventArgs e)
         {
-            //TODO: Finalizar
             AdicionarItensComboProprietarios();
             AdicionarItensComboIntencoes();
             AdicionarItensComboTiposImovel();
@@ -286,11 +248,26 @@ namespace Imob
 
         private void BtnFecharModalImovel_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Resetar valores do modal
             ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
             ComboProprietarios.Items.Clear();
             ComboIntencao.Items.Clear();
             ComboTipoImovel.Items.Clear();
+            TxtBoxCep.Clear();
+            TxtBoxLogradouro.Clear();
+            TxtBoxNumero.Clear();
+            TxtBoxPais.Clear();
+            TxtBoxEstado.Clear();
+            TxtBoxCidade.Clear();
+            TxtBoxBairro.Clear();
+            TxtBoxComplemento.Clear();
+            TxtBoxCondominio.Clear();
+            TxtBoxObservacoes.Clear();
+            TxtBoxDescricao.Clear();
+            TxtBoxMetragem.Clear();
+            TxtBoxValor.Clear();
+            TxtBoxIptu.Clear();
+            TxtBoxTaxaIncendio.Clear();
+            TxtBoxForo.Clear();
         }
 
         private async void CadastrarImovelBanco(object sender, RoutedEventArgs e)
@@ -341,6 +318,12 @@ namespace Imob
                 return;
             }
 
+            if (!int.TryParse(TxtBoxNumero.Text, out int numero))
+            {
+                MessageBox.Show("Número inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             var complemento = TxtBoxComplemento.Text;
             var condominio = TxtBoxCondominio.Text;
             var observacao = TxtBoxObservacoes.Text;
@@ -363,7 +346,6 @@ namespace Imob
                 imovel.Complemento = complemento;
             }
 
-            //TODO: Fix
             imovel.Proprietario = ClienteDAO.GetIdPorNome(clienteSelecionado);
             imovel.TipoImovel = TipoImovelDAO.GetIdPorNome(tipoImovelSelecionado);
             imovel.Intencao = IntencaoDAO.GetIdPorNome(intencaoSelecionada);
@@ -386,9 +368,9 @@ namespace Imob
 
             MessageBox.Show("Imóvel cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            ComboProprietarios.SelectedIndex = -1;
-            ComboIntencao.SelectedIndex = -1;
-            ComboTipoImovel.SelectedIndex = -1;
+            ComboProprietarios.Items.Clear();
+            ComboIntencao.Items.Clear();
+            ComboTipoImovel.Items.Clear();
             TxtBoxCep.Clear();
             TxtBoxLogradouro.Clear();
             TxtBoxNumero.Clear();
@@ -406,9 +388,149 @@ namespace Imob
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
 
-
             ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
+            await AdicionarItensGridImoveis();
 
+        }
+
+        private async void BtnAtualizar_Click(object sender, RoutedEventArgs e)
+        {
+            await AdicionarItensGridImoveis();  
+        }
+
+        private void BtnVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+           ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
+            
+            List<ClienteDAO> listaClientes = ClienteDAO.GetClientes();
+
+            foreach (ClienteDAO cliente in listaClientes)
+            {
+                ComboProprietariosEditar.Items.Add(cliente.Nome.ToString());
+            }
+
+            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao();
+
+            foreach (IntencaoDAO intencao in ListaIntencoes)
+            {
+                ComboIntencaoEditar.Items.Add(intencao.Nome.ToString());
+            }
+
+            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel();
+            foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
+            {
+                ComboTipoImovelEditar.Items.Add(tipoImovel.Nome.ToString());
+            }
+
+            ComboProprietariosEditar.Text = imovelSelecionado.NomeProprietario;
+            ComboIntencaoEditar.Text = imovelSelecionado.NomeIntencao;
+            ComboTipoImovelEditar.Text = imovelSelecionado.NomeTipoImovel;
+            TxtBoxCepEditar.Text = imovelSelecionado.Cep;
+            TxtBoxLogradouroEditar.Text = imovelSelecionado.Logradouro;
+            TxtBoxNumeroEditar.Text = imovelSelecionado.Numero.ToString();
+            TxtBoxPaisEditar.Text = imovelSelecionado.Pais;
+            TxtBoxEstadoEditar.Text = imovelSelecionado.Estado;
+            TxtBoxCidadeEditar.Text = imovelSelecionado.Cidade;
+            TxtBoxBairroEditar.Text = imovelSelecionado.Bairro;
+            TxtBoxComplementoEditar.Text = imovelSelecionado.Complemento;
+            TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio?.ToString();
+            TxtBoxObservacoesEditar.Text = imovelSelecionado.Observacao;
+            TxtBoxDescricaoEditar.Text = imovelSelecionado.Descricao;
+            TxtBoxMetragemEditar.Text = imovelSelecionado.Metragem.ToString();
+            TxtBoxValorEditar.Text = imovelSelecionado.Valor.ToString();
+            TxtBoxIptuEditar.Text = imovelSelecionado.Iptu?.ToString();
+            TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio?.ToString();
+            TxtBoxForoEditar.Text = imovelSelecionado.Foro?.ToString();
+            ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+
+        }
+
+        private async void BtnEditarModalImovel_Click(object sender, RoutedEventArgs e)
+        {
+            ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
+            ImovelDTO imovelAtualizado = new ImovelDTO();
+
+            imovelAtualizado.TaxaIncendio = Convert.ToDecimal(TxtBoxTaxaIncendioEditar.Text);
+            imovelAtualizado.Foro = Convert.ToDecimal(TxtBoxForoEditar.Text);
+            imovelAtualizado.Iptu = Convert.ToDecimal(TxtBoxIptuEditar.Text);
+            imovelAtualizado.Valor = Convert.ToDecimal(TxtBoxValorEditar.Text);
+            imovelAtualizado.Metragem = Convert.ToDecimal(TxtBoxMetragemEditar.Text);
+            imovelAtualizado.Descricao = TxtBoxDescricaoEditar.Text;
+            imovelAtualizado.Observacao = TxtBoxObservacoesEditar.Text;
+            imovelAtualizado.Condominio = Convert.ToDecimal(TxtBoxCondominioEditar.Text);
+            imovelAtualizado.Complemento = TxtBoxComplementoEditar.Text;
+            imovelAtualizado.Bairro = TxtBoxBairroEditar.Text;
+            imovelAtualizado.Cidade = TxtBoxCidadeEditar.Text;
+            imovelAtualizado.Estado = TxtBoxEstadoEditar.Text;
+            imovelAtualizado.Pais = TxtBoxPaisEditar.Text;
+            imovelAtualizado.Numero = Convert.ToInt32(TxtBoxNumeroEditar.Text);
+            imovelAtualizado.Logradouro = TxtBoxLogradouroEditar.Text;
+            imovelAtualizado.Cep = TxtBoxCepEditar.Text;
+            imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string);
+            imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string);
+            imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string);
+
+            try
+            {
+                await imovelAtualizado.AtualizarImovel(imovelSelecionado.Id);
+                MessageBox.Show("Imóvel atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+                await AdicionarItensGridImoveis();
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar imóvel: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+
+        }
+
+        private void BtnFecharModalImovelEditar_Click(object sender, RoutedEventArgs e)
+        {
+            ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+            ComboProprietariosEditar.Items.Clear();
+            ComboIntencaoEditar.Items.Clear();
+            ComboTipoImovelEditar.Items.Clear();
+            TxtBoxCepEditar.Clear();
+            TxtBoxLogradouroEditar.Clear();
+            TxtBoxNumeroEditar.Clear();
+            TxtBoxPaisEditar.Clear();
+            TxtBoxEstadoEditar.Clear();
+            TxtBoxCidadeEditar.Clear();
+            TxtBoxBairroEditar.Clear();
+            TxtBoxComplementoEditar.Clear();
+            TxtBoxCondominioEditar.Clear();
+            TxtBoxObservacoesEditar.Clear();
+            TxtBoxDescricaoEditar.Clear();
+            TxtBoxMetragemEditar.Clear();
+            TxtBoxValorEditar.Clear();
+            TxtBoxIptuEditar.Clear();
+            TxtBoxTaxaIncendioEditar.Clear();
+            TxtBoxForoEditar.Clear();
+        }
+
+        private async void BtnExcluir_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja excluir?", "Excluir", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (confirm == MessageBoxResult.Yes)
+            {
+                ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
+                ImovelDTO imovel = new ImovelDTO();
+                try
+                {
+                    await imovel.InativarImovel(imovelSelecionado.Id);
+                    MessageBox.Show("Imóvel excluído com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                    await AdicionarItensGridImoveis();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao excluir imóvel: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
         }
 
         //Click Events Fim

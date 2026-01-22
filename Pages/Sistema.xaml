@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Sistema" Height="1080" Width="1920" Icon="/IcoImob.png">
     <Window.Resources>
-        <!-- Estilo para TextBox moderno -->
+        <!-- Estilo TextBox -->
         <Style x:Key="ModernTextBox" TargetType="TextBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,10"/>
@@ -23,7 +23,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Estilo para PasswordBox moderno -->
+        <!-- Estilo PasswordBox -->
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,10"/>
@@ -39,7 +39,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Estilo para Botão moderno -->
+        <!-- Estilo Botão -->
         <Style x:Key="ModernButton" TargetType="Button">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Foreground" Value="White"/>
@@ -70,7 +70,7 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Estilo para Label -->
+        <!-- Estilo Label -->
         <Style x:Key="ModernLabel" TargetType="TextBlock">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="Foreground" Value="#555555"/>
@@ -78,7 +78,7 @@
             <Setter Property="Margin" Value="0,0,0,5"/>
         </Style>
 
-        <!-- Modern ComboBox style to match TextBox/Button aesthetics -->
+        <!-- Estilo ComboBox -->
         <Style x:Key="ModernComboBox" TargetType="ComboBox">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,8"/>
@@ -87,7 +87,6 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <!--<Setter Property="VerticalContentAlignment" Value="Center"/> -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
@@ -124,7 +123,6 @@
             </Setter>
         </Style>
 
-        <!-- ComboBoxItem visual polish to match application look -->
         <Style TargetType="ComboBoxItem">
             <Setter Property="Padding" Value="8"/>
             <Setter Property="FontSize" Value="14"/>
@@ -141,7 +139,6 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Estilo moderno para TreeViewItem: hover, clique transitório, sombra leve -->
         <Style TargetType="TreeViewItem">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="#FFF27F1D"/>
@@ -159,8 +156,9 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <ToggleButton x:Name="Expander" Grid.Column="0" Width="14" Height="14" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <Path x:Name="ExpanderPath" Data="M 2 0 L 10 8 L 2 16 Z" Fill="#666" RenderTransformOrigin="0.5,0.5"/>
+                                    <ToggleButton x:Name="Expander" Grid.Column="0" Width="14" Height="1" VerticalAlignment="Center" HorizontalAlignment="Center" Focusable="False" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Background="Transparent" BorderThickness="0" OverridesDefaultStyle="True" FocusVisualStyle="{x:Null}" Padding="0">
+                                        <!-- Plain black chevron arrow without any button chrome -->
+                                        <Path x:Name="ExpanderPath" Data="M 3,2 L 11,8 L 3,14" Stroke="Black" StrokeThickness="2" Fill="Transparent" StrokeLineJoin="Round" StrokeStartLineCap="Round" StrokeEndLineCap="Round" RenderTransformOrigin="0.5,0.5"/>
                                     </ToggleButton>
 
                                     <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" VerticalAlignment="Center"/>
@@ -180,12 +178,10 @@
                                 </Setter>
                             </Trigger>
 
-                            <!-- Esconder expander para itens folha -->
                             <Trigger Property="HasItems" Value="False">
                                 <Setter TargetName="Expander" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
 
-                            <!-- Hover: efeito sutil com sombra e pequena escala (reverte no Exit) -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Bd" Property="Background">
                                     <Setter.Value>
@@ -272,7 +268,7 @@
             <Image x:Name="ImgPwrOff" HorizontalAlignment="Left" Height="50" Margin="1855,0,0,0" VerticalAlignment="Center" Width="52" Source="/Pages/icons8-power-off-64.png" />
         </Grid>
 
-        <TreeView x:Name="MenuNav" Margin="-1,66,720,532">
+        <TreeView x:Name="MenuNav" Margin="-1,66,720,0">
             <TreeView.Effect>
                 <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
@@ -319,7 +315,6 @@
 
                 <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <!-- Editar aqui -->
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
                         <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
@@ -368,7 +363,6 @@
 
                 <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <!-- Editar aqui -->
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
                         <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
@@ -417,7 +411,6 @@
 
                 <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <!-- Editar aqui -->
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
                         <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
@@ -453,18 +446,20 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="302*"/>
+                        <ColumnDefinition Width="53*"/>
                         <ColumnDefinition Width="220"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.ColumnSpan="2">
                         <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnAdicionarImovel" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click">Novo Imóvel</Button>
+                    <Button x:Name="BtnAdicionarImovel" Grid.Column="2" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click" Margin="40,0,0,0">Novo Imóvel</Button>
+                    <Button x:Name="BtnAtualizar" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAtualizar_Click"  Content="Atualizar listagem" Margin="55,0,0,0" Grid.ColumnSpan="2" Grid.Column="1"/>
                 </Grid>
 
-                <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" SelectionUnit="Cell" IsReadOnly="True">
+                <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Extended"  AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="25"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -479,7 +474,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                        <Button x:Name="BtnVisualizar" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizar_Click"/>
+                                        <Button x:Name="BtnExcluir" Content="X" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnExcluir_Click"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -563,7 +559,6 @@
 
                 <DataGrid x:Name="VistoriasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <!-- Editar aqui -->
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
                         <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
@@ -586,7 +581,6 @@
             </Grid>
         </Border>
 
-        <!-- Overlays para replicar-->
         <Grid x:Name="ContratoModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
@@ -740,6 +734,94 @@
                 </Grid>
             </Border>
             <Button Content="Adicionar Fotos" HorizontalAlignment="Center" Margin="0,468,0,0" VerticalAlignment="Top" Style="{StaticResource ModernButton}"/>
+        </Grid>
+
+        <Grid x:Name="ImoveilModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="261*"/>
+                        <ColumnDefinition Width="221*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Editar Imóvel" FontSize="40" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="2"/>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0">
+                        <Button x:Name="BtnFecharModalImovelEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovelEditar_Click"/>
+                        <Button x:Name="BtnEditarModalImovel" Content="Confirmar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="BtnEditarModalImovel_Click"/>
+                    </StackPanel>
+                    <ComboBox x:Name="ComboProprietariosEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,282,460" Grid.Row="1" Grid.ColumnSpan="2">
+                    </ComboBox>
+                    <ComboBox x:Name="ComboIntencaoEditar" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,460" Grid.Row="1" Grid.Column="1"/>
+                    <ComboBox x:Name="ComboTipoImovelEditar" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,262,378" Grid.Row="1"/>
+                    <TextBox x:Name="TxtBoxCepEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="282,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="180"/>
+                    <TextBox x:Name="TxtBoxLogradouroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="482,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="462" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxNumeroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
+                    <TextBox x:Name="TxtBoxPaisEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
+                    <TextBox x:Name="TxtBoxEstadoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="313,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="98"/>
+                    <TextBox x:Name="TxtBoxCidadeEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="424,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxBairroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="156,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="268" Grid.Column="1"/>
+                    <TextBox x:Name="TxtBoxMetragemEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="210"/>
+                    <TextBox x:Name="TxtBoxComplementoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="262,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="682" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxValorEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="188"/>
+                    <TextBox x:Name="TxtBoxCondominioEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="219,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="188"/>
+                    <TextBox x:Name="TxtBoxIptuEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="424,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="162" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxTaxaIncendioEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="85,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="162" Grid.Column="1"/>
+                    <TextBox x:Name="TxtBoxForoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="267,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="162" Grid.Column="1"/>
+                    <TextBox x:Name="TxtBoxObservacoesEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,423,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxDescricaoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,495,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Proprietário*" VerticalAlignment="Top" Style="{StaticResource ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="180,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Intenção*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.497,-0.115" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Tipo do imóvel*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="282,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="CEP*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="482,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Logradouro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="175,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="País*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="313,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Estado*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="424,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Cidade*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="156,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Bairro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,257,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Metragem*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="262,257,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Complemento" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Valor*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,401,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Observações" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,473,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Descrição" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="219,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Condomínio" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="424,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="IPTU" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="85,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Taxa de incêndio" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="267,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Foro" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="22,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Número*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <!--AQUI-->
+        <Grid x:Name="ImoveilFotosModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="261*"/>
+                        <ColumnDefinition Width="221*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Cadastrar Fotos do Imóvel" FontSize="40" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                    <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="2"/>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0">
+                        <Button x:Name="BtnFecharModalImovelFotoCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovel_Click"/>
+                        <Button x:Name="BtnCriarModalImovelFotoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="CadastrarImovelBanco"/>
+                    </StackPanel>
+                    
+                </Grid>
+            </Border>
         </Grid>
 
         <Image Height="100" Width="100"/>
