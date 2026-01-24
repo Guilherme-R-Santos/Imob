@@ -475,7 +475,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                         <Button x:Name="BtnVisualizar" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizar_Click"/>
-                                        <Button x:Name="BtnExcluir" Content="X" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnExcluir_Click"/>
+                                        <Button x:Name="BtnExcluir" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnExcluir_Click" Cursor=""/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -795,6 +795,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="85,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Taxa de incêndio" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="267,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Foro" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Número*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <Button x:Name="BtnEditarFotos" Style="{StaticResource ModernButton}" Content="Fotos" Margin="10,10,335,10" Grid.Row="2" Click="BtnEditarFotos_Click"/>
                 </Grid>
             </Border>
         </Grid>
@@ -802,28 +803,181 @@
         <Grid x:Name="ImoveilFotosModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="261*"/>
-                        <ColumnDefinition Width="221*"/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="56"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="64"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Cadastrar Fotos do Imóvel" FontSize="40" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                    <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="2"/>
+                    <!-- Header -->
+                    <Grid Grid.Row="0">
+                        <TextBlock Text="Cadastrar Fotos do Imóvel" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+                    </Grid>
 
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0">
-                        <Button x:Name="BtnFecharModalImovelFotoCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovel_Click"/>
-                        <Button x:Name="BtnCriarModalImovelFotoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="CadastrarImovelBanco"/>
-                    </StackPanel>
-                    
+                    <!-- Drag & Drop zone -->
+                    <Border x:Name="UploadDropArea"
+                            Grid.Row="1"
+                            AllowDrop="True"
+                            Background="#FFFDF6F0"
+                            BorderBrush="#FFE0E0E0"
+                            BorderThickness="2"
+                            CornerRadius="10"
+                            Padding="16"
+                            Margin="0,8,0,8"
+                            DragEnter="UploadDropArea_DragEnter"
+                            DragOver="UploadDropArea_DragOver"
+                            Drop="UploadDropArea_Drop">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Simple icon -->
+                            <Path Grid.RowSpan="2" Data="M12,2 L12,10 L4,10 L4,14 L12,14 L12,22 L20,12 z" Fill="#FFF27F1D" Width="28" Height="28" Stretch="Uniform" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="Arraste e solte imagens aqui" Foreground="#444" FontSize="16" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button x:Name="BtnAdicionarFotos" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnAdicionarFotos_Click"/>
+                                <Button x:Name="BtnLimparSelecao" Content="Limpar seleção" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnLimparSelecao_Click"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Formatos: JPG, PNG, JPEG • Máx. 10MB por imagem" Foreground="#777" FontSize="12" Margin="0,6,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Thumbnails grid -->
+                    <Border Grid.Row="2" BorderBrush="#EEE" BorderThickness="1" CornerRadius="8" Padding="8">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="FotosSelecionadasList">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="6">
+                                            <Border CornerRadius="8" Background="#FFF" BorderBrush="#DDD" BorderThickness="1">
+                                                <Grid Width="160" Height="120">
+                                                    <Image Source="{Binding}" Stretch="UniformToFill" ClipToBounds="True"/>
+                                                    <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
+                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- Footer actions -->
+                    <Grid Grid.Row="3">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="BtnFecharModalImovelFotoCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoCriar_Click"/>
+                            <Button x:Name="BtnCriarModalImovelFotoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCadastrarModalImovelFotoCriar_Click"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
 
-        <Image Height="100" Width="100"/>
+        <Grid x:Name="ImoveilFotosModalOverlayEditar" Visibility="Visible" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="56"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="64"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <Grid Grid.Row="0">
+                        <TextBlock Text="Fotos do Imóvel" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Drag & Drop zone -->
+                    <Border x:Name="UploadDropAreaEditar"
+                    Grid.Row="1"
+                    AllowDrop="True"
+                    Background="#FFFDF6F0"
+                    BorderBrush="#FFE0E0E0"
+                    BorderThickness="2"
+                    CornerRadius="10"
+                    Padding="16"
+                    Margin="0,8,0,8"
+                    DragEnter="UploadDropArea_DragEnter"
+                    DragOver="UploadDropArea_DragOver"
+                    Drop="UploadDropArea_Drop">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Simple icon -->
+                            <Path Grid.RowSpan="2" Data="M12,2 L12,10 L4,10 L4,14 L12,14 L12,22 L20,12 z" Fill="#FFF27F1D" Width="28" Height="28" Stretch="Uniform" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="Arraste e solte imagens aqui" Foreground="#444" FontSize="16" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                                <Button x:Name="BtnAdicionarFotosEditar" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnAdicionarFotos_Click"/>
+                                <Button x:Name="BtnLimparSelecaoEditar" Content="Limpar seleção" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnLimparSelecao_Click"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="Formatos: JPG, PNG, JPEG • Máx. 10MB por imagem" Foreground="#777" FontSize="12" Margin="0,6,0,0"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Thumbnails grid -->
+                    <Border Grid.Row="2" BorderBrush="#EEE" BorderThickness="1" CornerRadius="8" Padding="8">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="FotosSelecionadasListEditar">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="6">
+                                            <Border CornerRadius="8" Background="#FFF" BorderBrush="#DDD" BorderThickness="1">
+                                                <Grid Width="160" Height="120">
+                                                    <Image Source="{Binding}" Stretch="UniformToFill" ClipToBounds="True"/>
+                                                    <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
+                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- Footer actions -->
+                    <Grid Grid.Row="3">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="BtnFecharModalImovelFotoEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoCriar_Click"/>
+                            <Button x:Name="BtnCriarModalImovelFotoEditar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCadastrarModalImovelFotoCriar_Click"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Image x:Name="fotoCriarAtual" Height="100" Width="100"/>
     </Grid>
 </Window>

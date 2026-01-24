@@ -17,12 +17,21 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.IO;
+using System.IO.Enumeration;
+using System.Collections.ObjectModel;
 
 namespace Imob
 {
     public partial class Sistema : Window
     {
         public UsuarioDAO UsuarioLogado { get; set; }
+
+        private ObservableCollection<ImageSource> _fotosSelecionadasPreview = new ObservableCollection<ImageSource>();
+
+        private List<byte[]> _fotosSelecionadasBinario = new List<byte[]>();
+
+        private int _idImovelCadastrado;
 
         public void SetUsuarioLogado(UsuarioDAO usuarioLogado)
         {
@@ -96,6 +105,9 @@ namespace Imob
 
             InitializeComponent();
             WindowState = WindowState.Maximized;
+
+            // Bind preview collection to ItemsControl
+            FotosSelecionadasList.ItemsSource = _fotosSelecionadasPreview;
 
             ImgPwrOff.MouseEnter += (s, e) =>
             {
@@ -364,7 +376,9 @@ namespace Imob
             imovel.Foro = (decimal?)foro;
             imovel.Cadastrador = UsuarioLogado.Id;
 
-            await imovel.CadastrarImovel();
+            int idImovel = await imovel.CadastrarImovel();
+
+            _idImovelCadastrado = idImovel;
 
             MessageBox.Show("Imóvel cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -390,6 +404,8 @@ namespace Imob
 
             ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
             await AdicionarItensGridImoveis();
+
+            ImoveilFotosModalOverlayCriar.Visibility = Visibility.Visible;
 
         }
 
@@ -427,20 +443,20 @@ namespace Imob
             ComboTipoImovelEditar.Text = imovelSelecionado.NomeTipoImovel;
             TxtBoxCepEditar.Text = imovelSelecionado.Cep;
             TxtBoxLogradouroEditar.Text = imovelSelecionado.Logradouro;
-            TxtBoxNumeroEditar.Text = imovelSelecionado.Numero.ToString();
+            TxtBoxNumeroEditar.Text = Convert.ToInt32(imovelSelecionado.Numero).ToString();
             TxtBoxPaisEditar.Text = imovelSelecionado.Pais;
             TxtBoxEstadoEditar.Text = imovelSelecionado.Estado;
             TxtBoxCidadeEditar.Text = imovelSelecionado.Cidade;
             TxtBoxBairroEditar.Text = imovelSelecionado.Bairro;
             TxtBoxComplementoEditar.Text = imovelSelecionado.Complemento;
-            TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio?.ToString();
+            TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio.HasValue ? imovelSelecionado.Condominio.Value.ToString() : string.Empty;
             TxtBoxObservacoesEditar.Text = imovelSelecionado.Observacao;
             TxtBoxDescricaoEditar.Text = imovelSelecionado.Descricao;
-            TxtBoxMetragemEditar.Text = imovelSelecionado.Metragem.ToString();
-            TxtBoxValorEditar.Text = imovelSelecionado.Valor.ToString();
-            TxtBoxIptuEditar.Text = imovelSelecionado.Iptu?.ToString();
-            TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio?.ToString();
-            TxtBoxForoEditar.Text = imovelSelecionado.Foro?.ToString();
+            TxtBoxMetragemEditar.Text = Convert.ToInt32(imovelSelecionado.Metragem).ToString();
+            TxtBoxValorEditar.Text = Convert.ToInt32(imovelSelecionado.Valor).ToString();
+            TxtBoxIptuEditar.Text = imovelSelecionado.Iptu.HasValue ? imovelSelecionado.Iptu.Value.ToString() : string.Empty;
+            TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio.HasValue ? imovelSelecionado.TaxaIncendio.Value.ToString() : string.Empty;
+            TxtBoxForoEditar.Text = imovelSelecionado.Foro.HasValue ? imovelSelecionado.Foro.Value.ToString() : string.Empty;
             ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
 
         }
@@ -449,6 +465,48 @@ namespace Imob
         {
             ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
             ImovelDTO imovelAtualizado = new ImovelDTO();
+
+            if (!double.TryParse(TxtBoxMetragemEditar.Text, out double metragem))
+            {
+                MessageBox.Show("Metragem inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxValorEditar.Text, out double valor))
+            {
+                MessageBox.Show("Valor inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxIptuEditar.Text, out double iptu))
+            {
+                MessageBox.Show("IPTU inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxTaxaIncendioEditar.Text, out double taxaIncendio))
+            {
+                MessageBox.Show("Taxa de Incêndio inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxForoEditar.Text, out double foro))
+            {
+                MessageBox.Show("Foro inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!int.TryParse(TxtBoxNumeroEditar.Text, out int numero))
+            {
+                MessageBox.Show("Número inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxCondominioEditar.Text, out double condominio))
+            {
+                MessageBox.Show("Valor de Condomínio inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             imovelAtualizado.TaxaIncendio = Convert.ToDecimal(TxtBoxTaxaIncendioEditar.Text);
             imovelAtualizado.Foro = Convert.ToDecimal(TxtBoxForoEditar.Text);
@@ -470,12 +528,16 @@ namespace Imob
             imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string);
             imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string);
 
+
             try
             {
                 await imovelAtualizado.AtualizarImovel(imovelSelecionado.Id);
                 MessageBox.Show("Imóvel atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+                ComboProprietariosEditar.Items.Clear();
+                ComboIntencaoEditar.Items.Clear();
+                ComboTipoImovelEditar.Items.Clear();
                 await AdicionarItensGridImoveis();
 
             } catch (Exception ex)
@@ -483,8 +545,6 @@ namespace Imob
                 MessageBox.Show("Erro ao atualizar imóvel: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
-
         }
 
         private void BtnFecharModalImovelEditar_Click(object sender, RoutedEventArgs e)
@@ -533,6 +593,149 @@ namespace Imob
             }
         }
 
-        //Click Events Fim
+        private void BtnAdicionarFotos_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
+            openFileDlg.Multiselect = true;
+            Nullable<bool> result = openFileDlg.ShowDialog();
+
+            if (result == true)
+            {
+                foreach (string fileName in openFileDlg.FileNames)
+                {
+                    string filePath = fileName;
+                    byte[] binFoto = File.ReadAllBytes(filePath);
+                    _fotosSelecionadasBinario.Add(binFoto);
+                    var bitmap = new BitmapImage();
+                    using (var stream = new MemoryStream(binFoto))
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                        bitmap.Freeze();
+                    }
+                    _fotosSelecionadasPreview.Add(bitmap);
+                }
+            }
+        }
+
+        private void BtnLimparSelecao_Click(object sender, RoutedEventArgs e)
+        {
+            _fotosSelecionadasPreview.Clear();
+            _fotosSelecionadasBinario.Clear();
+        }
+
+        private void UploadDropArea_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+        }
+
+        private void UploadDropArea_DragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Copy;
+            e.Handled = true;
+        }
+
+        private void UploadDropArea_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                foreach (var filePath in files)
+                {
+                    try
+                    {
+                        var ext = System.IO.Path.GetExtension(filePath)?.ToLowerInvariant();
+                        if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".webp" || ext == ".bmp")
+                        {
+                            byte[] binFoto = File.ReadAllBytes(filePath);
+                            _fotosSelecionadasBinario.Add(binFoto);
+                            var bitmap = new BitmapImage();
+                            using (var stream = new MemoryStream(binFoto))
+                            {
+                                bitmap.BeginInit();
+                                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                                bitmap.StreamSource = stream;
+                                bitmap.EndInit();
+                                bitmap.Freeze();
+                            }
+                            _fotosSelecionadasPreview.Add(bitmap);
+                        }
+                    } 
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Erro ao carregar imagem: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
+        private void BtnRemoverFoto_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.CommandParameter is ImageSource img)
+            {
+                _fotosSelecionadasPreview.Remove(img);
+                int index = FotosSelecionadasList.Items.IndexOf(img);
+                if (index >= 0 && index < _fotosSelecionadasBinario.Count)
+                {
+                    _fotosSelecionadasBinario.RemoveAt(index);
+                }
+            }
+        }
+
+        private void BtnFecharModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
+        {
+            ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+            _fotosSelecionadasPreview.Clear();
+            _fotosSelecionadasBinario.Clear();
+            _idImovelCadastrado = 0;
+        }
+
+        private async void BtnCadastrarModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i < _fotosSelecionadasBinario.Count; i++)
+                {
+                    FotoDTO foto = new FotoDTO
+                    {
+                        ImovelId = _idImovelCadastrado,
+                        Bin = _fotosSelecionadasBinario[i],
+                        NomeArquivo = $"ImovelId[{_idImovelCadastrado}] - Foto[{i}]",
+                        CadastradorId = UsuarioLogado.Id,
+                        TipoFoto = 1,
+                        Principal = false
+                    };
+
+                    await foto.CadastrarFoto();
+                }
+
+                MessageBox.Show("Fotos cadastradas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+                _fotosSelecionadasPreview.Clear();
+                _fotosSelecionadasBinario.Clear();
+                _idImovelCadastrado = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar fotos: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+        }
+
+        private void BtnEditarFotos_Click(object sender, RoutedEventArgs e)
+        {
+            ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+            //TODO: Implementar aqui
+
+        }
     }
 }

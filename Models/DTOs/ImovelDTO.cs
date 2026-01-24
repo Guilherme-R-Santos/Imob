@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Azure;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Imob.Models
 {
@@ -32,7 +33,7 @@ namespace Imob.Models
         public decimal? Foro { get; set; }
         public int Cadastrador { get; set; }
 
-        public async Task CadastrarImovel()
+        public async Task<int> CadastrarImovel()
         {
             using (var httpClient = new HttpClient())
             {
@@ -74,6 +75,28 @@ namespace Imob.Models
                 {
                     var respBody = await response.Content.ReadAsStringAsync();
                     throw new Exception($"Erro ao cadastrar imóvel: {response.StatusCode} - {respBody}");
+                }
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(responseBody))
+                {
+                    throw new Exception("Resposta vazia ao cadastrar imóvel.");
+                }
+
+                try
+                {
+                    var obj = JObject.Parse(responseBody);
+                    var idToken = obj.SelectToken("id") ?? obj.SelectToken("Id") ?? obj.SelectToken("data.id") ?? obj.SelectToken("data.Id");
+                    if (idToken == null || !int.TryParse(idToken.ToString(), out var createdId))
+                    {
+                        throw new Exception("Não foi possível obter o ID do imóvel criado na resposta da API.");
+                    }
+
+                    return createdId;
+                }
+                catch (JsonException ex)
+                {
+                    throw new Exception($"Falha ao interpretar resposta da API: {ex.Message}");
                 }
             }
         }
