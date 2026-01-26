@@ -49,5 +49,20 @@ namespace Imob.Models
                 }
             }
         }
+
+        public async Task InativarFoto(int idFoto)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+                httpClient.DefaultRequestHeaders.Accept.Clear();
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var response = await httpClient.PutAsync($"Foto/Inativar/{idFoto}", null);
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Erro ao inativar foto: " + response.StatusCode);
+                }
+            }
+        }
     }
 }

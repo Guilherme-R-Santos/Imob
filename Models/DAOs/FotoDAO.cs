@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 
 namespace Imob.Models
@@ -18,5 +20,29 @@ namespace Imob.Models
         public bool Principal { get; set; }
         public bool Ativo { get; set; }
         public VistoriaDAO Vistoria { get; set; }
+
+        public static async Task<List<FotoDAO>> GetFotosPorImovel(int imovelId)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7251/");
+
+                var response = await client.GetAsync($"Foto/ObterPorImovel/{imovelId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<FotoDAO>>(json);
+
+                } else
+                {
+                    throw new Exception("Erro ao obter fotos do imóvel.");
+                }
+            } catch
+            {
+                throw new Exception("Erro ao conectar com o servidor.");
+            }
+        }
     }
 }

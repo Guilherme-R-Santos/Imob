@@ -31,6 +31,10 @@ namespace Imob
 
         private List<byte[]> _fotosSelecionadasBinario = new List<byte[]>();
 
+		private List<int?> _fotoIdsPreview = new List<int?>();
+
+		private List<int> _fotosRemovidas = new List<int>();
+
         private int _idImovelCadastrado;
 
         public void SetUsuarioLogado(UsuarioDAO usuarioLogado)
@@ -108,6 +112,7 @@ namespace Imob
 
             // Bind preview collection to ItemsControl
             FotosSelecionadasList.ItemsSource = _fotosSelecionadasPreview;
+			FotosSelecionadasListEditar.ItemsSource = _fotosSelecionadasPreview;
 
             ImgPwrOff.MouseEnter += (s, e) =>
             {
@@ -606,6 +611,7 @@ namespace Imob
                     string filePath = fileName;
                     byte[] binFoto = File.ReadAllBytes(filePath);
                     _fotosSelecionadasBinario.Add(binFoto);
+					_fotoIdsPreview.Add(null);
                     var bitmap = new BitmapImage();
                     using (var stream = new MemoryStream(binFoto))
                     {
@@ -618,12 +624,6 @@ namespace Imob
                     _fotosSelecionadasPreview.Add(bitmap);
                 }
             }
-        }
-
-        private void BtnLimparSelecao_Click(object sender, RoutedEventArgs e)
-        {
-            _fotosSelecionadasPreview.Clear();
-            _fotosSelecionadasBinario.Clear();
         }
 
         private void UploadDropArea_DragEnter(object sender, DragEventArgs e)
@@ -658,6 +658,7 @@ namespace Imob
                         {
                             byte[] binFoto = File.ReadAllBytes(filePath);
                             _fotosSelecionadasBinario.Add(binFoto);
+							_fotoIdsPreview.Add(null);
                             var bitmap = new BitmapImage();
                             using (var stream = new MemoryStream(binFoto))
                             {
@@ -682,20 +683,35 @@ namespace Imob
         {
             if (sender is Button btn && btn.CommandParameter is ImageSource img)
             {
-                _fotosSelecionadasPreview.Remove(img);
-                int index = FotosSelecionadasList.Items.IndexOf(img);
-                if (index >= 0 && index < _fotosSelecionadasBinario.Count)
-                {
-                    _fotosSelecionadasBinario.RemoveAt(index);
-                }
+				int index = _fotosSelecionadasPreview.IndexOf(img);
+				if (index >= 0)
+				{
+					_fotosSelecionadasPreview.RemoveAt(index);
+					if (index < _fotosSelecionadasBinario.Count)
+					{
+						_fotosSelecionadasBinario.RemoveAt(index);
+					}
+					if (index < _fotoIdsPreview.Count)
+					{
+						var fotoId = _fotoIdsPreview[index];
+						_fotoIdsPreview.RemoveAt(index);
+						if (fotoId.HasValue)
+						{
+							_fotosRemovidas.Add(fotoId.Value);
+						}
+					}
+				}
             }
         }
 
         private void BtnFecharModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
         {
-            ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+			ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+			ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
             _fotosSelecionadasPreview.Clear();
             _fotosSelecionadasBinario.Clear();
+			_fotoIdsPreview.Clear();
+			_fotosRemovidas.Clear();
             _idImovelCadastrado = 0;
         }
 
@@ -722,6 +738,8 @@ namespace Imob
                 ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
                 _fotosSelecionadasPreview.Clear();
                 _fotosSelecionadasBinario.Clear();
+				_fotoIdsPreview.Clear();
+				_fotosRemovidas.Clear();
                 _idImovelCadastrado = 0;
             }
             catch (Exception ex)
@@ -731,10 +749,110 @@ namespace Imob
             }
         }
 
-        private void BtnEditarFotos_Click(object sender, RoutedEventArgs e)
+		private async void BtnEditarFotos_Click(object sender, RoutedEventArgs e)
+		{
+			if (ImoveisDataGrid.SelectedItem is not ImovelDAO imovelSelecionado)
+			{
+				MessageBox.Show("Selecione um imóvel para editar as fotos.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+				return;
+			}
+
+			ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+			_idImovelCadastrado = imovelSelecionado.Id;
+			ImovelFotosModalOverlayEditar.Visibility = Visibility.Visible;
+
+			_fotosSelecionadasPreview.Clear();
+			_fotosSelecionadasBinario.Clear();
+			_fotoIdsPreview.Clear();
+			_fotosRemovidas.Clear();
+
+			try
+			{
+				var fotosImovel = await FotoDAO.GetFotosPorImovel(_idImovelCadastrado);
+
+				foreach (var foto in fotosImovel)
+				{
+					if (foto.Bin == null || foto.Bin.Length == 0) continue;
+
+					_fotosSelecionadasBinario.Add(foto.Bin);
+					_fotoIdsPreview.Add(foto.Id);
+					var bitmap = new BitmapImage();
+					using (var stream = new MemoryStream(foto.Bin))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze();
+					}
+					_fotosSelecionadasPreview.Add(bitmap);
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Erro ao carregar fotos do imóvel: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+
+		}
+		private void BtnFecharModalImovelFotoEditar_Click(object sender, RoutedEventArgs e)
+		{
+			_fotosSelecionadasBinario.Clear();
+			_fotosSelecionadasPreview.Clear();
+			_fotoIdsPreview.Clear();
+			_fotosRemovidas.Clear();
+
+			ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
+
+			ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+		}
+
+		private async void BtnCriarModalImovelFotoEditar_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				foreach (var fotoId in _fotosRemovidas)
+				{
+					var fotoDto = new FotoDTO();
+					await fotoDto.InativarFoto(fotoId);
+				}
+
+				for (int i = 0; i < _fotosSelecionadasBinario.Count; i++)
+				{
+					if (_fotoIdsPreview.Count > i && _fotoIdsPreview[i].HasValue)
+					{
+						continue;
+					}
+
+					FotoDTO foto = new FotoDTO
+					{
+						ImovelId = _idImovelCadastrado,
+						Bin = _fotosSelecionadasBinario[i],
+						NomeArquivo = $"ImovelId[{_idImovelCadastrado}] - Foto[{i}]",
+						CadastradorId = UsuarioLogado.Id,
+						TipoFoto = 1,
+						Principal = false
+					};
+
+					await foto.CadastrarFoto();
+				}
+
+				MessageBox.Show("Fotos atualizadas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+				ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
+				_fotosSelecionadasBinario.Clear();
+				_fotosSelecionadasPreview.Clear();
+				_fotoIdsPreview.Clear();
+				_fotosRemovidas.Clear();
+				_idImovelCadastrado = 0;
+				ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Erro ao atualizar fotos: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
+
+        private void SearchBarImoveis_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
-            //TODO: Implementar aqui
 
         }
     }

@@ -23,6 +23,50 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Estilo SearchBox -->
+        <Style x:Key="ModernSearchBox" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
+            <Setter Property="Padding" Value="44,12,12,12"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
+            <Setter Property="Background" Value="#FFFDF6F0"/>
+            <Setter Property="MinHeight" Value="44"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="12">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Path Grid.Column="0" Data="M10,2 A8,8 0 1 0 10.01,2 Z M15,15 L22,22" Stroke="#FFF27F1D" StrokeThickness="2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Margin="8,0" VerticalAlignment="Center" Stretch="Uniform"/>
+
+                                <ScrollViewer x:Name="PART_ContentHost" Grid.Column="1" Margin="0,0,0,0" Focusable="False"/>
+                                <TextBlock x:Name="Placeholder" Grid.Column="1" Text="{TemplateBinding Tag}" Foreground="#9E9E9E" Margin="0,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False" Visibility="Collapsed"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FFF77A10"/>
+                                <Setter TargetName="Bd" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="#33000000" BlurRadius="10" ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Estilo PasswordBox -->
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
             <Setter Property="FontSize" Value="14"/>
@@ -450,9 +494,10 @@
                         <ColumnDefinition Width="53*"/>
                         <ColumnDefinition Width="220"/>
                     </Grid.ColumnDefinitions>
+                    <TextBox x:Name="SearchBarImoveis" Margin="305,10,93,10" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." TextChanged="SearchBarImoveis_TextChanged"/>
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.ColumnSpan="2">
-                        <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
-                        <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}"/>
+                        <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" Width="99" HorizontalAlignment="Left" />
+                        <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}" Width="127" HorizontalAlignment="Left"/>
                     </StackPanel>
 
                     <Button x:Name="BtnAdicionarImovel" Grid.Column="2" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click" Margin="40,0,0,0">Novo Imóvel</Button>
@@ -889,7 +934,7 @@
             </Border>
         </Grid>
 
-        <Grid x:Name="ImoveilFotosModalOverlayEditar" Visibility="Visible" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImovelFotosModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -934,7 +979,6 @@
                             <TextBlock Grid.Column="2" Text="Arraste e solte imagens aqui" Foreground="#444" FontSize="16" VerticalAlignment="Center"/>
                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
                                 <Button x:Name="BtnAdicionarFotosEditar" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnAdicionarFotos_Click"/>
-                                <Button x:Name="BtnLimparSelecaoEditar" Content="Limpar seleção" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnLimparSelecao_Click"/>
                             </StackPanel>
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="Formatos: JPG, PNG, JPEG • Máx. 10MB por imagem" Foreground="#777" FontSize="12" Margin="0,6,0,0"/>
                         </Grid>
