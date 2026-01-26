@@ -260,12 +260,12 @@ namespace Imob
             AdicionarItensComboProprietarios();
             AdicionarItensComboIntencoes();
             AdicionarItensComboTiposImovel();
-            ImoveilModalOverlayCriar.Visibility = Visibility.Visible;
+            ImovelModalOverlayCriar.Visibility = Visibility.Visible;
         }
 
         private void BtnFecharModalImovel_Click(object sender, RoutedEventArgs e)
         {
-            ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
+            ImovelModalOverlayCriar.Visibility = Visibility.Hidden;
             ComboProprietarios.Items.Clear();
             ComboIntencao.Items.Clear();
             ComboTipoImovel.Items.Clear();
@@ -345,6 +345,8 @@ namespace Imob
             var condominio = TxtBoxCondominio.Text;
             var observacao = TxtBoxObservacoes.Text;
             var descricao = TxtBoxDescricao.Text;
+            var inscricaoIptu = TxtBoxInscricaoIptu.Text;
+            var numeroCbmerj = TxtBoxNumeroCbmerj.Text;
 
             ImovelDTO imovel = new ImovelDTO();
 
@@ -379,7 +381,11 @@ namespace Imob
             imovel.Iptu = (decimal?)iptu;
             imovel.TaxaIncendio = (decimal?)taxaIncendio;
             imovel.Foro = (decimal?)foro;
+            imovel.InscricaoIptu = inscricaoIptu;
+            imovel.NumeroCbmerj = numeroCbmerj;
             imovel.Cadastrador = UsuarioLogado.Id;
+
+
 
             int idImovel = await imovel.CadastrarImovel();
 
@@ -407,10 +413,10 @@ namespace Imob
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
 
-            ImoveilModalOverlayCriar.Visibility = Visibility.Hidden;
+            ImovelModalOverlayCriar.Visibility = Visibility.Hidden;
             await AdicionarItensGridImoveis();
 
-            ImoveilFotosModalOverlayCriar.Visibility = Visibility.Visible;
+            ImovelFotosModalOverlayCriar.Visibility = Visibility.Visible;
 
         }
 
@@ -462,7 +468,9 @@ namespace Imob
             TxtBoxIptuEditar.Text = imovelSelecionado.Iptu.HasValue ? imovelSelecionado.Iptu.Value.ToString() : string.Empty;
             TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio.HasValue ? imovelSelecionado.TaxaIncendio.Value.ToString() : string.Empty;
             TxtBoxForoEditar.Text = imovelSelecionado.Foro.HasValue ? imovelSelecionado.Foro.Value.ToString() : string.Empty;
-            ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+            TxtBoxInscricaoIptuEditar.Text = imovelSelecionado.InscricaoIptu;
+            TxtBoxNumeroCbmerjEditar.Text = imovelSelecionado.NumeroCbmerj;
+            ImovelModalOverlayEditar.Visibility = Visibility.Visible;
 
         }
 
@@ -529,6 +537,8 @@ namespace Imob
             imovelAtualizado.Numero = Convert.ToInt32(TxtBoxNumeroEditar.Text);
             imovelAtualizado.Logradouro = TxtBoxLogradouroEditar.Text;
             imovelAtualizado.Cep = TxtBoxCepEditar.Text;
+            imovelAtualizado.InscricaoIptu = TxtBoxInscricaoIptuEditar.Text;
+            imovelAtualizado.NumeroCbmerj = TxtBoxNumeroCbmerjEditar.Text;
             imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string);
             imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string);
             imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string);
@@ -539,7 +549,7 @@ namespace Imob
                 await imovelAtualizado.AtualizarImovel(imovelSelecionado.Id);
                 MessageBox.Show("Imóvel atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+                ImovelModalOverlayEditar.Visibility = Visibility.Hidden;
                 ComboProprietariosEditar.Items.Clear();
                 ComboIntencaoEditar.Items.Clear();
                 ComboTipoImovelEditar.Items.Clear();
@@ -554,7 +564,7 @@ namespace Imob
 
         private void BtnFecharModalImovelEditar_Click(object sender, RoutedEventArgs e)
         {
-            ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+            ImovelModalOverlayEditar.Visibility = Visibility.Hidden;
             ComboProprietariosEditar.Items.Clear();
             ComboIntencaoEditar.Items.Clear();
             ComboTipoImovelEditar.Items.Clear();
@@ -706,7 +716,7 @@ namespace Imob
 
         private void BtnFecharModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
         {
-			ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+			ImovelFotosModalOverlayCriar.Visibility = Visibility.Hidden;
 			ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
             _fotosSelecionadasPreview.Clear();
             _fotosSelecionadasBinario.Clear();
@@ -735,7 +745,7 @@ namespace Imob
                 }
 
                 MessageBox.Show("Fotos cadastradas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-                ImoveilFotosModalOverlayCriar.Visibility = Visibility.Hidden;
+                ImovelFotosModalOverlayCriar.Visibility = Visibility.Hidden;
                 _fotosSelecionadasPreview.Clear();
                 _fotosSelecionadasBinario.Clear();
 				_fotoIdsPreview.Clear();
@@ -757,7 +767,7 @@ namespace Imob
 				return;
 			}
 
-			ImoveilModalOverlayEditar.Visibility = Visibility.Hidden;
+			ImovelModalOverlayEditar.Visibility = Visibility.Hidden;
 			_idImovelCadastrado = imovelSelecionado.Id;
 			ImovelFotosModalOverlayEditar.Visibility = Visibility.Visible;
 
@@ -803,7 +813,7 @@ namespace Imob
 
 			ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
 
-			ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+			ImovelModalOverlayEditar.Visibility = Visibility.Visible;
 		}
 
 		private async void BtnCriarModalImovelFotoEditar_Click(object sender, RoutedEventArgs e)
@@ -843,7 +853,7 @@ namespace Imob
 				_fotoIdsPreview.Clear();
 				_fotosRemovidas.Clear();
 				_idImovelCadastrado = 0;
-				ImoveilModalOverlayEditar.Visibility = Visibility.Visible;
+				ImovelModalOverlayEditar.Visibility = Visibility.Visible;
 			}
 			catch (Exception ex)
 			{
@@ -851,9 +861,34 @@ namespace Imob
 			}
 		}
 
-        private void SearchBarImoveis_TextChanged(object sender, TextChangedEventArgs e)
+        private void SearchBarImoveis_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                var texto = SearchBarImoveis.Text.ToLower();
+                var itens = ImoveisDataGrid.ItemsSource;
 
+                foreach (var it in itens)
+                {
+                    var imovel = it as ImovelDAO;
+                    if (imovel != null)
+                    {
+                        var corresponde = imovel.NomeProprietario.ToLower().Contains(texto) ||
+                                         imovel.Logradouro.ToLower().Contains(texto) ||
+                                         imovel.Cidade.ToLower().Contains(texto) ||
+                                         imovel.Bairro.ToLower().Contains(texto) ||
+                                         imovel.Cep.ToLower().Contains(texto) ||
+                                         imovel.Intencao.Nome.ToLower().Contains(texto) ||
+                                         imovel.Valor.ToString().ToLower().Contains(texto) ||
+                                         imovel.Metragem.ToString().ToLower().Contains(texto);
+                        var row = ImoveisDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                        if (row != null)
+                        {
+                            row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                        }
+                    }
+                }
+            }
         }
     }
 }

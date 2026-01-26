@@ -49,26 +49,29 @@
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="20,12"/>
             <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#2196F3"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
                                 CornerRadius="6"
                                 Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#1976D2"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#0D47A1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#1976D2"/>
-                </Trigger>
-                <Trigger Property="IsPressed" Value="True">
-                    <Setter Property="Background" Value="#0D47A1"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
 
         <!-- Estilo para Label -->
@@ -133,9 +136,11 @@
                           MouseLeftButtonDown="EsqueciSenha_Click">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
+                            <Setter Property="Cursor" Value="Hand"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="TextDecorations" Value="Underline"/>
+                                    <Setter Property="Foreground" Value="#1976D2"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -146,6 +151,7 @@
                 <Button x:Name="btnEntrar" 
                        Content="ENTRAR" 
                        Style="{StaticResource ModernButton}"
+                       Background="Bisque"
                        Height="48"
                        Margin="0,0,0,0"
                        IsDefault="True"

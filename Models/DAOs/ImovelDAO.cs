@@ -47,6 +47,8 @@ namespace Imob.Models
         public string Estado { get; set; }
         public string Pais { get; set; }
         public string ? Complemento { get; set; }
+        public string? InscricaoIptu { get; set; }
+        public string? NumeroCbmerj { get; set; }
         public decimal Metragem { get; set; }
         public decimal Valor { get; set; }
         public decimal? Condominio { get; set; }
