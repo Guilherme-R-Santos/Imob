@@ -346,32 +346,34 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="302*"/>
+                        <ColumnDefinition Width="53*"/>
                         <ColumnDefinition Width="220"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBox x:Name="SearchBarProprietarios" Margin="305,10,93,10" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarProprietarios_KeyDown" Panel.ZIndex="1"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.ColumnSpan="2" IsHitTestVisible="False">
                         <TextBlock Text="Proprietarios" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Proprietarios" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnAdicionarProprietario" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Proprietario</Button>
+                    <Button x:Name="BtnAdicionarProprietario" Grid.Column="2" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAdicionarProprietario_Click" Margin="40,0,0,0">Novo Proprietario</Button>
+                    <Button x:Name="BtnAtualizarProprietarios" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAtualizarProprietarios_Click" Content="Atualizar listagem" Margin="55,0,0,0" Grid.ColumnSpan="2" Grid.Column="1"/>
                 </Grid>
 
-                <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
-                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
-                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
+                        <DataGridTextColumn Header="Contrato" Binding="{Binding TipoContrato.Nome}" Width="*"/>
                         <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
-                        <DataGridTemplateColumn Header="Ações" Width="140">
+                        <DataGridTemplateColumn Header="Ações" Width="160">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                        <Button x:Name="BtnVisualizarProprietario" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarProprietario_Click"/>
+                                        <Button x:Name="BtnInativarProprietario" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarProprietario_Click"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -405,7 +407,7 @@
                     <Button x:Name="BtnAdicionarLocatario" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Locatário</Button>
                 </Grid>
 
-                <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -414,7 +416,6 @@
                         <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
                         <DataGridTemplateColumn Header="Ações" Width="140">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -453,7 +454,7 @@
                     <Button x:Name="BtnAdicionarFiador" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Fiador</Button>
                 </Grid>
 
-                <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -462,7 +463,6 @@
                         <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
                         <DataGridTemplateColumn Header="Ações" Width="140">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -563,7 +563,6 @@
                         <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridCheckBoxColumn Header="Ativo" Binding="{Binding Ativo}" Width="80"/>
                         <DataGridTemplateColumn Header="Ações" Width="140">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -670,7 +669,104 @@
             </Border>
         </Grid>
 
-        <Grid x:Name="ProprietarioModalOverlay" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ProprietarioModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Cadastrar Proprietário" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
+
+                    <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtClienteNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtClienteCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpClienteNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                        </Grid>
+                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalProprietarioCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalProprietarioCriar_Click"/>
+                        <Button x:Name="BtnSalvarProprietarioCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarProprietarioCriar_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="ProprietarioModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -679,14 +775,84 @@
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Visualização do Proprietário" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+                    <TextBlock Text="Editar Proprietário" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
 
-                    <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
-                        <TextBlock x:Name="ProprietarioPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                    <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtClienteNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtClienteCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtClienteTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpClienteNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                        </Grid>
                     </ScrollViewer>
 
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalProprietario" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalProprietarioEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalProprietarioEditar_Click"/>
+                        <Button x:Name="BtnSalvarProprietarioEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarProprietarioEditar_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

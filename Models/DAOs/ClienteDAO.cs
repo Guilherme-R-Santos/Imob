@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Imob.Models
 {
@@ -75,6 +76,38 @@ namespace Imob.Models
                     throw new Exception("Erro ao obter lista de Clientes: " + response.StatusCode);
                 }
             }
+        }
+
+        public static async Task<List<ClienteDAO>> GetProprietarios()
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
+            int idTipoProprietario = TipoClienteDAO.GetIdPorNome("Proprietário");
+
+            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoProprietario}");
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();
+        }
+
+        public static async Task<List<ClienteDAO>> GetLocatários()
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
+            int idTipoLocatario = TipoClienteDAO.GetIdPorNome("Locatário");
+            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoLocatario}");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();
+        }
+
+        public static async Task<List<ClienteDAO>> GetFiadores()
+        {
+            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
+            int idTipoFiador = TipoClienteDAO.GetIdPorNome("Fiador");
+            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoFiador}");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();
         }
     }
 }

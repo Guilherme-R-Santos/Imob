@@ -73,9 +73,48 @@ namespace Imob
             }
         }
 
-        public void AdicionarItensComboProprietarios()
+        public async Task AdcionarItensGridProprietarios()
         {
-            List<ClienteDAO> listaClientes = ClienteDAO.GetClientes();
+            try
+            {
+                var listaProprietarios = await ClienteDAO.GetProprietarios();
+                ProprietariosDataGrid.ItemsSource = listaProprietarios;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar proprietários: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async Task AdicionarItensGridLocatários()
+        {
+            try
+            {
+                var listaLocatarios = await ClienteDAO.GetLocatários();
+                LocatariosDataGrid.ItemsSource = listaLocatarios;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar locatários: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async Task AdicionarItensGridFiadores()
+        {
+            try
+            {
+                var listaFiadores = await ClienteDAO.GetFiadores();
+                FiadoresDataGrid.ItemsSource = listaFiadores;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar fiadores: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async Task AdicionarItensComboProprietarios()
+        {
+            List<ClienteDAO> listaClientes = await ClienteDAO.GetProprietarios();
 
             foreach (ClienteDAO cliente in listaClientes)
             {
@@ -110,7 +149,6 @@ namespace Imob
             InitializeComponent();
             WindowState = WindowState.Maximized;
 
-            // Bind preview collection to ItemsControl
             FotosSelecionadasList.ItemsSource = _fotosSelecionadasPreview;
 			FotosSelecionadasListEditar.ItemsSource = _fotosSelecionadasPreview;
 
@@ -225,21 +263,30 @@ namespace Imob
             ContratosPanel.Visibility = Visibility.Visible;
         }
 
-        private void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
+
+            await AdcionarItensGridProprietarios();
+
             ProprietariosPanel.Visibility = Visibility.Visible;
         }
 
-        private void LocatariosTree_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void LocatariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
+
+            await AdicionarItensGridLocatários();
+
             LocatariosPanel.Visibility = Visibility.Visible;
         }
 
-        private void FiadoresTree_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void FiadoresTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
+
+            await AdicionarItensGridFiadores();
+
             FiadoresPanel.Visibility = Visibility.Visible;
         }
 
@@ -425,6 +472,11 @@ namespace Imob
             await AdicionarItensGridImoveis();  
         }
 
+        private async void BtnAtualizarProprietarios_Click(object sender, RoutedEventArgs e)
+        {
+            await AdcionarItensGridProprietarios();
+        }
+
         private void BtnVisualizar_Click(object sender, RoutedEventArgs e)
         {
            ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
@@ -605,6 +657,76 @@ namespace Imob
                     MessageBox.Show("Erro ao excluir imóvel: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+            }
+        }
+
+        private void SearchBarProprietarios_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                var texto = SearchBarProprietarios.Text?.ToLower() ?? string.Empty;
+                var itens = ProprietariosDataGrid.ItemsSource;
+
+                foreach (var it in itens)
+                {
+                    var cliente = it as ClienteDAO;
+                    if (cliente != null)
+                    {
+                        var corresponde = string.IsNullOrWhiteSpace(texto) ||
+                                         (cliente.Nome?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.CpfCnpj?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Email?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Telefone?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Endereco?.ToLower().Contains(texto) ?? false);
+                        var row = ProprietariosDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                        if (row != null)
+                        {
+                            row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void BtnInativarProprietario_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja inativar?", "Inativar", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var id = 0;
+            if (sender is Button button && button.CommandParameter is int idParam)
+            {
+                id = idParam;
+            }
+            else if (sender is Button btn && btn.CommandParameter is string idText && int.TryParse(idText, out var parsedId))
+            {
+                id = parsedId;
+            }
+            else if (ProprietariosDataGrid.SelectedItem is ClienteDAO cliente)
+            {
+                id = cliente.Id;
+            }
+
+            if (id == 0)
+            {
+                MessageBox.Show("Selecione um proprietário para inativar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var clienteDto = new ClienteDTO();
+                await clienteDto.InativarCliente(id);
+                MessageBox.Show("Proprietário inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AdcionarItensGridProprietarios();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar proprietário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -888,6 +1010,216 @@ namespace Imob
                         }
                     }
                 }
+            }
+        }
+
+        private void BtnAdicionarProprietario_Click(object sender, RoutedEventArgs e)
+        {
+            ProprietarioModalOverlayCriar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalProprietarioCriar_Click(object sender, RoutedEventArgs e)
+        {
+            ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
+            TxtClienteNomeCriar.Clear();
+            TxtClienteCpfCnpjCriar.Clear();
+            TxtClienteIdentidadeCriar.Clear();
+            TxtClienteOrgaoExpedidorCriar.Clear();
+            TxtClienteNacionalidadeCriar.Clear();
+            TxtClienteNaturalidadeCriar.Clear();
+            TxtClienteEstadoCivilCriar.Clear();
+            TxtClienteProfissaoCriar.Clear();
+            TxtClienteEnderecoCriar.Clear();
+            TxtClienteBancoCriar.Clear();
+            TxtClienteAgenciaCriar.Clear();
+            TxtClienteContaCriar.Clear();
+            TxtClienteCodBancoCriar.Clear();
+            TxtClienteEmailCriar.Clear();
+            TxtClienteTelefoneCriar.Clear();
+            DpClienteNascimentoCriar.Text = "";
+        }
+
+        private async void BtnSalvarProprietarioCriar_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtClienteNomeCriar.Text) ||
+                string.IsNullOrWhiteSpace(TxtClienteCpfCnpjCriar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpClienteNascimentoCriar.Text))
+            {
+                if (!DateTime.TryParse(DpClienteNascimentoCriar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                dataNascimento = data;
+            }
+
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente proprietário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ClienteDTO cliente = new ClienteDTO
+            {
+                Nome = TxtClienteNomeCriar.Text,
+                CpfCnpj = TxtClienteCpfCnpjCriar.Text,
+                Identidade = TxtClienteIdentidadeCriar.Text,
+                OrgaoExpedidor = TxtClienteOrgaoExpedidorCriar.Text,
+                Nacionalidade = TxtClienteNacionalidadeCriar.Text,
+                Naturalidade = TxtClienteNaturalidadeCriar.Text,
+                EstadoCivil = TxtClienteEstadoCivilCriar.Text,
+                Profissao = TxtClienteProfissaoCriar.Text,
+                Endereco = TxtClienteEnderecoCriar.Text,
+                Banco = TxtClienteBancoCriar.Text,
+                Agencia = TxtClienteAgenciaCriar.Text,
+                Conta = TxtClienteContaCriar.Text,
+                CodBanco = TxtClienteCodBancoCriar.Text,
+                Email = TxtClienteEmailCriar.Text,
+                Telefone = TxtClienteTelefoneCriar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
+            };
+
+            try
+            {
+                await cliente.CadastrarCliente();
+                MessageBox.Show("Proprietário cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
+                TxtClienteNomeCriar.Clear();
+                TxtClienteCpfCnpjCriar.Clear();
+                TxtClienteIdentidadeCriar.Clear();
+                TxtClienteOrgaoExpedidorCriar.Clear();
+                TxtClienteNacionalidadeCriar.Clear();
+                TxtClienteNaturalidadeCriar.Clear();
+                TxtClienteEstadoCivilCriar.Clear();
+                TxtClienteProfissaoCriar.Clear();
+                TxtClienteEnderecoCriar.Clear();
+                TxtClienteBancoCriar.Clear();
+                TxtClienteAgenciaCriar.Clear();
+                TxtClienteContaCriar.Clear();
+                TxtClienteCodBancoCriar.Clear();
+                TxtClienteEmailCriar.Clear();
+                TxtClienteTelefoneCriar.Clear();
+                DpClienteNascimentoCriar.Text = "";
+
+                await AdcionarItensGridProprietarios();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar proprietário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // TODO: Refatorar para funcionar corretamente.
+        private void BtnVisualizarProprietario_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProprietariosDataGrid.SelectedItem is not ClienteDAO proprietarioSelecionado)
+            {
+                MessageBox.Show("Selecione um proprietário para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            TxtClienteNomeEditar.Text = proprietarioSelecionado.Nome;
+            TxtClienteCpfCnpjEditar.Text = proprietarioSelecionado.CpfCnpj;
+            TxtClienteIdentidadeEditar.Text = proprietarioSelecionado.Identidade;
+            TxtClienteOrgaoExpedidorEditar.Text = proprietarioSelecionado.OrgaoExpedidor;
+            TxtClienteNacionalidadeEditar.Text = proprietarioSelecionado.Nacionalidade;
+            TxtClienteNaturalidadeEditar.Text = proprietarioSelecionado.Naturalidade;
+            TxtClienteEstadoCivilEditar.Text = proprietarioSelecionado.EstadoCivil;
+            TxtClienteProfissaoEditar.Text = proprietarioSelecionado.Profissao;
+            TxtClienteEnderecoEditar.Text = proprietarioSelecionado.Endereco;
+            TxtClienteBancoEditar.Text = proprietarioSelecionado.Banco;
+            TxtClienteAgenciaEditar.Text = proprietarioSelecionado.Agencia;
+            TxtClienteContaEditar.Text = proprietarioSelecionado.Conta;
+            TxtClienteCodBancoEditar.Text = proprietarioSelecionado.CodBanco;
+            TxtClienteEmailEditar.Text = proprietarioSelecionado.Email;
+            TxtClienteTelefoneEditar.Text = proprietarioSelecionado.Telefone;
+            DpClienteNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;
+
+            ProprietarioModalOverlayEditar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalProprietarioEditar_Click(object sender, RoutedEventArgs e)
+        {
+            ProprietarioModalOverlayEditar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnSalvarProprietarioEditar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProprietariosDataGrid.SelectedItem is not ClienteDAO proprietarioSelecionado)
+            {
+                MessageBox.Show("Selecione um proprietário para editar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtClienteNomeEditar.Text) ||
+                string.IsNullOrWhiteSpace(TxtClienteCpfCnpjEditar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpClienteNascimentoEditar.Text))
+            {
+                if (!DateTime.TryParse(DpClienteNascimentoEditar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                dataNascimento = data;
+            }
+
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente proprietário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var clienteAtualizado = new ClienteDTO
+            {
+                Nome = TxtClienteNomeEditar.Text,
+                CpfCnpj = TxtClienteCpfCnpjEditar.Text,
+                Identidade = TxtClienteIdentidadeEditar.Text,
+                OrgaoExpedidor = TxtClienteOrgaoExpedidorEditar.Text,
+                Nacionalidade = TxtClienteNacionalidadeEditar.Text,
+                Naturalidade = TxtClienteNaturalidadeEditar.Text,
+                EstadoCivil = TxtClienteEstadoCivilEditar.Text,
+                Profissao = TxtClienteProfissaoEditar.Text,
+                Endereco = TxtClienteEnderecoEditar.Text,
+                Banco = TxtClienteBancoEditar.Text,
+                Agencia = TxtClienteAgenciaEditar.Text,
+                Conta = TxtClienteContaEditar.Text,
+                CodBanco = TxtClienteCodBancoEditar.Text,
+                Email = TxtClienteEmailEditar.Text,
+                Telefone = TxtClienteTelefoneEditar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId }
+            };
+
+            try
+            {
+                await clienteAtualizado.AtualizarCliente(proprietarioSelecionado.Id);
+                MessageBox.Show("Proprietário atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                ProprietarioModalOverlayEditar.Visibility = Visibility.Hidden;
+                await AdcionarItensGridProprietarios();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar proprietário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
