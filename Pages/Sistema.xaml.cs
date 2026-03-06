@@ -477,6 +477,16 @@ namespace Imob
             await AdcionarItensGridProprietarios();
         }
 
+        private async void BtnAtualizarLocatarios_Click(object sender, RoutedEventArgs e)
+        {
+            await AdicionarItensGridLocatários();
+        }
+
+        private async void BtnAtualizarFiadores_Click(object sender, RoutedEventArgs e)
+        {
+            await AdicionarItensGridFiadores();
+        }
+
         private void BtnVisualizar_Click(object sender, RoutedEventArgs e)
         {
            ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
@@ -614,6 +624,293 @@ namespace Imob
             }
         }
 
+        private void SearchBarFiadores_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                var texto = SearchBarFiadores.Text?.ToLower() ?? string.Empty;
+                var itens = FiadoresDataGrid.ItemsSource;
+
+                foreach (var it in itens)
+                {
+                    var cliente = it as ClienteDAO;
+                    if (cliente != null)
+                    {
+                        var corresponde = string.IsNullOrWhiteSpace(texto) ||
+                                         (cliente.Nome?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.CpfCnpj?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Email?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Telefone?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Endereco?.ToLower().Contains(texto) ?? false);
+                        var row = FiadoresDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                        if (row != null)
+                        {
+                            row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SearchBarLocatarios_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                var texto = SearchBarLocatarios.Text?.ToLower() ?? string.Empty;
+                var itens = LocatariosDataGrid.ItemsSource;
+
+                foreach (var it in itens)
+                {
+                    var cliente = it as ClienteDAO;
+                    if (cliente != null)
+                    {
+                        var corresponde = string.IsNullOrWhiteSpace(texto) ||
+                                         (cliente.Nome?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.CpfCnpj?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Email?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Telefone?.ToLower().Contains(texto) ?? false) ||
+                                         (cliente.Endereco?.ToLower().Contains(texto) ?? false);
+                        var row = LocatariosDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                        if (row != null)
+                        {
+                            row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void BtnAdicionarFiador_Click(object sender, RoutedEventArgs e)
+        {
+            FiadorModalOverlayCriar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalFiadorCriar_Click(object sender, RoutedEventArgs e)
+        {
+            FiadorModalOverlayCriar.Visibility = Visibility.Hidden;
+            TxtFiadorNomeCriar.Clear();
+            TxtFiadorCpfCnpjCriar.Clear();
+            TxtFiadorIdentidadeCriar.Clear();
+            TxtFiadorOrgaoExpedidorCriar.Clear();
+            TxtFiadorNacionalidadeCriar.Clear();
+            TxtFiadorNaturalidadeCriar.Clear();
+            TxtFiadorEstadoCivilCriar.Clear();
+            TxtFiadorProfissaoCriar.Clear();
+            TxtFiadorEnderecoCriar.Clear();
+            TxtFiadorBancoCriar.Clear();
+            TxtFiadorAgenciaCriar.Clear();
+            TxtFiadorContaCriar.Clear();
+            TxtFiadorCodBancoCriar.Clear();
+            TxtFiadorEmailCriar.Clear();
+            TxtFiadorTelefoneCriar.Clear();
+            DpFiadorNascimentoCriar.Text = "";
+        }
+
+        private async void BtnSalvarFiadorCriar_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtFiadorNomeCriar.Text) ||
+                string.IsNullOrWhiteSpace(TxtFiadorCpfCnpjCriar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpFiadorNascimentoCriar.Text))
+            {
+                if (!DateTime.TryParse(DpFiadorNascimentoCriar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                dataNascimento = data;
+            }
+
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente fiador não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ClienteDTO cliente = new ClienteDTO
+            {
+                Nome = TxtFiadorNomeCriar.Text,
+                CpfCnpj = TxtFiadorCpfCnpjCriar.Text,
+                Identidade = TxtFiadorIdentidadeCriar.Text,
+                OrgaoExpedidor = TxtFiadorOrgaoExpedidorCriar.Text,
+                Nacionalidade = TxtFiadorNacionalidadeCriar.Text,
+                Naturalidade = TxtFiadorNaturalidadeCriar.Text,
+                EstadoCivil = TxtFiadorEstadoCivilCriar.Text,
+                Profissao = TxtFiadorProfissaoCriar.Text,
+                Endereco = TxtFiadorEnderecoCriar.Text,
+                Banco = TxtFiadorBancoCriar.Text,
+                Agencia = TxtFiadorAgenciaCriar.Text,
+                Conta = TxtFiadorContaCriar.Text,
+                CodBanco = TxtFiadorCodBancoCriar.Text,
+                Email = TxtFiadorEmailCriar.Text,
+                Telefone = TxtFiadorTelefoneCriar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
+            };
+
+            try
+            {
+                await cliente.CadastrarCliente();
+                MessageBox.Show("Fiador cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                BtnFecharModalFiadorCriar_Click(sender, e);
+                await AdicionarItensGridFiadores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar fiador: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnVisualizarFiador_Click(object sender, RoutedEventArgs e)
+        {
+            if (FiadoresDataGrid.SelectedItem is not ClienteDAO fiadorSelecionado)
+            {
+                MessageBox.Show("Selecione um fiador para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes());
+            var fiadorCompleto = listaClientes?.Find(cliente => cliente.Id == fiadorSelecionado.Id) ?? fiadorSelecionado;
+
+            TxtFiadorNomeEditar.Text = fiadorCompleto.Nome;
+            TxtFiadorCpfCnpjEditar.Text = fiadorCompleto.CpfCnpj;
+            TxtFiadorIdentidadeEditar.Text = fiadorCompleto.Identidade;
+            TxtFiadorOrgaoExpedidorEditar.Text = fiadorCompleto.OrgaoExpedidor;
+            TxtFiadorNacionalidadeEditar.Text = fiadorCompleto.Nacionalidade;
+            TxtFiadorNaturalidadeEditar.Text = fiadorCompleto.Naturalidade;
+            TxtFiadorEstadoCivilEditar.Text = fiadorCompleto.EstadoCivil;
+            TxtFiadorProfissaoEditar.Text = fiadorCompleto.Profissao;
+            TxtFiadorEnderecoEditar.Text = fiadorCompleto.Endereco;
+            TxtFiadorBancoEditar.Text = fiadorCompleto.Banco;
+            TxtFiadorAgenciaEditar.Text = fiadorCompleto.Agencia;
+            TxtFiadorContaEditar.Text = fiadorCompleto.Conta;
+            TxtFiadorCodBancoEditar.Text = fiadorCompleto.CodBanco;
+            TxtFiadorEmailEditar.Text = fiadorCompleto.Email;
+            TxtFiadorTelefoneEditar.Text = fiadorCompleto.Telefone;
+            DpFiadorNascimentoEditar.SelectedDate = fiadorCompleto.DataNascimento;
+
+            FiadorModalOverlayEditar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalFiadorEditar_Click(object sender, RoutedEventArgs e)
+        {
+            FiadorModalOverlayEditar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnSalvarFiadorEditar_Click(object sender, RoutedEventArgs e)
+        {
+            if (FiadoresDataGrid.SelectedItem is not ClienteDAO fiadorSelecionado)
+            {
+                MessageBox.Show("Selecione um fiador para editar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtFiadorNomeEditar.Text) ||
+                string.IsNullOrWhiteSpace(TxtFiadorCpfCnpjEditar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpFiadorNascimentoEditar.Text))
+            {
+                if (!DateTime.TryParse(DpFiadorNascimentoEditar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                dataNascimento = data;
+            }
+
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente fiador não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var clienteAtualizado = new ClienteDTO
+            {
+                Id = fiadorSelecionado.Id,
+                Nome = TxtFiadorNomeEditar.Text,
+                CpfCnpj = TxtFiadorCpfCnpjEditar.Text,
+                Identidade = TxtFiadorIdentidadeEditar.Text,
+                OrgaoExpedidor = TxtFiadorOrgaoExpedidorEditar.Text,
+                Nacionalidade = TxtFiadorNacionalidadeEditar.Text,
+                Naturalidade = TxtFiadorNaturalidadeEditar.Text,
+                EstadoCivil = TxtFiadorEstadoCivilEditar.Text,
+                Profissao = TxtFiadorProfissaoEditar.Text,
+                Endereco = TxtFiadorEnderecoEditar.Text,
+                Banco = TxtFiadorBancoEditar.Text,
+                Agencia = TxtFiadorAgenciaEditar.Text,
+                Conta = TxtFiadorContaEditar.Text,
+                CodBanco = TxtFiadorCodBancoEditar.Text,
+                Email = TxtFiadorEmailEditar.Text,
+                Telefone = TxtFiadorTelefoneEditar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
+            };
+
+            try
+            {
+                await clienteAtualizado.AtualizarCliente(fiadorSelecionado.Id);
+                MessageBox.Show("Fiador atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                FiadorModalOverlayEditar.Visibility = Visibility.Hidden;
+                await AdicionarItensGridFiadores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar fiador: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnInativarFiador_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja inativar?", "Inativar", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var id = 0;
+            if (sender is Button button && button.CommandParameter is int idParam)
+            {
+                id = idParam;
+            }
+            else if (FiadoresDataGrid.SelectedItem is ClienteDAO cliente)
+            {
+                id = cliente.Id;
+            }
+
+            if (id == 0)
+            {
+                MessageBox.Show("Selecione um fiador para inativar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var clienteDto = new ClienteDTO();
+                await clienteDto.InativarCliente(id);
+                MessageBox.Show("Fiador inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AdicionarItensGridFiadores();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar fiador: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
         private void BtnFecharModalImovelEditar_Click(object sender, RoutedEventArgs e)
         {
             ImovelModalOverlayEditar.Visibility = Visibility.Hidden;
@@ -657,6 +954,238 @@ namespace Imob
                     MessageBox.Show("Erro ao excluir imóvel: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+            }
+        }
+
+        private void BtnAdicionarLocatario_Click(object sender, RoutedEventArgs e)
+        {
+            LocatarioModalOverlayCriar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalLocatarioCriar_Click(object sender, RoutedEventArgs e)
+        {
+            LocatarioModalOverlayCriar.Visibility = Visibility.Hidden;
+            TxtLocatarioNomeCriar.Clear();
+            TxtLocatarioCpfCnpjCriar.Clear();
+            TxtLocatarioIdentidadeCriar.Clear();
+            TxtLocatarioOrgaoExpedidorCriar.Clear();
+            TxtLocatarioNacionalidadeCriar.Clear();
+            TxtLocatarioNaturalidadeCriar.Clear();
+            TxtLocatarioEstadoCivilCriar.Clear();
+            TxtLocatarioProfissaoCriar.Clear();
+            TxtLocatarioEnderecoCriar.Clear();
+            TxtLocatarioBancoCriar.Clear();
+            TxtLocatarioAgenciaCriar.Clear();
+            TxtLocatarioContaCriar.Clear();
+            TxtLocatarioCodBancoCriar.Clear();
+            TxtLocatarioEmailCriar.Clear();
+            TxtLocatarioTelefoneCriar.Clear();
+            DpLocatarioNascimentoCriar.Text = "";
+        }
+
+        private async void BtnSalvarLocatarioCriar_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(TxtLocatarioNomeCriar.Text) ||
+                string.IsNullOrWhiteSpace(TxtLocatarioCpfCnpjCriar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpLocatarioNascimentoCriar.Text))
+            {
+                if (!DateTime.TryParse(DpLocatarioNascimentoCriar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                dataNascimento = data;
+            }
+
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente locatário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ClienteDTO cliente = new ClienteDTO
+            {
+                Nome = TxtLocatarioNomeCriar.Text,
+                CpfCnpj = TxtLocatarioCpfCnpjCriar.Text,
+                Identidade = TxtLocatarioIdentidadeCriar.Text,
+                OrgaoExpedidor = TxtLocatarioOrgaoExpedidorCriar.Text,
+                Nacionalidade = TxtLocatarioNacionalidadeCriar.Text,
+                Naturalidade = TxtLocatarioNaturalidadeCriar.Text,
+                EstadoCivil = TxtLocatarioEstadoCivilCriar.Text,
+                Profissao = TxtLocatarioProfissaoCriar.Text,
+                Endereco = TxtLocatarioEnderecoCriar.Text,
+                Banco = TxtLocatarioBancoCriar.Text,
+                Agencia = TxtLocatarioAgenciaCriar.Text,
+                Conta = TxtLocatarioContaCriar.Text,
+                CodBanco = TxtLocatarioCodBancoCriar.Text,
+                Email = TxtLocatarioEmailCriar.Text,
+                Telefone = TxtLocatarioTelefoneCriar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
+            };
+
+            try
+            {
+                await cliente.CadastrarCliente();
+                MessageBox.Show("Locatário cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                BtnFecharModalLocatarioCriar_Click(sender, e);
+                await AdicionarItensGridLocatários();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar locatário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnVisualizarLocatario_Click(object sender, RoutedEventArgs e)
+        {
+            if (LocatariosDataGrid.SelectedItem is not ClienteDAO locatarioSelecionado)
+            {
+                MessageBox.Show("Selecione um locatário para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes());
+            var locatarioCompleto = listaClientes?.Find(cliente => cliente.Id == locatarioSelecionado.Id) ?? locatarioSelecionado;
+
+            TxtLocatarioNomeEditar.Text = locatarioCompleto.Nome;
+            TxtLocatarioCpfCnpjEditar.Text = locatarioCompleto.CpfCnpj;
+            TxtLocatarioIdentidadeEditar.Text = locatarioCompleto.Identidade;
+            TxtLocatarioOrgaoExpedidorEditar.Text = locatarioCompleto.OrgaoExpedidor;
+            TxtLocatarioNacionalidadeEditar.Text = locatarioCompleto.Nacionalidade;
+            TxtLocatarioNaturalidadeEditar.Text = locatarioCompleto.Naturalidade;
+            TxtLocatarioEstadoCivilEditar.Text = locatarioCompleto.EstadoCivil;
+            TxtLocatarioProfissaoEditar.Text = locatarioCompleto.Profissao;
+            TxtLocatarioEnderecoEditar.Text = locatarioCompleto.Endereco;
+            TxtLocatarioBancoEditar.Text = locatarioCompleto.Banco;
+            TxtLocatarioAgenciaEditar.Text = locatarioCompleto.Agencia;
+            TxtLocatarioContaEditar.Text = locatarioCompleto.Conta;
+            TxtLocatarioCodBancoEditar.Text = locatarioCompleto.CodBanco;
+            TxtLocatarioEmailEditar.Text = locatarioCompleto.Email;
+            TxtLocatarioTelefoneEditar.Text = locatarioCompleto.Telefone;
+            DpLocatarioNascimentoEditar.SelectedDate = locatarioCompleto.DataNascimento;
+
+            LocatarioModalOverlayEditar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalLocatarioEditar_Click(object sender, RoutedEventArgs e)
+        {
+            LocatarioModalOverlayEditar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnSalvarLocatarioEditar_Click(object sender, RoutedEventArgs e)
+        {
+            if (LocatariosDataGrid.SelectedItem is not ClienteDAO locatarioSelecionado)
+            {
+                MessageBox.Show("Selecione um locatário para editar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(TxtLocatarioNomeEditar.Text) ||
+                string.IsNullOrWhiteSpace(TxtLocatarioCpfCnpjEditar.Text))
+            {
+                MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            DateTime? dataNascimento = null;
+            if (!string.IsNullOrWhiteSpace(DpLocatarioNascimentoEditar.Text))
+            {
+                if (!DateTime.TryParse(DpLocatarioNascimentoEditar.Text, out var data))
+                {
+                    MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                dataNascimento = data;
+            }
+
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário");
+            if (tipoClienteId == 0)
+            {
+                MessageBox.Show("Tipo de cliente locatário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var clienteAtualizado = new ClienteDTO
+            {
+                Id = locatarioSelecionado.Id,
+                Nome = TxtLocatarioNomeEditar.Text,
+                CpfCnpj = TxtLocatarioCpfCnpjEditar.Text,
+                Identidade = TxtLocatarioIdentidadeEditar.Text,
+                OrgaoExpedidor = TxtLocatarioOrgaoExpedidorEditar.Text,
+                Nacionalidade = TxtLocatarioNacionalidadeEditar.Text,
+                Naturalidade = TxtLocatarioNaturalidadeEditar.Text,
+                EstadoCivil = TxtLocatarioEstadoCivilEditar.Text,
+                Profissao = TxtLocatarioProfissaoEditar.Text,
+                Endereco = TxtLocatarioEnderecoEditar.Text,
+                Banco = TxtLocatarioBancoEditar.Text,
+                Agencia = TxtLocatarioAgenciaEditar.Text,
+                Conta = TxtLocatarioContaEditar.Text,
+                CodBanco = TxtLocatarioCodBancoEditar.Text,
+                Email = TxtLocatarioEmailEditar.Text,
+                Telefone = TxtLocatarioTelefoneEditar.Text,
+                DataNascimento = dataNascimento,
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
+            };
+
+            try
+            {
+                await clienteAtualizado.AtualizarCliente(locatarioSelecionado.Id);
+                MessageBox.Show("Locatário atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                LocatarioModalOverlayEditar.Visibility = Visibility.Hidden;
+                await AdicionarItensGridLocatários();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar locatário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnInativarLocatario_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja inativar?", "Inativar", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var id = 0;
+            if (sender is Button button && button.CommandParameter is int idParam)
+            {
+                id = idParam;
+            }
+            else if (LocatariosDataGrid.SelectedItem is ClienteDAO cliente)
+            {
+                id = cliente.Id;
+            }
+
+            if (id == 0)
+            {
+                MessageBox.Show("Selecione um locatário para inativar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var clienteDto = new ClienteDTO();
+                await clienteDto.InativarCliente(id);
+                MessageBox.Show("Locatário inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AdicionarItensGridLocatários();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar locatário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
