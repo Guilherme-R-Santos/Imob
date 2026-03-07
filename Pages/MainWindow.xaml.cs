@@ -22,6 +22,20 @@ namespace Imob
     {
         private readonly HttpClient client;
         private bool sucessoConect = false;
+        private string tokenJwt;
+        private DateTime? tokenExpiration;
+
+        private class LoginJwtResponse
+        {
+            [JsonProperty("token")]
+            public string Token { get; set; }
+
+            [JsonProperty("expiration")]
+            public DateTime? Expiration { get; set; }
+
+            [JsonProperty("tipo")]
+            public string Tipo { get; set; }
+        }
 
         public MainWindow()
         {
@@ -74,6 +88,19 @@ namespace Imob
                     return;
                 }
 
+                var loginResponseJson = await response.Content.ReadAsStringAsync();
+                var loginResponse = JsonConvert.DeserializeObject<LoginJwtResponse>(loginResponseJson);
+
+                if (loginResponse == null || string.IsNullOrWhiteSpace(loginResponse.Token))
+                {
+                    MessageBox.Show("Resposta de autenticação inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                tokenJwt = loginResponse.Token;
+                tokenExpiration = loginResponse.Expiration;
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(loginResponse.Tipo ?? "Bearer", tokenJwt);
+
                 var userResponse = await client.GetAsync($"Usuario/ObterPorLogin/{login}");
                 if (!userResponse.IsSuccessStatusCode)
                 {
@@ -86,6 +113,7 @@ namespace Imob
 
                 var sistemaWindow = new Sistema();
                 sistemaWindow.SetUsuarioLogado(usuarioLogado);
+                sistemaWindow.SetAutenticacao(tokenJwt, tokenExpiration);
                 sistemaWindow.MenuNav.Visibility = Visibility.Hidden;
                 sistemaWindow.Show();
                 this.Close();

@@ -16,25 +16,21 @@ namespace Imob.Models
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static List<TipoClienteDAO> GetTodos()
+        public static List<TipoClienteDAO> GetTodos(HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("TipoCliente/ListarTipos").Result;
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-                var response = client.GetAsync("TipoCliente/ListarTipos").Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<TipoClienteDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter informações do Tipo do imóvel: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<TipoClienteDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter informações do Tipo do imóvel: " + response.StatusCode);
             }
         }
-        public static int GetIdPorNome(string nome)
+        public static int GetIdPorNome(string nome, HttpClient httpClient)
         {
-            var tipos = GetTodos();
+            var tipos = GetTodos(httpClient);
             return tipos?.FirstOrDefault(t => t.Nome.Equals(nome, StringComparison.OrdinalIgnoreCase))?.Id ?? 0;
         }
     }

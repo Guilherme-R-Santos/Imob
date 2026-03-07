@@ -34,77 +34,64 @@ namespace Imob.Models
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
 
-        public static List<ClienteDAO> GetPorNome(string nome)
+        public static List<ClienteDAO> GetPorNome(string nome, HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("Cliente/ObterPorNome/" + nome).Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("Cliente/ObterPorNome/" + nome).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<ClienteDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter informações do Tipo do imóvel: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<ClienteDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter informações do Tipo do imóvel: " + response.StatusCode);
             }
         }
 
-        public static int GetIdPorNome(string nome)
+        public static int GetIdPorNome(string nome, HttpClient httpClient)
         {
-            var clientes = GetPorNome(nome);
+            var clientes = GetPorNome(nome, httpClient);
             return clientes?.FirstOrDefault()?.Id ?? 0;
         }
 
-        public static List<ClienteDAO> GetClientes()
+        public static List<ClienteDAO> GetClientes(HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("Cliente/ObterTodos").Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("Cliente/ObterTodos").Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<ClienteDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter lista de Clientes: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<ClienteDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter lista de Clientes: " + response.StatusCode);
             }
         }
 
-        public static async Task<List<ClienteDAO>> GetProprietarios()
+        public static async Task<List<ClienteDAO>> GetProprietarios(HttpClient httpClient)
         {
-            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
-            int idTipoProprietario = TipoClienteDAO.GetIdPorNome("Proprietário");
+            int idTipoProprietario = TipoClienteDAO.GetIdPorNome("Proprietário", httpClient);
 
-            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoProprietario}");
+            var response = await httpClient.GetAsync($"Cliente/ObterPorTipo/{idTipoProprietario}");
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();
         }
 
-        public static async Task<List<ClienteDAO>> GetLocatários()
+        public static async Task<List<ClienteDAO>> GetLocatários(HttpClient httpClient)
         {
-            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
-            int idTipoLocatario = TipoClienteDAO.GetIdPorNome("Locatário");
-            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoLocatario}");
+            int idTipoLocatario = TipoClienteDAO.GetIdPorNome("Locatário", httpClient);
+            var response = await httpClient.GetAsync($"Cliente/ObterPorTipo/{idTipoLocatario}");
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();
         }
 
-        public static async Task<List<ClienteDAO>> GetFiadores()
+        public static async Task<List<ClienteDAO>> GetFiadores(HttpClient httpClient)
         {
-            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
-            int idTipoFiador = TipoClienteDAO.GetIdPorNome("Fiador");
-            var response = await client.GetAsync($"Cliente/ObterPorTipo/{idTipoFiador}");
+            int idTipoFiador = TipoClienteDAO.GetIdPorNome("Fiador", httpClient);
+            var response = await httpClient.GetAsync($"Cliente/ObterPorTipo/{idTipoFiador}");
             response.EnsureSuccessStatusCode();
             var json = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<ClienteDAO>>(json) ?? new List<ClienteDAO>();

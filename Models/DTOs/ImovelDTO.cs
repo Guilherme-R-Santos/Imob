@@ -35,138 +35,117 @@ namespace Imob.Models
         public decimal? Foro { get; set; }
         public int Cadastrador { get; set; }
 
-        public async Task<int> CadastrarImovel()
+        public async Task<int> CadastrarImovel(HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var imovelJson = new
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+                Descricao = this.Descricao,
+                Observacao = this.Observacao,
+                Proprietario = new { Id = this.Proprietario },
+                TipoImovel = new { Id = this.TipoImovel },
+                Intencao = new { Id = this.Intencao },
+                Cep = this.Cep,
+                Logradouro = this.Logradouro,
+                Numero = this.Numero,
+                Bairro = this.Bairro,
+                Cidade = this.Cidade,
+                Estado = this.Estado,
+                Pais = this.Pais,
+                Complemento = this.Complemento,
+                Metragem = this.Metragem,
+                Valor = this.Valor,
+                Condominio = this.Condominio,
+                Iptu = this.Iptu,
+                TaxaIncendio = this.TaxaIncendio,
+                Foro = this.Foro,
+                InscricaoIptu = this.InscricaoIptu,
+                NumeroCbmerj = this.NumeroCbmerj,
+                Cadastrador = new { Id = this.Cadastrador }
+            };
 
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var json = JsonConvert.SerializeObject(imovelJson);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var imovelJson = new
+            var response = await httpClient.PostAsync("Imovel/Criar", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao cadastrar imóvel: {response.StatusCode} - {respBody}");
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(responseBody))
+            {
+                throw new Exception("Resposta vazia ao cadastrar imóvel.");
+            }
+
+            try
+            {
+                var obj = JObject.Parse(responseBody);
+                var idToken = obj.SelectToken("id") ?? obj.SelectToken("Id") ?? obj.SelectToken("data.id") ?? obj.SelectToken("data.Id");
+                if (idToken == null || !int.TryParse(idToken.ToString(), out var createdId))
                 {
-                    Descricao = this.Descricao,
-                    Observacao = this.Observacao,
-                    Proprietario = new { Id = this.Proprietario },
-                    TipoImovel = new { Id = this.TipoImovel },
-                    Intencao = new { Id = this.Intencao },
-                    Cep = this.Cep,
-                    Logradouro = this.Logradouro,
-                    Numero = this.Numero,
-                    Bairro = this.Bairro,
-                    Cidade = this.Cidade,
-                    Estado = this.Estado,
-                    Pais = this.Pais,
-                    Complemento = this.Complemento,
-                    Metragem = this.Metragem,
-                    Valor = this.Valor,
-                    Condominio = this.Condominio,
-                    Iptu = this.Iptu,
-                    TaxaIncendio = this.TaxaIncendio,
-                    Foro = this.Foro,
-                    InscricaoIptu = this.InscricaoIptu,
-                    NumeroCbmerj = this.NumeroCbmerj,
-                    Cadastrador = new { Id = this.Cadastrador }
-                };
-
-                var json = JsonConvert.SerializeObject(imovelJson);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync("Imovel/Criar", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao cadastrar imóvel: {response.StatusCode} - {respBody}");
+                    throw new Exception("Não foi possível obter o ID do imóvel criado na resposta da API.");
                 }
 
-                var responseBody = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseBody))
-                {
-                    throw new Exception("Resposta vazia ao cadastrar imóvel.");
-                }
-
-                try
-                {
-                    var obj = JObject.Parse(responseBody);
-                    var idToken = obj.SelectToken("id") ?? obj.SelectToken("Id") ?? obj.SelectToken("data.id") ?? obj.SelectToken("data.Id");
-                    if (idToken == null || !int.TryParse(idToken.ToString(), out var createdId))
-                    {
-                        throw new Exception("Não foi possível obter o ID do imóvel criado na resposta da API.");
-                    }
-
-                    return createdId;
-                }
-                catch (JsonException ex)
-                {
-                    throw new Exception($"Falha ao interpretar resposta da API: {ex.Message}");
-                }
+                return createdId;
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"Falha ao interpretar resposta da API: {ex.Message}");
             }
         }
 
-        public async Task AtualizarImovel(int id)
+        public async Task AtualizarImovel(int id, HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var imovelJson = new
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+                Descricao = this.Descricao,
+                Observacao = this.Observacao,
+                Proprietario = new { Id = this.Proprietario },
+                TipoImovel = new { Id = this.TipoImovel },
+                Intencao = new { Id = this.Intencao },
+                Cep = this.Cep,
+                Logradouro = this.Logradouro,
+                Numero = this.Numero,
+                Bairro = this.Bairro,
+                Cidade = this.Cidade,
+                Estado = this.Estado,
+                Pais = this.Pais,
+                Complemento = this.Complemento,
+                Metragem = this.Metragem,
+                Valor = this.Valor,
+                Condominio = this.Condominio,
+                Iptu = this.Iptu,
+                TaxaIncendio = this.TaxaIncendio,
+                Foro = this.Foro,
+                InscricaoIptu = this.InscricaoIptu,
+                NumeroCbmerj = this.NumeroCbmerj
+            };
 
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var json = JsonConvert.SerializeObject(imovelJson);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var imovelJson = new
-                {
-                    Descricao = this.Descricao,
-                    Observacao = this.Observacao,
-                    Proprietario = new { Id = this.Proprietario },
-                    TipoImovel = new { Id = this.TipoImovel },
-                    Intencao = new { Id = this.Intencao },
-                    Cep = this.Cep,
-                    Logradouro = this.Logradouro,
-                    Numero = this.Numero,
-                    Bairro = this.Bairro,
-                    Cidade = this.Cidade,
-                    Estado = this.Estado,
-                    Pais = this.Pais,
-                    Complemento = this.Complemento,
-                    Metragem = this.Metragem,
-                    Valor = this.Valor,
-                    Condominio = this.Condominio,
-                    Iptu = this.Iptu,
-                    TaxaIncendio = this.TaxaIncendio,
-                    Foro = this.Foro,
-                    InscricaoIptu = this.InscricaoIptu,
-                    NumeroCbmerj = this.NumeroCbmerj
-                };
+            var response = await httpClient.PutAsync($"Imovel/Atualizar/{id}", content);
 
-                var json = JsonConvert.SerializeObject(imovelJson);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PutAsync($"Imovel/Atualizar/{id}", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao atualizar imóvel: {response.StatusCode} - {respBody}");
-                }
+            if (!response.IsSuccessStatusCode)
+            {
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao atualizar imóvel: {response.StatusCode} - {respBody}");
             }
         }
 
-        public async Task InativarImovel(int id)
+        public async Task InativarImovel(int id, HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var content = new StringContent(string.Empty);
+
+            var response = await httpClient.PostAsync($"Imovel/Inativar/{id}", content);
+
+            if (!response.IsSuccessStatusCode)
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
-
-                var content = new StringContent(string.Empty);
-
-                var response = await httpClient.PostAsync($"Imovel/Inativar/{id}", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao excluir imóvel: {response.StatusCode} - {respBody}");
-                }
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao excluir imóvel: {response.StatusCode} - {respBody}");
             }
 
         }

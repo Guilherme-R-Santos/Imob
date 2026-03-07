@@ -17,10 +17,9 @@ namespace Imob.Models
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static List<IntencaoDAO> GetPorNome(string nome)
+        public static List<IntencaoDAO> GetPorNome(string nome, HttpClient httpClient)
         {
-            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
-            var response = client.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}").Result;
+            var response = httpClient.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}").Result;
             response.EnsureSuccessStatusCode();
 
             var content = response.Content.ReadAsStringAsync().Result;
@@ -41,29 +40,23 @@ namespace Imob.Models
             }
         }
 
-        public static List<IntencaoDAO> GetIntencao()
+        public static List<IntencaoDAO> GetIntencao(HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("Intencao/ObterTodas").Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("Intencao/ObterTodas").Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<IntencaoDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<IntencaoDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
             }
         }
 
-        public static async Task<List<IntencaoDAO>> GetPorNomeAsync(string nome)
+        public static async Task<List<IntencaoDAO>> GetPorNomeAsync(string nome, HttpClient httpClient)
         {
-            using var client = new HttpClient { BaseAddress = new Uri("https://localhost:7251/") };
-            var response = await client.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}");
+            var response = await httpClient.GetAsync($"Intencao/ObterPorNome/{Uri.EscapeDataString(nome)}");
             response.EnsureSuccessStatusCode();
 
             var content = await response.Content.ReadAsStringAsync();
@@ -84,9 +77,9 @@ namespace Imob.Models
             }
         }
 
-        public static int GetIdPorNome(string nome)
+        public static int GetIdPorNome(string nome, HttpClient httpClient)
         {
-            var intecoes = GetPorNome(nome);
+            var intecoes = GetPorNome(nome, httpClient);
             return intecoes?.FirstOrDefault()?.Id ?? 0;
         }
     }

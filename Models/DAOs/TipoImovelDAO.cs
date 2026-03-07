@@ -16,47 +16,37 @@ namespace Imob.Models
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static List<TipoImovelDAO> GetPorNome(string nome)
+        public static List<TipoImovelDAO> GetPorNome(string nome, HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("TipoImovel/ObterPorNome/" + nome).Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("TipoImovel/ObterPorNome/" + nome).Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<TipoImovelDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter informações do Tipo: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<TipoImovelDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter informações do Tipo: " + response.StatusCode);
             }
         }
 
-        public static List<TipoImovelDAO> GetTipoImovel()
+        public static List<TipoImovelDAO> GetTipoImovel(HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = httpClient.GetAsync("TipoImovel/ObterTodos").Result;
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = client.GetAsync("TipoImovel/ObterTodos").Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return JsonConvert.DeserializeObject<List<TipoImovelDAO>>(response.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
-                }
+                return JsonConvert.DeserializeObject<List<TipoImovelDAO>>(response.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter lista de Intenções: " + response.StatusCode);
             }
         }
 
-        public static int GetIdPorNome(string nome)
+        public static int GetIdPorNome(string nome, HttpClient httpClient)
         {
-            var tipoImovel = GetPorNome(nome);
+            var tipoImovel = GetPorNome(nome, httpClient);
             return tipoImovel?.FirstOrDefault()?.Id ?? 0;
         }
     }

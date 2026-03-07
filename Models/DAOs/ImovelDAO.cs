@@ -60,43 +60,33 @@ namespace Imob.Models
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
 
-        public static async Task<List<ImovelDAO>> GetImoveis()
+        public static async Task<List<ImovelDAO>> GetImoveis(HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = await httpClient.GetAsync("Imovel/ObterTodos");
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = await client.GetAsync("Imovel/ObterTodos");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<List<ImovelDAO>>(json);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter lista de imóveis: " + response.StatusCode);
-                }
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ImovelDAO>>(json);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter lista de imóveis: " + response.StatusCode);
             }
         }
 
-        public static async Task<ImovelDAO> GetImovelPorId(int id)
+        public static async Task<ImovelDAO> GetImovelPorId(int id, HttpClient httpClient)
         {
-            using (HttpClient client = new HttpClient())
+            var response = await httpClient.GetAsync($"Imovel/ObterPorId/{id}");
+
+            if (response.IsSuccessStatusCode)
             {
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = await client.GetAsync($"Imovel/ObterPorId/{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var json = await response.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<ImovelDAO>(json);
-                }
-                else
-                {
-                    throw new Exception("Erro ao obter imóvel: " + response.StatusCode);
-                }
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ImovelDAO>(json);
+            }
+            else
+            {
+                throw new Exception("Erro ao obter imóvel: " + response.StatusCode);
             }
         }
     }

@@ -36,131 +36,110 @@ namespace Imob.Models
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
 
-        public async Task<int> CadastrarCliente()
+        public async Task<int> CadastrarCliente(HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var clienteJson = new
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+                Nome = this.Nome,
+                CpfCnpj = this.CpfCnpj,
+                Identidade = this.Identidade,
+                OrgaoExpedidor = this.OrgaoExpedidor,
+                Nacionalidade = this.Nacionalidade,
+                Naturalidade = this.Naturalidade,
+                EstadoCivil = this.EstadoCivil,
+                Profissao = this.Profissao,
+                Endereco = this.Endereco,
+                Agencia = this.Agencia,
+                Conta = this.Conta,
+                CodBanco = this.CodBanco,
+                Banco = this.Banco,
+                Email = this.Email,
+                Telefone = this.Telefone,
+                DataNascimento = this.DataNascimento,
+                TipoCliente = new { Id = this.TipoCliente.Id },
+                Cadastrador = new { Id = this.Cadastrador.Id }
+            };
 
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var json = JsonConvert.SerializeObject(clienteJson);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var clienteJson = new
+            var response = await httpClient.PostAsync("Cliente/Criar", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao cadastrar cliente: {response.StatusCode} - {respBody}");
+            }
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            if (string.IsNullOrWhiteSpace(responseBody))
+            {
+                throw new Exception("Resposta vazia ao cadastrar cliente.");
+            }
+
+            try
+            {
+                var obj = JObject.Parse(responseBody);
+                var idToken = obj.SelectToken("id") ?? obj.SelectToken("Id") ?? obj.SelectToken("data.id") ?? obj.SelectToken("data.Id");
+                if (idToken == null || !int.TryParse(idToken.ToString(), out var createdId))
                 {
-                    Nome = this.Nome,
-                    CpfCnpj = this.CpfCnpj,
-                    Identidade = this.Identidade,
-                    OrgaoExpedidor = this.OrgaoExpedidor,
-                    Nacionalidade = this.Nacionalidade,
-                    Naturalidade = this.Naturalidade,
-                    EstadoCivil = this.EstadoCivil,
-                    Profissao = this.Profissao,
-                    Endereco = this.Endereco,
-                    Agencia = this.Agencia,
-                    Conta = this.Conta,
-                    CodBanco = this.CodBanco,
-                    Banco = this.Banco,
-                    Email = this.Email,
-                    Telefone = this.Telefone,
-                    DataNascimento = this.DataNascimento,
-                    TipoCliente = new { Id = this.TipoCliente.Id },
-                    Cadastrador = new { Id = this.Cadastrador.Id }
-                };
-
-                var json = JsonConvert.SerializeObject(clienteJson);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PostAsync("Cliente/Criar", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao cadastrar cliente: {response.StatusCode} - {respBody}");
+                    throw new Exception("Não foi possível obter o ID do cliente criado na resposta da API.");
                 }
 
-                var responseBody = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(responseBody))
-                {
-                    throw new Exception("Resposta vazia ao cadastrar cliente.");
-                }
-
-                try
-                {
-                    var obj = JObject.Parse(responseBody);
-                    var idToken = obj.SelectToken("id") ?? obj.SelectToken("Id") ?? obj.SelectToken("data.id") ?? obj.SelectToken("data.Id");
-                    if (idToken == null || !int.TryParse(idToken.ToString(), out var createdId))
-                    {
-                        throw new Exception("Não foi possível obter o ID do cliente criado na resposta da API.");
-                    }
-
-                    return createdId;
-                }
-                catch (JsonException ex)
-                {
-                    throw new Exception($"Falha ao interpretar resposta da API: {ex.Message}");
-                }
+                return createdId;
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"Falha ao interpretar resposta da API: {ex.Message}");
             }
         }
 
-        public async Task AtualizarCliente(int id)
+        public async Task AtualizarCliente(int id, HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var clienteJson = new
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
+                Id = this.Id,
+                Nome = this.Nome,
+                CpfCnpj = this.CpfCnpj,
+                Identidade = this.Identidade,
+                OrgaoExpedidor = this.OrgaoExpedidor,
+                Nacionalidade = this.Nacionalidade,
+                Naturalidade = this.Naturalidade,
+                EstadoCivil = this.EstadoCivil,
+                Profissao = this.Profissao,
+                Endereco = this.Endereco,
+                Agencia = this.Agencia,
+                Conta = this.Conta,
+                CodBanco = this.CodBanco,
+                Banco = this.Banco,
+                Email = this.Email,
+                Telefone = this.Telefone,
+                DataNascimento = this.DataNascimento,
+                TipoCliente = new { Id = this.TipoCliente.Id },
+                Cadastrador = this.Cadastrador == null ? null : new { Id = this.Cadastrador.Id }
+            };
 
-                httpClient.DefaultRequestHeaders.Accept.Clear();
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var json = JsonConvert.SerializeObject(clienteJson);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var clienteJson = new
-                {
-                    Id = this.Id,
-                    Nome = this.Nome,
-                    CpfCnpj = this.CpfCnpj,
-                    Identidade = this.Identidade,
-                    OrgaoExpedidor = this.OrgaoExpedidor,
-                    Nacionalidade = this.Nacionalidade,
-                    Naturalidade = this.Naturalidade,
-                    EstadoCivil = this.EstadoCivil,
-                    Profissao = this.Profissao,
-                    Endereco = this.Endereco,
-                    Agencia = this.Agencia,
-                    Conta = this.Conta,
-                    CodBanco = this.CodBanco,
-                    Banco = this.Banco,
-                    Email = this.Email,
-                    Telefone = this.Telefone,
-                    DataNascimento = this.DataNascimento,
-                    TipoCliente = new { Id = this.TipoCliente.Id },
-                    Cadastrador = this.Cadastrador == null ? null : new { Id = this.Cadastrador.Id }
-                };
+            var response = await httpClient.PutAsync($"Cliente/Atualizar/{id}", content);
 
-                var json = JsonConvert.SerializeObject(clienteJson);
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                var response = await httpClient.PutAsync($"Cliente/Atualizar/{id}", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao atualizar cliente: {response.StatusCode} - {respBody}");
-                }
+            if (!response.IsSuccessStatusCode)
+            {
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao atualizar cliente: {response.StatusCode} - {respBody}");
             }
         }
 
-        public async Task InativarCliente(int id)
+        public async Task InativarCliente(int id, HttpClient httpClient)
         {
-            using (var httpClient = new HttpClient())
+            var content = new StringContent(string.Empty);
+            var response = await httpClient.PutAsync($"Cliente/Inativar/{id}", content);
+
+            if (!response.IsSuccessStatusCode)
             {
-                httpClient.BaseAddress = new Uri("https://localhost:7251/");
-
-                var content = new StringContent(string.Empty);
-                var response = await httpClient.PutAsync($"Cliente/Inativar/{id}", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var respBody = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erro ao inativar cliente: {response.StatusCode} - {respBody}");
-                }
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao inativar cliente: {response.StatusCode} - {respBody}");
             }
         }
 

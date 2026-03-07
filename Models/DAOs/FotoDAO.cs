@@ -21,14 +21,11 @@ namespace Imob.Models
         public bool Ativo { get; set; }
         public VistoriaDAO Vistoria { get; set; }
 
-        public static async Task<List<FotoDAO>> GetFotosPorImovel(int imovelId)
+        public static async Task<List<FotoDAO>> GetFotosPorImovel(int imovelId, HttpClient httpClient)
         {
             try
             {
-                HttpClient client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:7251/");
-
-                var response = await client.GetAsync($"Foto/ObterPorImovel/{imovelId}");
+                var response = await httpClient.GetAsync($"Foto/ObterPorImovel/{imovelId}");
 
                 if (response.IsSuccessStatusCode)
                 {

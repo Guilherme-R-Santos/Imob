@@ -20,12 +20,18 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.IO;
 using System.IO.Enumeration;
 using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace Imob
 {
     public partial class Sistema : Window
     {
+        public static HttpClient HttpClientFixo { get; } = CriarHttpClient();
+
         public UsuarioDAO UsuarioLogado { get; set; }
+        public string TokenJwt { get; private set; }
+        public DateTime? TokenExpiration { get; private set; }
 
         private ObservableCollection<ImageSource> _fotosSelecionadasPreview = new ObservableCollection<ImageSource>();
 
@@ -37,10 +43,42 @@ namespace Imob
 
         private int _idImovelCadastrado;
 
+        private static HttpClient CriarHttpClient()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.BaseAddress = new Uri("https://localhost:7251/");
+            return client;
+        }
+
+        private void AtualizarCabecalhosAutenticacao()
+        {
+            HttpClientFixo.DefaultRequestHeaders.Authorization = null;
+            HttpClientFixo.DefaultRequestHeaders.Remove("X-Token-Expiration");
+
+            if (!string.IsNullOrWhiteSpace(TokenJwt))
+            {
+                HttpClientFixo.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", TokenJwt);
+            }
+
+            if (TokenExpiration.HasValue)
+            {
+                HttpClientFixo.DefaultRequestHeaders.Add("X-Token-Expiration", TokenExpiration.Value.ToUniversalTime().ToString("O"));
+            }
+        }
+
         public void SetUsuarioLogado(UsuarioDAO usuarioLogado)
         {
             UsuarioLogado = usuarioLogado;
             UsuarioAtivo.Content = UsuarioLogado.Login;
+        }
+
+        public void SetAutenticacao(string tokenJwt, DateTime? tokenExpiration)
+        {
+            TokenJwt = tokenJwt;
+            TokenExpiration = tokenExpiration;
+            AtualizarCabecalhosAutenticacao();
         }
 
         // Funções auxilires Inicio
@@ -64,7 +102,7 @@ namespace Imob
         {
             try
             {
-                var listaImoveis = await ImovelDAO.GetImoveis();
+                var listaImoveis = await ImovelDAO.GetImoveis(HttpClientFixo);
                 ImoveisDataGrid.ItemsSource = listaImoveis;
             }
             catch (Exception ex)
@@ -77,7 +115,7 @@ namespace Imob
         {
             try
             {
-                var listaProprietarios = await ClienteDAO.GetProprietarios();
+                var listaProprietarios = await ClienteDAO.GetProprietarios(HttpClientFixo);
                 ProprietariosDataGrid.ItemsSource = listaProprietarios;
             }
             catch (Exception ex)
@@ -90,7 +128,7 @@ namespace Imob
         {
             try
             {
-                var listaLocatarios = await ClienteDAO.GetLocatários();
+                var listaLocatarios = await ClienteDAO.GetLocatários(HttpClientFixo);
                 LocatariosDataGrid.ItemsSource = listaLocatarios;
             }
             catch (Exception ex)
@@ -103,7 +141,7 @@ namespace Imob
         {
             try
             {
-                var listaFiadores = await ClienteDAO.GetFiadores();
+                var listaFiadores = await ClienteDAO.GetFiadores(HttpClientFixo);
                 FiadoresDataGrid.ItemsSource = listaFiadores;
             }
             catch (Exception ex)
@@ -114,7 +152,7 @@ namespace Imob
 
         public async Task AdicionarItensComboProprietarios()
         {
-            List<ClienteDAO> listaClientes = await ClienteDAO.GetProprietarios();
+            List<ClienteDAO> listaClientes = await ClienteDAO.GetProprietarios(HttpClientFixo);
 
             foreach (ClienteDAO cliente in listaClientes)
             {
@@ -124,7 +162,7 @@ namespace Imob
 
         public void AdicionarItensComboIntencoes()
         {
-            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao();
+            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao(HttpClientFixo);
 
             foreach (IntencaoDAO intencao in ListaIntencoes)
             {
@@ -134,7 +172,7 @@ namespace Imob
 
         public void AdicionarItensComboTiposImovel()
         {
-            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel();
+            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel(HttpClientFixo);
             foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
             {
                 ComboTipoImovel.Items.Add(tipoImovel.Nome.ToString());
@@ -412,9 +450,9 @@ namespace Imob
                 imovel.Complemento = complemento;
             }
 
-            imovel.Proprietario = ClienteDAO.GetIdPorNome(clienteSelecionado);
-            imovel.TipoImovel = TipoImovelDAO.GetIdPorNome(tipoImovelSelecionado);
-            imovel.Intencao = IntencaoDAO.GetIdPorNome(intencaoSelecionada);
+            imovel.Proprietario = ClienteDAO.GetIdPorNome(clienteSelecionado, HttpClientFixo);
+            imovel.TipoImovel = TipoImovelDAO.GetIdPorNome(tipoImovelSelecionado, HttpClientFixo);
+            imovel.Intencao = IntencaoDAO.GetIdPorNome(intencaoSelecionada, HttpClientFixo);
             imovel.Cep = TxtBoxCep.Text;
             imovel.Logradouro = TxtBoxLogradouro.Text;
             imovel.Numero = int.Parse(TxtBoxNumero.Text);
@@ -434,7 +472,7 @@ namespace Imob
 
 
 
-            int idImovel = await imovel.CadastrarImovel();
+            int idImovel = await imovel.CadastrarImovel(HttpClientFixo);
 
             _idImovelCadastrado = idImovel;
 
@@ -491,21 +529,21 @@ namespace Imob
         {
            ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
             
-            List<ClienteDAO> listaClientes = ClienteDAO.GetClientes();
+            List<ClienteDAO> listaClientes = ClienteDAO.GetClientes(HttpClientFixo);
 
             foreach (ClienteDAO cliente in listaClientes)
             {
                 ComboProprietariosEditar.Items.Add(cliente.Nome.ToString());
             }
 
-            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao();
+            List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao(HttpClientFixo);
 
             foreach (IntencaoDAO intencao in ListaIntencoes)
             {
                 ComboIntencaoEditar.Items.Add(intencao.Nome.ToString());
             }
 
-            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel();
+            List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel(HttpClientFixo);
             foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
             {
                 ComboTipoImovelEditar.Items.Add(tipoImovel.Nome.ToString());
@@ -601,14 +639,14 @@ namespace Imob
             imovelAtualizado.Cep = TxtBoxCepEditar.Text;
             imovelAtualizado.InscricaoIptu = TxtBoxInscricaoIptuEditar.Text;
             imovelAtualizado.NumeroCbmerj = TxtBoxNumeroCbmerjEditar.Text;
-            imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string);
-            imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string);
-            imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string);
+            imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string, HttpClientFixo);
+            imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string, HttpClientFixo);
+            imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string, HttpClientFixo);
 
 
             try
             {
-                await imovelAtualizado.AtualizarImovel(imovelSelecionado.Id);
+                await imovelAtualizado.AtualizarImovel(imovelSelecionado.Id, HttpClientFixo);
                 MessageBox.Show("Imóvel atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ImovelModalOverlayEditar.Visibility = Visibility.Hidden;
@@ -727,7 +765,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador");
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente fiador não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -758,7 +796,7 @@ namespace Imob
 
             try
             {
-                await cliente.CadastrarCliente();
+                await cliente.CadastrarCliente(HttpClientFixo);
                 MessageBox.Show("Fiador cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 BtnFecharModalFiadorCriar_Click(sender, e);
@@ -778,7 +816,7 @@ namespace Imob
                 return;
             }
 
-            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes());
+            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes(HttpClientFixo));
             var fiadorCompleto = listaClientes?.Find(cliente => cliente.Id == fiadorSelecionado.Id) ?? fiadorSelecionado;
 
             TxtFiadorNomeEditar.Text = fiadorCompleto.Nome;
@@ -832,7 +870,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador");
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Fiador", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente fiador não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -864,7 +902,7 @@ namespace Imob
 
             try
             {
-                await clienteAtualizado.AtualizarCliente(fiadorSelecionado.Id);
+                await clienteAtualizado.AtualizarCliente(fiadorSelecionado.Id, HttpClientFixo);
                 MessageBox.Show("Fiador atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 FiadorModalOverlayEditar.Visibility = Visibility.Hidden;
                 await AdicionarItensGridFiadores();
@@ -902,7 +940,7 @@ namespace Imob
             try
             {
                 var clienteDto = new ClienteDTO();
-                await clienteDto.InativarCliente(id);
+                await clienteDto.InativarCliente(id, HttpClientFixo);
                 MessageBox.Show("Fiador inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 await AdicionarItensGridFiadores();
             }
@@ -945,7 +983,7 @@ namespace Imob
                 ImovelDTO imovel = new ImovelDTO();
                 try
                 {
-                    await imovel.InativarImovel(imovelSelecionado.Id);
+                    await imovel.InativarImovel(imovelSelecionado.Id, HttpClientFixo);
                     MessageBox.Show("Imóvel excluído com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                     await AdicionarItensGridImoveis();
                 }
@@ -1004,7 +1042,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário");
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente locatário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1035,7 +1073,7 @@ namespace Imob
 
             try
             {
-                await cliente.CadastrarCliente();
+                await cliente.CadastrarCliente(HttpClientFixo);
                 MessageBox.Show("Locatário cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 BtnFecharModalLocatarioCriar_Click(sender, e);
@@ -1055,7 +1093,7 @@ namespace Imob
                 return;
             }
 
-            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes());
+            var listaClientes = await Task.Run(() => ClienteDAO.GetClientes(HttpClientFixo));
             var locatarioCompleto = listaClientes?.Find(cliente => cliente.Id == locatarioSelecionado.Id) ?? locatarioSelecionado;
 
             TxtLocatarioNomeEditar.Text = locatarioCompleto.Nome;
@@ -1109,7 +1147,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário");
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Locatário", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente locatário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1141,7 +1179,7 @@ namespace Imob
 
             try
             {
-                await clienteAtualizado.AtualizarCliente(locatarioSelecionado.Id);
+                await clienteAtualizado.AtualizarCliente(locatarioSelecionado.Id, HttpClientFixo);
                 MessageBox.Show("Locatário atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 LocatarioModalOverlayEditar.Visibility = Visibility.Hidden;
                 await AdicionarItensGridLocatários();
@@ -1179,7 +1217,7 @@ namespace Imob
             try
             {
                 var clienteDto = new ClienteDTO();
-                await clienteDto.InativarCliente(id);
+                await clienteDto.InativarCliente(id, HttpClientFixo);
                 MessageBox.Show("Locatário inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 await AdicionarItensGridLocatários();
             }
@@ -1249,7 +1287,7 @@ namespace Imob
             try
             {
                 var clienteDto = new ClienteDTO();
-                await clienteDto.InativarCliente(id);
+                await clienteDto.InativarCliente(id, HttpClientFixo);
                 MessageBox.Show("Proprietário inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 await AdcionarItensGridProprietarios();
             }
@@ -1392,7 +1430,7 @@ namespace Imob
                         Principal = false
                     };
 
-                    await foto.CadastrarFoto();
+                    await foto.CadastrarFoto(HttpClientFixo);
                 }
 
                 MessageBox.Show("Fotos cadastradas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1429,7 +1467,7 @@ namespace Imob
 
 			try
 			{
-				var fotosImovel = await FotoDAO.GetFotosPorImovel(_idImovelCadastrado);
+                var fotosImovel = await FotoDAO.GetFotosPorImovel(_idImovelCadastrado, HttpClientFixo);
 
 				foreach (var foto in fotosImovel)
 				{
@@ -1474,7 +1512,7 @@ namespace Imob
 				foreach (var fotoId in _fotosRemovidas)
 				{
 					var fotoDto = new FotoDTO();
-					await fotoDto.InativarFoto(fotoId);
+					await fotoDto.InativarFoto(fotoId, HttpClientFixo);
 				}
 
 				for (int i = 0; i < _fotosSelecionadasBinario.Count; i++)
@@ -1494,7 +1532,7 @@ namespace Imob
 						Principal = false
 					};
 
-					await foto.CadastrarFoto();
+                    await foto.CadastrarFoto(HttpClientFixo);
 				}
 
 				MessageBox.Show("Fotos atualizadas com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1589,7 +1627,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário");
+            int tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente proprietário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1620,7 +1658,7 @@ namespace Imob
 
             try
             {
-                await cliente.CadastrarCliente();
+                await cliente.CadastrarCliente(HttpClientFixo);
                 MessageBox.Show("Proprietário cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
@@ -1710,7 +1748,7 @@ namespace Imob
                 dataNascimento = data;
             }
 
-            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário");
+            var tipoClienteId = TipoClienteDAO.GetIdPorNome("Proprietário", HttpClientFixo);
             if (tipoClienteId == 0)
             {
                 MessageBox.Show("Tipo de cliente proprietário não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1740,7 +1778,7 @@ namespace Imob
 
             try
             {
-                await clienteAtualizado.AtualizarCliente(proprietarioSelecionado.Id);
+                await clienteAtualizado.AtualizarCliente(proprietarioSelecionado.Id, HttpClientFixo);
                 MessageBox.Show("Proprietário atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ProprietarioModalOverlayEditar.Visibility = Visibility.Hidden;
