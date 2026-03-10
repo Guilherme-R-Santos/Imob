@@ -25,7 +25,7 @@
 
         <!-- Estilo SearchBox -->
         <Style x:Key="ModernSearchBox" TargetType="TextBox" BasedOn="{StaticResource ModernTextBox}">
-            <Setter Property="Padding" Value="44,12,12,12"/>
+            <Setter Property="Padding" Value="0,12,12,12"/>
             <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="BorderBrush" Value="#FFE0E0E0"/>
             <Setter Property="Background" Value="#FFFDF6F0"/>
@@ -138,9 +138,8 @@
                             <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                                 <Grid>
                                     <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" VerticalAlignment="Center"/>
-                                    <ToggleButton x:Name="ToggleButton" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34">
-                                        <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#FFF27F1D" Width="10" Height="6" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </ToggleButton>
+                                    <ToggleButton x:Name="ToggleButton" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0"/>
+                                    <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#FFF27F1D" Width="10" Height="6" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" IsHitTestVisible="False"/>
                                 </Grid>
                             </Border>
 
@@ -1209,6 +1208,8 @@
                     <TextBox x:Name="TxtBoxBairro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="156,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="268" Grid.Column="1" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="TxtBoxMetragem" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="210"/>
                     <TextBox x:Name="TxtBoxComplemento" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="262,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="243"/>
+                    <TextBox x:Name="TxtBoxInscricaoIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="198" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxNumeroCbmerj" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="53,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="194" Grid.Column="2"/>
                     <TextBox x:Name="TxtBoxValor" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="188"/>
                     <TextBox x:Name="TxtBoxCondominio" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="219,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="188"/>
                     <TextBox x:Name="TxtBoxIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="424,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="162" Grid.ColumnSpan="2"/>
@@ -1235,9 +1236,7 @@
                     <TextBlock HorizontalAlignment="Left" Margin="85,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Taxa de incêndio" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="1" Grid.ColumnSpan="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="92,331,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Foro" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.829,0.753" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Número*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
-                    <TextBox x:Name="TxtBoxInscricaoIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="198" Grid.Column="1" Grid.ColumnSpan="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,257,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="1"><Run Language="pt-br" Text="Inscrição IPTU"/></TextBlock>
-                    <TextBox x:Name="TxtBoxNumeroCbmerj" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="53,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="194" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="53,257,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="2" Width="106"><Run Text="Número "/><Run Language="pt-br" Text="C"/><Run Text="BMERJ"/></TextBlock>
                 </Grid>
             </Border>
@@ -1506,8 +1505,8 @@
                     <!-- Footer actions -->
                     <Grid Grid.Row="3">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="BtnFecharModalImovelFotoEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoCriar_Click"/>
-                            <Button x:Name="BtnCriarModalImovelFotoEditar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCadastrarModalImovelFotoCriar_Click"/>
+                            <Button x:Name="BtnFecharModalImovelFotoEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoEditar_Click"/>
+                            <Button x:Name="BtnCriarModalImovelFotoEditar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCriarModalImovelFotoEditar_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
