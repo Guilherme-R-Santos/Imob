@@ -321,7 +321,38 @@ namespace Imob
             if (e.Key == System.Windows.Input.Key.Escape)
             {
                 LimparBuscaComboBox(comboBox);
+                RestaurarFiltroComboBox(comboBox);
+                comboBox.Text = string.Empty;
+                comboBox.SelectedItem = null;
             }
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is not ComboBox comboBox)
+            {
+                return;
+            }
+
+            comboBox.DropDownClosed -= ComboBox_DropDownClosed;
+            comboBox.DropDownClosed += ComboBox_DropDownClosed;
+        }
+
+        private void ComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            if (sender is not ComboBox comboBox)
+            {
+                return;
+            }
+
+            RestaurarFiltroComboBox(comboBox);
+
+            if (comboBox.SelectedItem != null)
+            {
+                comboBox.Text = ObterTextoItemComboBox(comboBox, comboBox.SelectedItem);
+            }
+
+            LimparBuscaComboBox(comboBox);
         }
 
         private void AtualizarBuscaComboBox(ComboBox comboBox, string termoDigitado)
@@ -354,51 +385,52 @@ namespace Imob
 
             if (string.IsNullOrWhiteSpace(termo))
             {
+                comboBox.SelectedItem = null;
+                RestaurarFiltroComboBox(comboBox);
+                comboBox.IsDropDownOpen = true;
                 return;
             }
 
             var termoNormalizado = termo.Trim();
-            object melhorCorrespondencia = null;
+            comboBox.SelectedItem = null;
+            AplicarFiltroComboBox(comboBox, termoNormalizado);
+        }
 
-            foreach (var item in comboBox.Items)
+        private void AplicarFiltroComboBox(ComboBox comboBox, string termo)
+        {
+            comboBox.Items.Filter = item =>
             {
                 if (item == null)
                 {
-                    continue;
+                    return false;
                 }
 
                 var textoItem = ObterTextoItemComboBox(comboBox, item);
+                return !string.IsNullOrWhiteSpace(textoItem) &&
+                       textoItem.IndexOf(termo, StringComparison.CurrentCultureIgnoreCase) >= 0;
+            };
 
-                if (string.IsNullOrWhiteSpace(textoItem))
-                {
-                    continue;
-                }
+            comboBox.Items.Refresh();
+            comboBox.IsDropDownOpen = true;
 
-                if (textoItem.StartsWith(termoNormalizado, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    melhorCorrespondencia = item;
-                    break;
-                }
-
-                if (melhorCorrespondencia == null && textoItem.IndexOf(termoNormalizado, StringComparison.CurrentCultureIgnoreCase) >= 0)
-                {
-                    melhorCorrespondencia = item;
-                }
-            }
-
-            if (melhorCorrespondencia != null)
+            comboBox.Dispatcher.BeginInvoke(new Action(() =>
             {
-                comboBox.SelectedItem = melhorCorrespondencia;
-                comboBox.IsDropDownOpen = true;
-
-                comboBox.Dispatcher.BeginInvoke(new Action(() =>
+                foreach (var item in comboBox.Items)
                 {
-                    if (comboBox.ItemContainerGenerator.ContainerFromItem(melhorCorrespondencia) is FrameworkElement elemento)
+                    if (comboBox.ItemContainerGenerator.ContainerFromItem(item) is FrameworkElement elemento)
                     {
                         elemento.BringIntoView();
+                        break;
                     }
-                }), DispatcherPriority.Background);
-            }
+                }
+
+                if (comboBox.Template.FindName("PART_EditableTextBox", comboBox) is TextBox editavel)
+                {
+                    editavel.Focus();
+                    editavel.SelectionStart = editavel.Text.Length;
+                    editavel.SelectionLength = 0;
+                }
+            }), DispatcherPriority.Background);
         }
 
         private static string ObterTextoItemComboBox(ComboBox comboBox, object item)
@@ -430,6 +462,12 @@ namespace Imob
         {
             _comboBoxSearchBuffer.Remove(comboBox);
             _comboBoxSearchBufferTimestamp.Remove(comboBox);
+        }
+
+        private static void RestaurarFiltroComboBox(ComboBox comboBox)
+        {
+            comboBox.Items.Filter = null;
+            comboBox.Items.Refresh();
         }
 
         // Funções auxilires Fim
