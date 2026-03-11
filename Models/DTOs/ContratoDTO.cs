@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace Imob.Models
 {
-    public class ContratoDAO
+    public class ContratoDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -33,17 +31,16 @@ namespace Imob.Models
         public string PropostaSegFianca { get; set; }
         public string ApoliceSegFianca { get; set; }
 
-        public static async Task<List<ContratoDAO>> GetContratos(HttpClient httpClient)
+        public async Task InativarContrato(int id, HttpClient httpClient)
         {
-            var response = await httpClient.GetAsync("Contrato/ObterTodos");
+            var content = new StringContent(string.Empty);
+            var response = await httpClient.PutAsync($"Contrato/Inativar/{id}", content);
 
-            if (response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                var json = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<List<ContratoDAO>>(json);
+                var respBody = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Erro ao inativar contrato: {response.StatusCode} - {respBody}");
             }
-
-            throw new Exception("Erro ao obter lista de contratos: " + response.StatusCode);
         }
     }
 }

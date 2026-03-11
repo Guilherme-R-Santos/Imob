@@ -131,6 +131,9 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="IsEditable" Value="True"/>
+            <Setter Property="StaysOpenOnEdit" Value="True"/>
+            <Setter Property="IsTextSearchEnabled" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ComboBox">
@@ -138,6 +141,7 @@
                             <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6" Padding="{TemplateBinding Padding}">
                                 <Grid>
                                     <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" VerticalAlignment="Center"/>
+                                    <TextBox x:Name="PART_EditableTextBox" Visibility="Hidden" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" Foreground="{TemplateBinding Foreground}"/>
                                     <ToggleButton x:Name="ToggleButton" Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="0"/>
                                     <Path Data="M 0 0 L 4 4 L 8 0 Z" Fill="#FFF27F1D" Width="10" Height="6" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,12,0" IsHitTestVisible="False"/>
                                 </Grid>
@@ -160,10 +164,16 @@
                                 <Setter Property="Foreground" Value="#888888"/>
                                 <Setter TargetName="Bd" Property="Opacity" Value="0.6"/>
                             </Trigger>
+                            <Trigger Property="IsEditable" Value="True">
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <EventSetter Event="PreviewTextInput" Handler="ComboBox_PreviewTextInput"/>
+            <EventSetter Event="PreviewKeyDown" Handler="ComboBox_PreviewKeyDown"/>
         </Style>
 
         <Style TargetType="ComboBoxItem">
@@ -316,10 +326,7 @@
                 <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
             <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ImoveisTree_MouseDown" MouseDoubleClick="ImoveisTree_MouseDown"/>
-            <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ContratosTreeCompraVenda" Header="Compra / Venda" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeCompraVenda_MouseDown" MouseDoubleClick="ContratosTreeCompraVenda_MouseDown"/>
-                <TreeViewItem x:Name="ContratosTreeLocacao" Header="Locação" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTreeLocacao_MouseDown" MouseDoubleClick="ContratosTreeLocacao_MouseDown"/>
-            </TreeViewItem>
+            <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTree_MouseDown" MouseDoubleClick="ContratosTree_MouseDown"/>
             <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
                 <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ProprietariosTree_MouseDown" MouseDoubleClick="ProprietariosTree_MouseDown"/>
                 <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown" MouseDoubleClick="LocatariosTree_MouseDown"/>
@@ -363,10 +370,11 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
-                        <DataGridTextColumn Header="Contrato" Binding="{Binding TipoContrato.Nome}" Width="*"/>
-                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
-                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
-                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="CPF/CNPJ" Binding="{Binding CpfCnpj}" Width="*"/>
+                        <DataGridTextColumn Header="E-mail" Binding="{Binding Email}" Width="*"/>
+                        <DataGridTextColumn Header="Telefone" Binding="{Binding Telefone}" Width="*"/>
+                        <DataGridTextColumn Header="Endereço" Binding="{Binding Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Nascimento" Binding="{Binding DataNascimento, StringFormat=d}" Width="120"/>
                         <DataGridTemplateColumn Header="Ações" Width="160">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -550,18 +558,21 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="302*"/>
+                        <ColumnDefinition Width="53*"/>
                         <ColumnDefinition Width="220"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBox x:Name="SearchBarContratos" Margin="305,10,93,10" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarContratos_KeyDown" Panel.ZIndex="1"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.ColumnSpan="2" IsHitTestVisible="False">
                         <TextBlock Text="Contratos" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de contratos" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnAdicionarContrato" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Novo Contrato</Button>
+                    <Button x:Name="BtnAdicionarContrato" Grid.Column="2" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,0,0,0" Click="BtnAdicionarContrato_Click">Novo Contrato</Button>
+                    <Button x:Name="BtnAtualizarContratos" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Click="BtnAtualizarContratos_Click" Content="Atualizar listagem" Margin="55,0,0,0" Grid.ColumnSpan="2" Grid.Column="1"/>
                 </Grid>
 
-                <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">
+                <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -570,11 +581,12 @@
                         <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridTemplateColumn Header="Ações" Width="140">
+                        <DataGridTemplateColumn Header="Ações" Width="160">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button Content="Visualizar" Style="{StaticResource ModernButton}" Width="110" Height="34" CommandParameter="{Binding Id}"/>
+                                        <Button x:Name="BtnVisualizarContrato" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarContrato_Click"/>
+                                        <Button x:Name="BtnInativarContrato" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarContrato_Click"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -635,20 +647,116 @@
         <Grid x:Name="ContratoModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="48"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="60"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Novo Contrato" FontSize="20" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center"/>
+                    <TextBlock Text="Cadastrar Contrato" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
-                    <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
-                        <TextBlock x:Name="ContratoPreviewText" TextWrapping="Wrap" Foreground="#333"/>
+                    <ScrollViewer Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.4*"/>
+                                <ColumnDefinition Width="1.2*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                            <TextBox x:Name="TxtContratoNomeCriar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Tipo de Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                            <ComboBox x:Name="ComboTipoContratoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                            <TextBlock Text="Modalidade*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <ComboBox x:Name="ComboModalidadeContratoCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                            <TextBlock Text="Objeto do Contrato*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <ComboBox x:Name="ComboObjetoContratoCriar" Grid.Row="3" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                            <TextBlock Text="Proprietário*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <ComboBox x:Name="ComboContratoProprietarioCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                            <TextBlock Text="Imóvel*" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <ComboBox x:Name="ComboContratoImovelCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                            <Grid Grid.Row="4" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Contratante 1*" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                                <TextBlock Text="Contratante 2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                            </Grid>
+                            <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="ComboContratoContratante1Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                                <ComboBox x:Name="ComboContratoContratante2Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                            </Grid>
+
+                            <Grid Grid.Row="6" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Contratante 3" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                                <TextBlock Text="Contratante 4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                            </Grid>
+                            <Grid Grid.Row="7" Grid.ColumnSpan="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="ComboContratoContratante3Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                                <ComboBox x:Name="ComboContratoContratante4Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                            </Grid>
+
+                            <TextBlock Text="Fiador" Grid.Row="8" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <ComboBox x:Name="ComboContratoFiadorCriar" Grid.Row="9" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                            <TextBlock Text="Data Início*" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <DatePicker x:Name="DpContratoDataInicioCriar" Grid.Row="9" Grid.Column="1" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtContratoPrazoMesesCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Vencimento*" Grid.Row="10" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <DatePicker x:Name="DpContratoVencimentoCriar" Grid.Row="11" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Proposta Seg. Fiança" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoPropostaSegFiancaCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Apólice Seg. Fiança" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtContratoApoliceSegFiancaCriar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                        </Grid>
                     </ScrollViewer>
 
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosCriar_Click"/>
+                        <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -670,7 +778,7 @@
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalContratosVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
+                        <Button x:Name="BtnFecharModalContratosVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="BtnFecharModalContratosVisualizar_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

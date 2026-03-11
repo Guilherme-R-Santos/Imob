@@ -1,5 +1,4 @@
-﻿using Imob.Components;
-using Imob.Models;
+﻿using Imob.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
@@ -22,20 +21,48 @@ using System.IO.Enumeration;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace Imob
 {
     public partial class Sistema : Window
     {
+        private const int TokenSafetyMarginMinutes = 5;
+
         public static HttpClient HttpClientFixo { get; } = CriarHttpClient();
 
         public UsuarioDAO UsuarioLogado { get; set; }
         public string TokenJwt { get; private set; }
         public DateTime? TokenExpiration { get; private set; }
 
+        private string _loginSessao;
+        private string _senhaSessao;
+        private readonly SemaphoreSlim _tokenRefreshSemaphore = new SemaphoreSlim(1, 1);
+        private readonly DispatcherTimer _tokenRefreshTimer;
+
+        private class LoginJwtResponse
+        {
+            [JsonProperty("token")]
+            public string Token { get; set; }
+
+            [JsonProperty("expiration")]
+            public DateTime? Expiration { get; set; }
+
+            [JsonProperty("tipo")]
+            public string Tipo { get; set; }
+        }
+
         private ObservableCollection<ImageSource> _fotosSelecionadasPreview = new ObservableCollection<ImageSource>();
 
         private List<byte[]> _fotosSelecionadasBinario = new List<byte[]>();
+
+        private readonly Dictionary<ComboBox, string> _comboBoxSearchBuffer = new Dictionary<ComboBox, string>();
+
+        private readonly Dictionary<ComboBox, DateTime> _comboBoxSearchBufferTimestamp = new Dictionary<ComboBox, DateTime>();
+
+        private static readonly TimeSpan ComboBoxSearchBufferReset = TimeSpan.FromSeconds(1.2);
 
 		private List<int?> _fotoIdsPreview = new List<int?>();
 
@@ -74,11 +101,72 @@ namespace Imob
             UsuarioAtivo.Content = UsuarioLogado.Login;
         }
 
-        public void SetAutenticacao(string tokenJwt, DateTime? tokenExpiration)
+        public void SetAutenticacao(string tokenJwt, DateTime? tokenExpiration, string loginSessao = null, string senhaSessao = null)
         {
             TokenJwt = tokenJwt;
             TokenExpiration = tokenExpiration;
+            _loginSessao = loginSessao;
+            _senhaSessao = senhaSessao;
             AtualizarCabecalhosAutenticacao();
+            _ = RenovarTokenSeNecessarioAsync();
+        }
+
+        private bool TokenProximoDaExpiracao()
+        {
+            if (!TokenExpiration.HasValue)
+            {
+                return false;
+            }
+
+            var limiteSeguranca = TokenExpiration.Value.ToUniversalTime().AddMinutes(-TokenSafetyMarginMinutes);
+            return DateTime.UtcNow >= limiteSeguranca;
+        }
+
+        private async Task RenovarTokenSeNecessarioAsync()
+        {
+            if (!TokenProximoDaExpiracao())
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(_loginSessao) || string.IsNullOrWhiteSpace(_senhaSessao))
+            {
+                return;
+            }
+
+            await _tokenRefreshSemaphore.WaitAsync();
+            try
+            {
+                if (!TokenProximoDaExpiracao())
+                {
+                    return;
+                }
+
+                var loginEscapado = Uri.EscapeDataString(_loginSessao);
+                var senhaEscapada = Uri.EscapeDataString(_senhaSessao);
+                var response = await HttpClientFixo.GetAsync($"Usuario/Login?login={loginEscapado}&senha={senhaEscapada}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return;
+                }
+
+                var loginResponseJson = await response.Content.ReadAsStringAsync();
+                var loginResponse = JsonConvert.DeserializeObject<LoginJwtResponse>(loginResponseJson);
+
+                if (loginResponse == null || string.IsNullOrWhiteSpace(loginResponse.Token))
+                {
+                    return;
+                }
+
+                TokenJwt = loginResponse.Token;
+                TokenExpiration = loginResponse.Expiration;
+                AtualizarCabecalhosAutenticacao();
+            }
+            finally
+            {
+                _tokenRefreshSemaphore.Release();
+            }
         }
 
         // Funções auxilires Inicio
@@ -150,6 +238,19 @@ namespace Imob
             }
         }
 
+        public async Task AdicionarItensGridContratos()
+        {
+            try
+            {
+                var listaContratos = await ContratoDAO.GetContratos(HttpClientFixo);
+                ContratosDataGrid.ItemsSource = listaContratos;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar contratos: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public async Task AdicionarItensComboProprietarios()
         {
             List<ClienteDAO> listaClientes = await ClienteDAO.GetProprietarios(HttpClientFixo);
@@ -179,6 +280,158 @@ namespace Imob
             }
         }
 
+        private void ComboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (sender is not ComboBox comboBox || string.IsNullOrWhiteSpace(e.Text))
+            {
+                return;
+            }
+
+            AtualizarBuscaComboBox(comboBox, e.Text);
+            e.Handled = true;
+        }
+
+        private void ComboBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is not ComboBox comboBox)
+            {
+                return;
+            }
+
+            if (e.Key == System.Windows.Input.Key.Back)
+            {
+                if (!_comboBoxSearchBuffer.TryGetValue(comboBox, out var termoAtual) || string.IsNullOrEmpty(termoAtual))
+                {
+                    return;
+                }
+
+                termoAtual = termoAtual[..^1];
+                DefinirBuscaComboBox(comboBox, termoAtual);
+                e.Handled = true;
+                return;
+            }
+
+            if (e.Key == System.Windows.Input.Key.Space)
+            {
+                AtualizarBuscaComboBox(comboBox, " ");
+                e.Handled = true;
+                return;
+            }
+
+            if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                LimparBuscaComboBox(comboBox);
+            }
+        }
+
+        private void AtualizarBuscaComboBox(ComboBox comboBox, string termoDigitado)
+        {
+            _comboBoxSearchBuffer.TryGetValue(comboBox, out var termoAtual);
+            _comboBoxSearchBufferTimestamp.TryGetValue(comboBox, out var ultimaDigitacao);
+
+            if (DateTime.UtcNow - ultimaDigitacao > ComboBoxSearchBufferReset)
+            {
+                termoAtual = string.Empty;
+            }
+
+            DefinirBuscaComboBox(comboBox, (termoAtual ?? string.Empty) + termoDigitado);
+        }
+
+        private void DefinirBuscaComboBox(ComboBox comboBox, string termo)
+        {
+            _comboBoxSearchBuffer[comboBox] = termo;
+            _comboBoxSearchBufferTimestamp[comboBox] = DateTime.UtcNow;
+
+            if (comboBox.IsEditable)
+            {
+                comboBox.Text = termo ?? string.Empty;
+                if (comboBox.Template.FindName("PART_EditableTextBox", comboBox) is TextBox editavel)
+                {
+                    editavel.SelectionStart = editavel.Text.Length;
+                    editavel.SelectionLength = 0;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(termo))
+            {
+                return;
+            }
+
+            var termoNormalizado = termo.Trim();
+            object melhorCorrespondencia = null;
+
+            foreach (var item in comboBox.Items)
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+
+                var textoItem = ObterTextoItemComboBox(comboBox, item);
+
+                if (string.IsNullOrWhiteSpace(textoItem))
+                {
+                    continue;
+                }
+
+                if (textoItem.StartsWith(termoNormalizado, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    melhorCorrespondencia = item;
+                    break;
+                }
+
+                if (melhorCorrespondencia == null && textoItem.IndexOf(termoNormalizado, StringComparison.CurrentCultureIgnoreCase) >= 0)
+                {
+                    melhorCorrespondencia = item;
+                }
+            }
+
+            if (melhorCorrespondencia != null)
+            {
+                comboBox.SelectedItem = melhorCorrespondencia;
+                comboBox.IsDropDownOpen = true;
+
+                comboBox.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (comboBox.ItemContainerGenerator.ContainerFromItem(melhorCorrespondencia) is FrameworkElement elemento)
+                    {
+                        elemento.BringIntoView();
+                    }
+                }), DispatcherPriority.Background);
+            }
+        }
+
+        private static string ObterTextoItemComboBox(ComboBox comboBox, object item)
+        {
+            if (item is ComboBoxItem comboBoxItem)
+            {
+                return comboBoxItem.Content?.ToString() ?? string.Empty;
+            }
+
+            var caminhoTexto = TextSearch.GetTextPath(comboBox);
+            if (string.IsNullOrWhiteSpace(caminhoTexto))
+            {
+                caminhoTexto = comboBox.DisplayMemberPath;
+            }
+
+            if (!string.IsNullOrWhiteSpace(caminhoTexto))
+            {
+                var propriedade = item.GetType().GetProperty(caminhoTexto, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                if (propriedade != null)
+                {
+                    return propriedade.GetValue(item)?.ToString() ?? string.Empty;
+                }
+            }
+
+            return item.ToString() ?? string.Empty;
+        }
+
+        private void LimparBuscaComboBox(ComboBox comboBox)
+        {
+            _comboBoxSearchBuffer.Remove(comboBox);
+            _comboBoxSearchBufferTimestamp.Remove(comboBox);
+        }
+
         // Funções auxilires Fim
 
         public Sistema()
@@ -186,6 +439,14 @@ namespace Imob
 
             InitializeComponent();
             WindowState = WindowState.Maximized;
+
+            _tokenRefreshTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMinutes(1)
+            };
+            _tokenRefreshTimer.Tick += async (_, __) => await RenovarTokenSeNecessarioAsync();
+            _tokenRefreshTimer.Start();
+            Closed += (_, __) => _tokenRefreshTimer.Stop();
 
             FotosSelecionadasList.ItemsSource = _fotosSelecionadasPreview;
 			FotosSelecionadasListEditar.ItemsSource = _fotosSelecionadasPreview;
@@ -289,15 +550,11 @@ namespace Imob
             ImoveisPanel.Visibility = Visibility.Visible;
         }
 
-        private void ContratosTreeCompraVenda_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void ContratosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
-            ContratosPanel.Visibility = Visibility.Visible;
-        }
 
-        private void ContratosTreeLocacao_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FecharPanelsAtivos();
+            await AdicionarItensGridContratos();
             ContratosPanel.Visibility = Visibility.Visible;
         }
 
@@ -523,6 +780,223 @@ namespace Imob
         private async void BtnAtualizarFiadores_Click(object sender, RoutedEventArgs e)
         {
             await AdicionarItensGridFiadores();
+        }
+
+        private async void BtnAtualizarContratos_Click(object sender, RoutedEventArgs e)
+        {
+            await AdicionarItensGridContratos();
+        }
+
+        private async void BtnAdicionarContrato_Click(object sender, RoutedEventArgs e)
+        {
+            await CarregarCombosContratoCriarAsync();
+            ContratoModalOverlayCriar.Visibility = Visibility.Visible;
+        }
+
+        private async Task CarregarCombosContratoCriarAsync()
+        {
+            try
+            {
+                var tiposContratoTask = TipoContratoDAO.GetTiposContrato(HttpClientFixo);
+                var modalidadesContratoTask = ModalidadeContratoDAO.GetModalidadesContrato(HttpClientFixo);
+                var objetosContratoTask = ObjetoContratoDAO.GetObjetosContrato(HttpClientFixo);
+                var proprietariosTask = ClienteDAO.GetProprietarios(HttpClientFixo);
+                var locatariosTask = ClienteDAO.GetLocatários(HttpClientFixo);
+                var fiadoresTask = ClienteDAO.GetFiadores(HttpClientFixo);
+                var imoveisTask = ImovelDAO.GetImoveis(HttpClientFixo);
+
+                await Task.WhenAll(
+                    tiposContratoTask,
+                    modalidadesContratoTask,
+                    objetosContratoTask,
+                    proprietariosTask,
+                    locatariosTask,
+                    fiadoresTask,
+                    imoveisTask);
+
+                ComboTipoContratoCriar.DisplayMemberPath = "Nome";
+                ComboTipoContratoCriar.SelectedValuePath = "Id";
+                ComboTipoContratoCriar.ItemsSource = tiposContratoTask.Result;
+
+                ComboModalidadeContratoCriar.DisplayMemberPath = "Nome";
+                ComboModalidadeContratoCriar.SelectedValuePath = "Id";
+                ComboModalidadeContratoCriar.ItemsSource = modalidadesContratoTask.Result;
+
+                ComboObjetoContratoCriar.DisplayMemberPath = "Nome";
+                ComboObjetoContratoCriar.SelectedValuePath = "Id";
+                ComboObjetoContratoCriar.ItemsSource = objetosContratoTask.Result;
+
+                ComboContratoProprietarioCriar.DisplayMemberPath = "Nome";
+                ComboContratoProprietarioCriar.SelectedValuePath = "Id";
+                ComboContratoProprietarioCriar.ItemsSource = proprietariosTask.Result;
+
+                ComboContratoImovelCriar.DisplayMemberPath = "Logradouro";
+                ComboContratoImovelCriar.SelectedValuePath = "Id";
+                ComboContratoImovelCriar.ItemsSource = imoveisTask.Result;
+
+                ComboContratoContratante1Criar.DisplayMemberPath = "Nome";
+                ComboContratoContratante1Criar.SelectedValuePath = "Id";
+                ComboContratoContratante1Criar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante2Criar.DisplayMemberPath = "Nome";
+                ComboContratoContratante2Criar.SelectedValuePath = "Id";
+                ComboContratoContratante2Criar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante3Criar.DisplayMemberPath = "Nome";
+                ComboContratoContratante3Criar.SelectedValuePath = "Id";
+                ComboContratoContratante3Criar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante4Criar.DisplayMemberPath = "Nome";
+                ComboContratoContratante4Criar.SelectedValuePath = "Id";
+                ComboContratoContratante4Criar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoFiadorCriar.DisplayMemberPath = "Nome";
+                ComboContratoFiadorCriar.SelectedValuePath = "Id";
+                ComboContratoFiadorCriar.ItemsSource = fiadoresTask.Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados do contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnFecharModalContratosCriar_Click(object sender, RoutedEventArgs e)
+        {
+            ContratoModalOverlayCriar.Visibility = Visibility.Hidden;
+
+            TxtContratoNomeCriar.Clear();
+            TxtContratoPrazoMesesCriar.Clear();
+            TxtContratoPropostaSegFiancaCriar.Clear();
+            TxtContratoApoliceSegFiancaCriar.Clear();
+
+            DpContratoDataInicioCriar.SelectedDate = null;
+            DpContratoVencimentoCriar.SelectedDate = null;
+
+            ComboTipoContratoCriar.SelectedItem = null;
+            ComboModalidadeContratoCriar.SelectedItem = null;
+            ComboObjetoContratoCriar.SelectedItem = null;
+            ComboContratoProprietarioCriar.SelectedItem = null;
+            ComboContratoImovelCriar.SelectedItem = null;
+            ComboContratoContratante1Criar.SelectedItem = null;
+            ComboContratoContratante2Criar.SelectedItem = null;
+            ComboContratoContratante3Criar.SelectedItem = null;
+            ComboContratoContratante4Criar.SelectedItem = null;
+            ComboContratoFiadorCriar.SelectedItem = null;
+
+            ComboTipoContratoCriar.ItemsSource = null;
+            ComboModalidadeContratoCriar.ItemsSource = null;
+            ComboObjetoContratoCriar.ItemsSource = null;
+            ComboContratoProprietarioCriar.ItemsSource = null;
+            ComboContratoImovelCriar.ItemsSource = null;
+            ComboContratoContratante1Criar.ItemsSource = null;
+            ComboContratoContratante2Criar.ItemsSource = null;
+            ComboContratoContratante3Criar.ItemsSource = null;
+            ComboContratoContratante4Criar.ItemsSource = null;
+            ComboContratoFiadorCriar.ItemsSource = null;
+        }
+
+        private void SearchBarContratos_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter || ContratosDataGrid.ItemsSource == null)
+            {
+                return;
+            }
+
+            var texto = SearchBarContratos.Text?.ToLower() ?? string.Empty;
+
+            foreach (var it in ContratosDataGrid.ItemsSource)
+            {
+                if (it is ContratoDAO contrato)
+                {
+                    var corresponde = string.IsNullOrWhiteSpace(texto) ||
+                                     (contrato.Nome?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.TipoContrato?.Nome?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.Proprietario?.Nome?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.Imovel?.Logradouro?.ToLower().Contains(texto) ?? false);
+
+                    var row = ContratosDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                    if (row != null)
+                    {
+                        row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+
+        private void BtnVisualizarContrato_Click(object sender, RoutedEventArgs e)
+        {
+            var contratoSelecionado = ContratosDataGrid.SelectedItem as ContratoDAO;
+
+            if (contratoSelecionado == null && sender is Button button && button.CommandParameter is int id)
+            {
+                foreach (var item in ContratosDataGrid.ItemsSource)
+                {
+                    if (item is ContratoDAO contrato && contrato.Id == id)
+                    {
+                        contratoSelecionado = contrato;
+                        break;
+                    }
+                }
+            }
+
+            if (contratoSelecionado == null)
+            {
+                MessageBox.Show("Selecione um contrato para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            ContratoPreviewTextVisualizar.Text =
+                $"ID: {contratoSelecionado.Id}\n" +
+                $"Nome: {contratoSelecionado.Nome}\n" +
+                $"Tipo: {contratoSelecionado.TipoContrato?.Nome}\n" +
+                $"Proprietário: {contratoSelecionado.Proprietario?.Nome}\n" +
+                $"Imóvel: {contratoSelecionado.Imovel?.Logradouro}\n" +
+                $"Início: {contratoSelecionado.DataInicioVigencia:d}\n" +
+                $"Vencimento: {contratoSelecionado.Vencimento:d}";
+
+            ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
+        }
+
+        private void BtnFecharModalContratosVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            ContratoModalOverlayVisualizar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnInativarContrato_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja inativar?", "Inativar", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var id = 0;
+            if (sender is Button button && button.CommandParameter is int idParam)
+            {
+                id = idParam;
+            }
+            else if (ContratosDataGrid.SelectedItem is ContratoDAO contrato)
+            {
+                id = contrato.Id;
+            }
+
+            if (id == 0)
+            {
+                MessageBox.Show("Selecione um contrato para inativar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var contratoDto = new ContratoDTO();
+                await contratoDto.InativarContrato(id, HttpClientFixo);
+                MessageBox.Show("Contrato inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AdicionarItensGridContratos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void BtnVisualizar_Click(object sender, RoutedEventArgs e)
