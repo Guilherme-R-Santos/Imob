@@ -645,7 +645,7 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="ContratoModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ContratoModalOverlayCriar" Visibility="Visible" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -744,8 +744,8 @@
                             <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtContratoPrazoMesesCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="Vencimento*" Grid.Row="10" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <DatePicker x:Name="DpContratoVencimentoCriar" Grid.Row="11" Margin="0,0,12,10"/>
+                            <TextBlock Text="Vencimento (dia)*" Grid.Row="10" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="DpContratoVencimentoCriar" Grid.Row="11" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Proposta Seg. Fiança" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
                             <TextBox x:Name="TxtContratoPropostaSegFiancaCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
@@ -757,7 +757,7 @@
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosCriar_Click"/>
-                        <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12"/>
+                        <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarContratoCriar_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -908,7 +908,7 @@ namespace Imob
             TxtContratoApoliceSegFiancaCriar.Clear();
 
             DpContratoDataInicioCriar.SelectedDate = null;
-            DpContratoVencimentoCriar.SelectedDate = null;
+            DpContratoVencimentoCriar.Text = string.Empty;
 
             ComboTipoContratoCriar.SelectedItem = null;
             ComboModalidadeContratoCriar.SelectedItem = null;
@@ -1819,6 +1819,17 @@ namespace Imob
             {
                 foreach (string fileName in openFileDlg.FileNames)
                 {
+                    if (fileName == null) continue;
+                    if (!File.Exists(fileName)) continue;
+                    if (!fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) &&
+                        !fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) &&
+                        !fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) &&
+                        !fileName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) &&
+                        !fileName.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show($"Arquivo '{fileName}' não é um formato de imagem suportado.", "Formato Não Suportado", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        continue;
+                    }
                     string filePath = fileName;
                     byte[] binFoto = File.ReadAllBytes(filePath);
                     _fotosSelecionadasBinario.Add(binFoto);
@@ -2300,6 +2311,45 @@ namespace Imob
             {
                 MessageBox.Show("Erro ao atualizar proprietário: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void BtnSalvarContratoCriar_Click(object sender, RoutedEventArgs e)
+        {
+            string nomeContrato = TxtContratoNomeCriar.Text;
+            ModalidadeContratoDAO modalidadeSelecionada = ComboModalidadeContratoCriar.SelectedItem as ModalidadeContratoDAO;
+            ObjetoContratoDAO objetoSelecionado = ComboObjetoContratoCriar.SelectedItem as ObjetoContratoDAO;
+            ClienteDAO proprietarioSelecionado = ComboContratoProprietarioCriar.SelectedItem as ClienteDAO;
+            ImovelDAO imovelSelecionado = ComboContratoImovelCriar.SelectedItem as ImovelDAO;
+            ClienteDAO locatario1Selecionado = ComboContratoContratante1Criar.SelectedItem as ClienteDAO;
+            ClienteDAO locatario2Selecionado = (bool)ComboContratoContratante2Criar.SelectedItem ? ComboContratoContratante2Criar.SelectedItem as ClienteDAO : null;
+            ClienteDAO locatario3Selecionado = (bool)ComboContratoContratante3Criar.SelectedItem ? ComboContratoContratante2Criar.SelectedItem as ClienteDAO : null;
+            ClienteDAO locatario4Selecionado = (bool)ComboContratoContratante4Criar.SelectedItem ? ComboContratoContratante2Criar.SelectedItem as ClienteDAO : null;
+            ClienteDAO fiadorSelecionado = (bool)ComboContratoFiadorCriar.SelectedItem ? ComboContratoFiadorCriar.SelectedItem as ClienteDAO : null;
+            DateTime? inicio = DpContratoDataInicioCriar.SelectedDate;
+
+            if (!int.TryParse(TxtContratoPrazoMesesCriar.Text, out int prazo))
+            {
+                MessageBox.Show("Prazo inválido Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!int.TryParse(DpContratoVencimentoCriar.Text, out int vencimento) || (vencimento < 1 && vencimento > 31))
+            {
+                MessageBox.Show("Vencimento inválido Utilize apenas números de 1 a 31.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (string.IsNullOrEmpty(nomeContrato) ||
+                modalidadeSelecionada == null ||
+                objetoSelecionado == null ||
+                proprietarioSelecionado == null ||
+                imovelSelecionado == null ||
+                locatario1Selecionado == null ||
+                inicio == null)
+            {
+                MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
         }
     }
 }

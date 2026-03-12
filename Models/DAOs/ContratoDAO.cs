@@ -26,7 +26,7 @@ namespace Imob.Models
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataInicioVigencia { get; set; }
         public int PrazoMeses { get; set; }
-        public DateTime Vencimento { get; set; }
+        public int Vencimento { get; set; }
         public DateTime? DataFimVigencia { get; set; }
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }
