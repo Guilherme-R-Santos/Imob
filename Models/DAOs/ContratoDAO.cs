@@ -45,5 +45,18 @@ namespace Imob.Models
 
             throw new Exception("Erro ao obter lista de contratos: " + response.StatusCode);
         }
+
+        public static async Task<ContratoDAO> GetContratoPorId(int id, HttpClient httpClient)
+        {
+            var response = await httpClient.GetAsync($"Contrato/ObterPorId/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<ContratoDAO>(json);
+            }
+
+            throw new Exception("Erro ao obter contrato: " + response.StatusCode);
+        }
     }
 }
