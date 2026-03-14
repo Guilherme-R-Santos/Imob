@@ -2511,6 +2511,47 @@ namespace Imob
 
         private void BtnVisualizarContrato_Click(object sender, RoutedEventArgs e)
         {
+            //ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
+
+            ContratoDAO contratoSelecionado = ((ContratoDAO)ContratosDataGrid.SelectedItem);
+
+            //List<ClienteDAO> listaClientes = ClienteDAO.GetClientes(HttpClientFixo);
+
+            //foreach (ClienteDAO cliente in listaClientes)
+            //{
+            //    ComboProprietariosEditar.Items.Add(cliente.Nome.ToString());
+            //}
+
+            //List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao(HttpClientFixo);
+
+            //foreach (IntencaoDAO intencao in ListaIntencoes)
+            //{
+            //    ComboIntencaoEditar.Items.Add(intencao.Nome.ToString());
+            //}
+
+            //List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel(HttpClientFixo);
+            //foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
+            //{
+            //    ComboTipoImovelEditar.Items.Add(tipoImovel.Nome.ToString());
+            //}
+
+            TxtContratoNomeVisualizar.Text = contratoSelecionado.Nome;
+            ComboTipoContratoVisualizar.Text = contratoSelecionado.TipoContrato?.Nome;
+            ComboModalidadeContratoVisualizar.Text = contratoSelecionado.ModalidadeContrato?.Nome;
+            ComboObjetoContratoVisualizar.Text = contratoSelecionado.ObjetoContrato?.Nome;
+            ComboContratoImovelVisualizar.Text = contratoSelecionado.Imovel?.Logradouro;
+            ComboContratoContratante1Visualizar.Text = contratoSelecionado.Contratante1?.Nome;
+            ComboContratoContratante2Visualizar.Text = contratoSelecionado.Contratante2?.Nome;
+            ComboContratoContratante3Visualizar.Text = contratoSelecionado.Contratante3?.Nome;
+            ComboContratoContratante4Visualizar.Text = contratoSelecionado.Contratante4?.Nome;
+            ComboContratoFiadorVisualizar.Text = contratoSelecionado.Fiador?.Nome;
+            DpContratoDataInicioVisualizar.Text = contratoSelecionado.DataInicioVigencia?.ToString("dd-MM-yyyy");
+            TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
+            TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
+            TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
+            TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
+
+            ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
 
         }
     }
