@@ -12,6 +12,97 @@ namespace Imob.Models
         public int Id { get; set; }
         public string Nome { get; set; }
         public bool Ativo { get; set; }
+        public int? TipoContratoId { get; set; }
+        public int? ProprietarioId { get; set; }
+        public int? Contratante1Id { get; set; }
+        public int? Contratante2Id { get; set; }
+        public int? Contratante3Id { get; set; }
+        public int? Contratante4Id { get; set; }
+        public int? FiadorId { get; set; }
+        public int? ImovelId { get; set; }
+        public int? ObjetoContratoId { get; set; }
+        public int? ModalidadeContratoId { get; set; }
+
+        public string NomeTipoContrato
+        {
+            get
+            {
+                return TipoContrato != null ? TipoContrato.Nome : string.Empty;
+            }
+        }
+
+        public string NomeProprietario
+        {
+            get
+            {
+                return Proprietario != null ? Proprietario.Nome : string.Empty;
+            }
+        }
+
+        public string NomeContratante1
+        {
+            get
+            {
+                return Contratante1 != null ? Contratante1.Nome : string.Empty;
+            }
+        }
+
+        public string NomeContratante2
+        {
+            get
+            {
+                return Contratante2 != null ? Contratante2.Nome : string.Empty;
+            }
+        }
+
+        public string NomeContratante3
+        {
+            get
+            {
+                return Contratante3 != null ? Contratante3.Nome : string.Empty;
+            }
+        }
+
+        public string NomeContratante4
+        {
+            get
+            {
+                return Contratante4 != null ? Contratante4.Nome : string.Empty;
+            }
+        }
+
+        public string NomeFiador
+        {
+            get
+            {
+                return Fiador != null ? Fiador.Nome : string.Empty;
+            }
+        }
+
+        public string NomeImovel
+        {
+            get
+            {
+                return Imovel != null ? Imovel.Nome : string.Empty;
+            }
+        }
+
+        public string NomeObjetoContrato
+        {
+            get
+            {
+                return ObjetoContrato != null ? ObjetoContrato.Nome : string.Empty;
+            }
+        }
+
+        public string NomeModalidadeContrato
+        {
+            get
+            {
+                return ModalidadeContrato != null ? ModalidadeContrato.Nome : string.Empty;
+            }
+        }
+
         public UsuarioDAO Cadastrador { get; set; }
         public TipoContratoDAO TipoContrato { get; set; }
         public ClienteDAO Proprietario { get; set; }

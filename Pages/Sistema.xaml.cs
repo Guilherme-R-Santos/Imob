@@ -898,6 +898,73 @@ namespace Imob
             }
         }
 
+        private async Task CarregarCombosContratoEditarAsync()
+        {
+            try
+            {
+                var tiposContratoTask = TipoContratoDAO.GetTiposContrato(HttpClientFixo);
+                var modalidadesContratoTask = ModalidadeContratoDAO.GetModalidadesContrato(HttpClientFixo);
+                var objetosContratoTask = ObjetoContratoDAO.GetObjetosContrato(HttpClientFixo);
+                var proprietariosTask = ClienteDAO.GetProprietarios(HttpClientFixo);
+                var locatariosTask = ClienteDAO.GetLocatários(HttpClientFixo);
+                var fiadoresTask = ClienteDAO.GetFiadores(HttpClientFixo);
+                var imoveisTask = ImovelDAO.GetImoveis(HttpClientFixo);
+
+                await Task.WhenAll(
+                    tiposContratoTask,
+                    modalidadesContratoTask,
+                    objetosContratoTask,
+                    proprietariosTask,
+                    locatariosTask,
+                    fiadoresTask,
+                    imoveisTask);
+
+                ComboTipoContratoVisualizar.DisplayMemberPath = "Nome";
+                ComboTipoContratoVisualizar.SelectedValuePath = "Id";
+                ComboTipoContratoVisualizar.ItemsSource = tiposContratoTask.Result;
+
+                ComboModalidadeContratoVisualizar.DisplayMemberPath = "Nome";
+                ComboModalidadeContratoVisualizar.SelectedValuePath = "Id";
+                ComboModalidadeContratoVisualizar.ItemsSource = modalidadesContratoTask.Result;
+
+                ComboObjetoContratoVisualizar.DisplayMemberPath = "Nome";
+                ComboObjetoContratoVisualizar.SelectedValuePath = "Id";
+                ComboObjetoContratoVisualizar.ItemsSource = objetosContratoTask.Result;
+
+                ComboContratoProprietarioVisualizar.DisplayMemberPath = "Nome";
+                ComboContratoProprietarioVisualizar.SelectedValuePath = "Id";
+                ComboContratoProprietarioVisualizar.ItemsSource = proprietariosTask.Result;
+
+                ComboContratoImovelVisualizar.DisplayMemberPath = "Logradouro";
+                ComboContratoImovelVisualizar.SelectedValuePath = "Id";
+                ComboContratoImovelVisualizar.ItemsSource = imoveisTask.Result;
+
+                ComboContratoContratante1Visualizar.DisplayMemberPath = "Nome";
+                ComboContratoContratante1Visualizar.SelectedValuePath = "Id";
+                ComboContratoContratante1Visualizar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante2Visualizar.DisplayMemberPath = "Nome";
+                ComboContratoContratante2Visualizar.SelectedValuePath = "Id";
+                ComboContratoContratante2Visualizar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante3Visualizar.DisplayMemberPath = "Nome";
+                ComboContratoContratante3Visualizar.SelectedValuePath = "Id";
+                ComboContratoContratante3Visualizar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoContratante4Visualizar.DisplayMemberPath = "Nome";
+                ComboContratoContratante4Visualizar.SelectedValuePath = "Id";
+                ComboContratoContratante4Visualizar.ItemsSource = locatariosTask.Result;
+
+                ComboContratoFiadorVisualizar.DisplayMemberPath = "Nome";
+                ComboContratoFiadorVisualizar.SelectedValuePath = "Id";
+                ComboContratoFiadorVisualizar.ItemsSource = fiadoresTask.Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados do contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void BtnFecharModalContratosCriar_Click(object sender, RoutedEventArgs e)
         {
             ContratoModalOverlayCriar.Visibility = Visibility.Hidden;
@@ -937,9 +1004,9 @@ namespace Imob
                 {
                     var corresponde = string.IsNullOrWhiteSpace(texto) ||
                                      (contrato.Nome?.ToLower().Contains(texto) ?? false) ||
-                                     (contrato.TipoContrato?.Nome?.ToLower().Contains(texto) ?? false) ||
-                                     (contrato.Proprietario?.Nome?.ToLower().Contains(texto) ?? false) ||
-                                     (contrato.Imovel?.Logradouro?.ToLower().Contains(texto) ?? false);
+                                     (contrato.NomeTipoContrato?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.NomeProprietario?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.NomeImovel?.ToLower().Contains(texto) ?? false);
 
                     var row = ContratosDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
                     if (row != null)
@@ -2431,17 +2498,33 @@ namespace Imob
                 return;
             }
 
+            static int? ObterIdSelecionado(ComboBox comboBox)
+            {
+                if (comboBox.SelectedItem == null)
+                {
+                    return null;
+                }
+
+                return comboBox.SelectedValue switch
+                {
+                    int idInt => idInt,
+                    long idLong => (int)idLong,
+                    string idTexto when int.TryParse(idTexto, out var idParseado) => idParseado,
+                    _ => null
+                };
+            }
+
             string nomeContrato = TxtContratoNomeVisualizar.Text;
-            TipoContratoDAO tipoContratoSelecionado = ComboTipoContratoVisualizar.SelectedItem as TipoContratoDAO;
-            ModalidadeContratoDAO modalidadeSelecionada = ComboModalidadeContratoVisualizar.SelectedItem as ModalidadeContratoDAO;
-            ObjetoContratoDAO objetoSelecionado = ComboObjetoContratoVisualizar.SelectedItem as ObjetoContratoDAO;
-            ClienteDAO proprietarioSelecionado = ComboContratoProprietarioVisualizar.SelectedItem as ClienteDAO;
-            ImovelDAO imovelSelecionado = ComboContratoImovelVisualizar.SelectedItem as ImovelDAO;
-            ClienteDAO locatario1Selecionado = ComboContratoContratante1Visualizar.SelectedItem as ClienteDAO;
-            ClienteDAO locatario2Selecionado = ComboContratoContratante2Visualizar.SelectedItem as ClienteDAO;
-            ClienteDAO locatario3Selecionado = ComboContratoContratante3Visualizar.SelectedItem as ClienteDAO;
-            ClienteDAO locatario4Selecionado = ComboContratoContratante4Visualizar.SelectedItem as ClienteDAO;
-            ClienteDAO fiadorSelecionado = ComboContratoFiadorVisualizar.SelectedItem as ClienteDAO;
+            int? tipoContratoId = ObterIdSelecionado(ComboTipoContratoVisualizar);
+            int? modalidadeId = ObterIdSelecionado(ComboModalidadeContratoVisualizar);
+            int? objetoId = ObterIdSelecionado(ComboObjetoContratoVisualizar);
+            int? proprietarioId = ObterIdSelecionado(ComboContratoProprietarioVisualizar);
+            int? imovelId = ObterIdSelecionado(ComboContratoImovelVisualizar);
+            int? locatario1Id = ObterIdSelecionado(ComboContratoContratante1Visualizar);
+            int? locatario2Id = ObterIdSelecionado(ComboContratoContratante2Visualizar);
+            int? locatario3Id = ObterIdSelecionado(ComboContratoContratante3Visualizar);
+            int? locatario4Id = ObterIdSelecionado(ComboContratoContratante4Visualizar);
+            int? fiadorId = ObterIdSelecionado(ComboContratoFiadorVisualizar);
             DateTime? inicio = DpContratoDataInicioVisualizar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaVisualizar.Text;
             string apolice = TxtContratoApoliceSegFiancaVisualizar.Text;
@@ -2459,12 +2542,12 @@ namespace Imob
             }
 
             if (string.IsNullOrEmpty(nomeContrato) ||
-                tipoContratoSelecionado == null ||
-                modalidadeSelecionada == null ||
-                objetoSelecionado == null ||
-                proprietarioSelecionado == null ||
-                imovelSelecionado == null ||
-                locatario1Selecionado == null ||
+                !tipoContratoId.HasValue ||
+                !modalidadeId.HasValue ||
+                !objetoId.HasValue ||
+                !proprietarioId.HasValue ||
+                !imovelId.HasValue ||
+                !locatario1Id.HasValue ||
                 inicio == null)
             {
                 MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -2478,16 +2561,16 @@ namespace Imob
                     Id = contratoSelecionado.Id,
                     Nome = nomeContrato,
                     Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id },
-                    TipoContrato = tipoContratoSelecionado,
-                    ModalidadeContrato = modalidadeSelecionada,
-                    ObjetoContrato = objetoSelecionado,
-                    Proprietario = proprietarioSelecionado,
-                    Imovel = imovelSelecionado,
-                    Contratante1 = locatario1Selecionado,
-                    Contratante2 = locatario2Selecionado,
-                    Contratante3 = locatario3Selecionado,
-                    Contratante4 = locatario4Selecionado,
-                    Fiador = fiadorSelecionado,
+                    TipoContrato = new TipoContratoDAO { Id = tipoContratoId.Value },
+                    ModalidadeContrato = new ModalidadeContratoDAO { Id = modalidadeId.Value },
+                    ObjetoContrato = new ObjetoContratoDAO { Id = objetoId.Value },
+                    Proprietario = new ClienteDAO { Id = proprietarioId.Value },
+                    Imovel = new ImovelDAO { Id = imovelId.Value },
+                    Contratante1 = new ClienteDAO { Id = locatario1Id.Value },
+                    Contratante2 = locatario2Id.HasValue ? new ClienteDAO { Id = locatario2Id.Value } : null,
+                    Contratante3 = locatario3Id.HasValue ? new ClienteDAO { Id = locatario3Id.Value } : null,
+                    Contratante4 = locatario4Id.HasValue ? new ClienteDAO { Id = locatario4Id.Value } : null,
+                    Fiador = fiadorId.HasValue ? new ClienteDAO { Id = fiadorId.Value } : null,
                     DataInicioVigencia = inicio.Value,
                     PrazoMeses = prazo,
                     Vencimento = vencimento,
@@ -2495,7 +2578,7 @@ namespace Imob
                     ApoliceSegFianca = apolice
                 };
 
-                //await contratoAtualizado.AtualizarContrato(HttpClientFixo);
+                await contratoAtualizado.AtualizarContrato(contratoSelecionado.Id, HttpClientFixo);
 
                 MessageBox.Show("Contrato atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -2509,50 +2592,72 @@ namespace Imob
             }
         }
 
-        private void BtnVisualizarContrato_Click(object sender, RoutedEventArgs e)
+        private async void BtnVisualizarContrato_Click(object sender, RoutedEventArgs e)
         {
-            //ImovelDAO imovelSelecionado = ((ImovelDAO)ImoveisDataGrid.SelectedItem);
+            if (ContratosDataGrid.SelectedItem is not ContratoDAO contratoSelecionadoGrid)
+            {
+                MessageBox.Show("Selecione um contrato para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-            ContratoDAO contratoSelecionado = ((ContratoDAO)ContratosDataGrid.SelectedItem);
+            try
+            {
+                var contratoSelecionado = await ContratoDAO.GetContratoPorId(contratoSelecionadoGrid.Id, HttpClientFixo);
+                if (contratoSelecionado == null)
+                {
+                    MessageBox.Show("Contrato não encontrado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-            //List<ClienteDAO> listaClientes = ClienteDAO.GetClientes(HttpClientFixo);
+                await CarregarCombosContratoVisualizarAsync();
 
-            //foreach (ClienteDAO cliente in listaClientes)
-            //{
-            //    ComboProprietariosEditar.Items.Add(cliente.Nome.ToString());
-            //}
+                TxtContratoNomeVisualizar.Text = contratoSelecionado.Nome;
 
-            //List<IntencaoDAO> ListaIntencoes = IntencaoDAO.GetIntencao(HttpClientFixo);
+                //ComboTipoContratoVisualizar.Text = contratoSelecionado.NomeTipoContrato;
+                //ComboModalidadeContratoVisualizar.Text = contratoSelecionado.NomeModalidadeContrato;
+                //ComboObjetoContratoCriar.Text = contratoSelecionado.NomeObjetoContrato;
+                //ComboContratoProprietarioVisualizar.Text = contratoSelecionado.NomeProprietario;
+                //ComboContratoImovelVisualizar.Text = contratoSelecionado.NomeImovel;
+                //ComboContratoContratante1Visualizar.Text = contratoSelecionado.NomeContratante1;
+                //ComboContratoContratante2Visualizar.Text = contratoSelecionado.NomeContratante2;
+                //ComboContratoContratante3Visualizar.Text = contratoSelecionado.NomeContratante3;
+                //ComboContratoContratante4Visualizar.Text = contratoSelecionado.NomeContratante4;
+                //ComboContratoFiadorVisualizar.Text = contratoSelecionado.NomeFiador;
 
-            //foreach (IntencaoDAO intencao in ListaIntencoes)
-            //{
-            //    ComboIntencaoEditar.Items.Add(intencao.Nome.ToString());
-            //}
+                ComboTipoContratoVisualizar.SelectedValue = contratoSelecionado.TipoContrato?.Id ?? contratoSelecionado.TipoContratoId;
+                ComboModalidadeContratoVisualizar.SelectedValue = contratoSelecionado.ModalidadeContrato?.Id ?? contratoSelecionado.ModalidadeContratoId;
+                ComboObjetoContratoVisualizar.SelectedValue = contratoSelecionado.ObjetoContrato?.Id ?? contratoSelecionado.ObjetoContratoId;
+                ComboContratoProprietarioVisualizar.SelectedValue = contratoSelecionado.Proprietario?.Id ?? contratoSelecionado.ProprietarioId;
+                ComboContratoImovelVisualizar.SelectedValue = contratoSelecionado.Imovel?.Id ?? contratoSelecionado.ImovelId;
+                ComboContratoContratante1Visualizar.SelectedValue = contratoSelecionado.Contratante1?.Id ?? contratoSelecionado.Contratante1Id;
+                ComboContratoContratante2Visualizar.SelectedValue = contratoSelecionado.Contratante2?.Id ?? contratoSelecionado.Contratante2Id;
+                ComboContratoContratante3Visualizar.SelectedValue = contratoSelecionado.Contratante3?.Id ?? contratoSelecionado.Contratante3Id;
+                ComboContratoContratante4Visualizar.SelectedValue = contratoSelecionado.Contratante4?.Id ?? contratoSelecionado.Contratante4Id;
+                ComboContratoFiadorVisualizar.SelectedValue = contratoSelecionado.Fiador?.Id ?? contratoSelecionado.FiadorId;
 
-            //List<TipoImovelDAO> ListaTiposImovel = TipoImovelDAO.GetTipoImovel(HttpClientFixo);
-            //foreach (TipoImovelDAO tipoImovel in ListaTiposImovel)
-            //{
-            //    ComboTipoImovelEditar.Items.Add(tipoImovel.Nome.ToString());
-            //}
+                if (ComboTipoContratoVisualizar.SelectedItem == null) ComboTipoContratoVisualizar.Text = contratoSelecionado.TipoContrato?.Nome;
+                if (ComboModalidadeContratoVisualizar.SelectedItem == null) ComboModalidadeContratoVisualizar.Text = contratoSelecionado.ModalidadeContrato?.Nome;
+                if (ComboObjetoContratoVisualizar.SelectedItem == null) ComboObjetoContratoVisualizar.Text = contratoSelecionado.ObjetoContrato?.Nome;
+                if (ComboContratoProprietarioVisualizar.SelectedItem == null) ComboContratoProprietarioVisualizar.Text = contratoSelecionado.Proprietario?.Nome;
+                if (ComboContratoImovelVisualizar.SelectedItem == null) ComboContratoImovelVisualizar.Text = contratoSelecionado.Imovel?.Logradouro;
+                if (ComboContratoContratante1Visualizar.SelectedItem == null) ComboContratoContratante1Visualizar.Text = contratoSelecionado.Contratante1?.Nome;
+                if (ComboContratoContratante2Visualizar.SelectedItem == null) ComboContratoContratante2Visualizar.Text = contratoSelecionado.Contratante2?.Nome;
+                if (ComboContratoContratante3Visualizar.SelectedItem == null) ComboContratoContratante3Visualizar.Text = contratoSelecionado.Contratante3?.Nome;
+                if (ComboContratoContratante4Visualizar.SelectedItem == null) ComboContratoContratante4Visualizar.Text = contratoSelecionado.Contratante4?.Nome;
+                if (ComboContratoFiadorVisualizar.SelectedItem == null) ComboContratoFiadorVisualizar.Text = contratoSelecionado.Fiador?.Nome;
 
-            TxtContratoNomeVisualizar.Text = contratoSelecionado.Nome;
-            ComboTipoContratoVisualizar.Text = contratoSelecionado.TipoContrato?.Nome;
-            ComboModalidadeContratoVisualizar.Text = contratoSelecionado.ModalidadeContrato?.Nome;
-            ComboObjetoContratoVisualizar.Text = contratoSelecionado.ObjetoContrato?.Nome;
-            ComboContratoImovelVisualizar.Text = contratoSelecionado.Imovel?.Logradouro;
-            ComboContratoContratante1Visualizar.Text = contratoSelecionado.Contratante1?.Nome;
-            ComboContratoContratante2Visualizar.Text = contratoSelecionado.Contratante2?.Nome;
-            ComboContratoContratante3Visualizar.Text = contratoSelecionado.Contratante3?.Nome;
-            ComboContratoContratante4Visualizar.Text = contratoSelecionado.Contratante4?.Nome;
-            ComboContratoFiadorVisualizar.Text = contratoSelecionado.Fiador?.Nome;
-            DpContratoDataInicioVisualizar.Text = contratoSelecionado.DataInicioVigencia?.ToString("dd-MM-yyyy");
-            TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
-            TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
-            TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
-            TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
+                DpContratoDataInicioVisualizar.SelectedDate = contratoSelecionado.DataInicioVigencia;
+                TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
+                TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
+                TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
+                TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
 
-            ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
-
+                ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

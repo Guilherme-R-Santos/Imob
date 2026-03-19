@@ -577,9 +577,9 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
-                        <DataGridTextColumn Header="Tipo" Binding="{Binding TipoContrato.Nome}" Width="*"/>
-                        <DataGridTextColumn Header="Proprietário" Binding="{Binding Proprietario.Nome}" Width="*"/>
-                        <DataGridTextColumn Header="Imóvel" Binding="{Binding Imovel.Endereco}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoContrato}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding NomeProprietario}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding NomeImovel}" Width="2*"/>
                         <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
                         <DataGridTemplateColumn Header="Ações" Width="160">
