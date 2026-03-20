@@ -24,6 +24,8 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Threading;
+using System.Linq;
+using System.Globalization;
 
 namespace Imob
 {
@@ -69,6 +71,17 @@ namespace Imob
 		private List<int> _fotosRemovidas = new List<int>();
 
         private int _idImovelCadastrado;
+
+        private List<ClienteDAO> _proprietariosContratoCriar = new List<ClienteDAO>();
+        private List<ImovelDAO> _imoveisContratoCriar = new List<ImovelDAO>();
+        private List<ClienteDAO> _locatariosContratoCriar = new List<ClienteDAO>();
+
+        private List<ClienteDAO> _proprietariosContratoVisualizar = new List<ClienteDAO>();
+        private List<ImovelDAO> _imoveisContratoVisualizar = new List<ImovelDAO>();
+        private List<ClienteDAO> _locatariosContratoVisualizar = new List<ClienteDAO>();
+
+        private bool _atualizandoCombosContratoCriar;
+        private bool _atualizandoCombosContratoVisualizar;
 
         private static HttpClient CriarHttpClient()
         {
@@ -470,6 +483,398 @@ namespace Imob
             comboBox.Items.Refresh();
         }
 
+        private static string NormalizarTextoComparacao(string valor)
+        {
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                return string.Empty;
+            }
+
+            var normalizado = valor.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (var ch in normalizado)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(ch);
+                }
+            }
+
+            return sb.ToString().ToLowerInvariant();
+        }
+
+        private static bool ModalidadeEhFiador(ModalidadeContratoDAO modalidade)
+        {
+            var nome = NormalizarTextoComparacao(modalidade?.Nome);
+            return nome.Contains("fiador");
+        }
+
+        private static bool ModalidadeEhSeguroFianca(ModalidadeContratoDAO modalidade)
+        {
+            var nome = NormalizarTextoComparacao(modalidade?.Nome);
+            return nome.Contains("seguro fianca") || nome.Contains("segurofianca");
+        }
+
+        private static int? ObterIdEntidade(object entidade)
+        {
+            if (entidade == null)
+            {
+                return null;
+            }
+
+            var propriedadeId = entidade.GetType().GetProperty("Id", BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (propriedadeId == null)
+            {
+                return null;
+            }
+
+            var valor = propriedadeId.GetValue(entidade);
+            return valor switch
+            {
+                int idInt => idInt,
+                long idLong => (int)idLong,
+                _ => null
+            };
+        }
+
+        private static void RestaurarSelecaoPorId<T>(ComboBox comboBox, int? idSelecionado) where T : class
+        {
+            if (!idSelecionado.HasValue)
+            {
+                comboBox.SelectedItem = null;
+                return;
+            }
+
+            var item = comboBox.Items.OfType<T>()
+                .FirstOrDefault(x => ObterIdEntidade(x) == idSelecionado.Value);
+            comboBox.SelectedItem = item;
+        }
+
+        private void AtualizarPermissoesModalidadeCriar()
+        {
+            var modalidade = ComboModalidadeContratoCriar.SelectedItem as ModalidadeContratoDAO;
+            var habilitaFiador = ModalidadeEhFiador(modalidade);
+            var habilitaSeguro = ModalidadeEhSeguroFianca(modalidade);
+
+            ComboContratoFiadorCriar.IsEnabled = habilitaFiador;
+            if (!habilitaFiador)
+            {
+                ComboContratoFiadorCriar.SelectedItem = null;
+                ComboContratoFiadorCriar.Text = string.Empty;
+            }
+
+            TxtContratoPropostaSegFiancaCriar.IsReadOnly = !habilitaSeguro;
+            TxtContratoApoliceSegFiancaCriar.IsReadOnly = !habilitaSeguro;
+
+            if (!habilitaSeguro)
+            {
+                TxtContratoPropostaSegFiancaCriar.Background = new SolidColorBrush(Color.FromRgb(243, 243, 243));
+                TxtContratoPropostaSegFiancaCriar.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                TxtContratoPropostaSegFiancaCriar.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+                TxtContratoPropostaSegFiancaCriar.ToolTip = "Disponível apenas para modalidade Seguro fiança.";
+
+                TxtContratoApoliceSegFiancaCriar.Background = new SolidColorBrush(Color.FromRgb(243, 243, 243));
+                TxtContratoApoliceSegFiancaCriar.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                TxtContratoApoliceSegFiancaCriar.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+                TxtContratoApoliceSegFiancaCriar.ToolTip = "Disponível apenas para modalidade Seguro fiança.";
+            }
+            else
+            {
+                TxtContratoPropostaSegFiancaCriar.ClearValue(TextBox.BackgroundProperty);
+                TxtContratoPropostaSegFiancaCriar.ClearValue(TextBox.ForegroundProperty);
+                TxtContratoPropostaSegFiancaCriar.ClearValue(TextBox.BorderBrushProperty);
+                TxtContratoPropostaSegFiancaCriar.ToolTip = null;
+
+                TxtContratoApoliceSegFiancaCriar.ClearValue(TextBox.BackgroundProperty);
+                TxtContratoApoliceSegFiancaCriar.ClearValue(TextBox.ForegroundProperty);
+                TxtContratoApoliceSegFiancaCriar.ClearValue(TextBox.BorderBrushProperty);
+                TxtContratoApoliceSegFiancaCriar.ToolTip = null;
+            }
+
+            if (!habilitaSeguro)
+            {
+                TxtContratoPropostaSegFiancaCriar.Clear();
+                TxtContratoApoliceSegFiancaCriar.Clear();
+            }
+        }
+
+        private void AtualizarPermissoesModalidadeVisualizar()
+        {
+            var modalidade = ComboModalidadeContratoVisualizar.SelectedItem as ModalidadeContratoDAO;
+            var habilitaFiador = ModalidadeEhFiador(modalidade);
+            var habilitaSeguro = ModalidadeEhSeguroFianca(modalidade);
+
+            ComboContratoFiadorVisualizar.IsEnabled = habilitaFiador;
+            if (!habilitaFiador)
+            {
+                ComboContratoFiadorVisualizar.SelectedItem = null;
+                ComboContratoFiadorVisualizar.Text = string.Empty;
+            }
+
+            TxtContratoPropostaSegFiancaVisualizar.IsReadOnly = !habilitaSeguro;
+            TxtContratoApoliceSegFiancaVisualizar.IsReadOnly = !habilitaSeguro;
+
+            if (!habilitaSeguro)
+            {
+                TxtContratoPropostaSegFiancaVisualizar.Background = new SolidColorBrush(Color.FromRgb(243, 243, 243));
+                TxtContratoPropostaSegFiancaVisualizar.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                TxtContratoPropostaSegFiancaVisualizar.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+                TxtContratoPropostaSegFiancaVisualizar.ToolTip = "Disponível apenas para modalidade Seguro fiança.";
+
+                TxtContratoApoliceSegFiancaVisualizar.Background = new SolidColorBrush(Color.FromRgb(243, 243, 243));
+                TxtContratoApoliceSegFiancaVisualizar.Foreground = new SolidColorBrush(Color.FromRgb(136, 136, 136));
+                TxtContratoApoliceSegFiancaVisualizar.BorderBrush = new SolidColorBrush(Color.FromRgb(224, 224, 224));
+                TxtContratoApoliceSegFiancaVisualizar.ToolTip = "Disponível apenas para modalidade Seguro fiança.";
+            }
+            else
+            {
+                TxtContratoPropostaSegFiancaVisualizar.ClearValue(TextBox.BackgroundProperty);
+                TxtContratoPropostaSegFiancaVisualizar.ClearValue(TextBox.ForegroundProperty);
+                TxtContratoPropostaSegFiancaVisualizar.ClearValue(TextBox.BorderBrushProperty);
+                TxtContratoPropostaSegFiancaVisualizar.ToolTip = null;
+
+                TxtContratoApoliceSegFiancaVisualizar.ClearValue(TextBox.BackgroundProperty);
+                TxtContratoApoliceSegFiancaVisualizar.ClearValue(TextBox.ForegroundProperty);
+                TxtContratoApoliceSegFiancaVisualizar.ClearValue(TextBox.BorderBrushProperty);
+                TxtContratoApoliceSegFiancaVisualizar.ToolTip = null;
+            }
+
+            if (!habilitaSeguro)
+            {
+                TxtContratoPropostaSegFiancaVisualizar.Clear();
+                TxtContratoApoliceSegFiancaVisualizar.Clear();
+            }
+        }
+
+        private void AtualizarFiltroProprietarioImovelCriar(bool proprietarioOrigem)
+        {
+            if (_atualizandoCombosContratoCriar)
+            {
+                return;
+            }
+
+            _atualizandoCombosContratoCriar = true;
+            try
+            {
+                var proprietarioSelecionado = ComboContratoProprietarioCriar.SelectedItem as ClienteDAO;
+                var imovelSelecionado = ComboContratoImovelCriar.SelectedItem as ImovelDAO;
+
+                if (proprietarioOrigem)
+                {
+                    var idProprietario = proprietarioSelecionado?.Id;
+                    var imoveisFiltrados = _imoveisContratoCriar
+                        .Where(i => !idProprietario.HasValue || i.Proprietario?.Id == idProprietario.Value)
+                        .ToList();
+
+                    var imovelIdSelecionado = imovelSelecionado?.Id;
+
+                    ComboContratoProprietarioCriar.ItemsSource = _proprietariosContratoCriar;
+                    ComboContratoImovelCriar.ItemsSource = imoveisFiltrados;
+
+                    RestaurarSelecaoPorId<ClienteDAO>(ComboContratoProprietarioCriar, proprietarioSelecionado?.Id);
+                    RestaurarSelecaoPorId<ImovelDAO>(ComboContratoImovelCriar, imovelIdSelecionado);
+
+                    if (ComboContratoImovelCriar.SelectedItem == null)
+                    {
+                        ComboContratoImovelCriar.SelectedItem = null;
+                    }
+                }
+                else
+                {
+                    var proprietariosFiltrados = _proprietariosContratoCriar
+                        .Where(p => imovelSelecionado == null || p.Id == imovelSelecionado.Proprietario?.Id)
+                        .ToList();
+
+                    ComboContratoImovelCriar.ItemsSource = _imoveisContratoCriar;
+                    ComboContratoProprietarioCriar.ItemsSource = proprietariosFiltrados;
+
+                    RestaurarSelecaoPorId<ImovelDAO>(ComboContratoImovelCriar, imovelSelecionado?.Id);
+
+                    var proprietarioId = imovelSelecionado?.Proprietario?.Id ?? proprietarioSelecionado?.Id;
+                    RestaurarSelecaoPorId<ClienteDAO>(ComboContratoProprietarioCriar, proprietarioId);
+                }
+            }
+            finally
+            {
+                _atualizandoCombosContratoCriar = false;
+            }
+        }
+
+        private void AtualizarFiltroProprietarioImovelVisualizar(bool proprietarioOrigem)
+        {
+            if (_atualizandoCombosContratoVisualizar)
+            {
+                return;
+            }
+
+            _atualizandoCombosContratoVisualizar = true;
+            try
+            {
+                var proprietarioSelecionado = ComboContratoProprietarioVisualizar.SelectedItem as ClienteDAO;
+                var imovelSelecionado = ComboContratoImovelVisualizar.SelectedItem as ImovelDAO;
+
+                if (proprietarioOrigem)
+                {
+                    var idProprietario = proprietarioSelecionado?.Id;
+                    var imoveisFiltrados = _imoveisContratoVisualizar
+                        .Where(i => !idProprietario.HasValue || i.Proprietario?.Id == idProprietario.Value)
+                        .ToList();
+
+                    var imovelIdSelecionado = imovelSelecionado?.Id;
+
+                    ComboContratoProprietarioVisualizar.ItemsSource = _proprietariosContratoVisualizar;
+                    ComboContratoImovelVisualizar.ItemsSource = imoveisFiltrados;
+
+                    RestaurarSelecaoPorId<ClienteDAO>(ComboContratoProprietarioVisualizar, proprietarioSelecionado?.Id);
+                    RestaurarSelecaoPorId<ImovelDAO>(ComboContratoImovelVisualizar, imovelIdSelecionado);
+                }
+                else
+                {
+                    var proprietariosFiltrados = _proprietariosContratoVisualizar
+                        .Where(p => imovelSelecionado == null || p.Id == imovelSelecionado.Proprietario?.Id)
+                        .ToList();
+
+                    ComboContratoImovelVisualizar.ItemsSource = _imoveisContratoVisualizar;
+                    ComboContratoProprietarioVisualizar.ItemsSource = proprietariosFiltrados;
+
+                    RestaurarSelecaoPorId<ImovelDAO>(ComboContratoImovelVisualizar, imovelSelecionado?.Id);
+
+                    var proprietarioId = imovelSelecionado?.Proprietario?.Id ?? proprietarioSelecionado?.Id;
+                    RestaurarSelecaoPorId<ClienteDAO>(ComboContratoProprietarioVisualizar, proprietarioId);
+                }
+            }
+            finally
+            {
+                _atualizandoCombosContratoVisualizar = false;
+            }
+        }
+
+        private void AtualizarFiltroContratantesCriar()
+        {
+            if (_atualizandoCombosContratoCriar)
+            {
+                return;
+            }
+
+            _atualizandoCombosContratoCriar = true;
+            try
+            {
+                AtualizarItensContratante(
+                    _locatariosContratoCriar,
+                    ComboContratoContratante1Criar,
+                    ComboContratoContratante2Criar,
+                    ComboContratoContratante3Criar,
+                    ComboContratoContratante4Criar);
+            }
+            finally
+            {
+                _atualizandoCombosContratoCriar = false;
+            }
+        }
+
+        private void AtualizarFiltroContratantesVisualizar()
+        {
+            if (_atualizandoCombosContratoVisualizar)
+            {
+                return;
+            }
+
+            _atualizandoCombosContratoVisualizar = true;
+            try
+            {
+                AtualizarItensContratante(
+                    _locatariosContratoVisualizar,
+                    ComboContratoContratante1Visualizar,
+                    ComboContratoContratante2Visualizar,
+                    ComboContratoContratante3Visualizar,
+                    ComboContratoContratante4Visualizar);
+            }
+            finally
+            {
+                _atualizandoCombosContratoVisualizar = false;
+            }
+        }
+
+        private static void AtualizarItensContratante(
+            List<ClienteDAO> baseLocatarios,
+            ComboBox combo1,
+            ComboBox combo2,
+            ComboBox combo3,
+            ComboBox combo4)
+        {
+            var combos = new[] { combo1, combo2, combo3, combo4 };
+            var selecionados = combos
+                .Select(c => c.SelectedItem as ClienteDAO)
+                .ToArray();
+
+            for (var i = 0; i < combos.Length; i++)
+            {
+                var idAtual = selecionados[i]?.Id;
+                var idsOutros = selecionados
+                    .Where((s, indice) => indice != i && s != null)
+                    .Select(s => s.Id)
+                    .ToHashSet();
+
+                var itens = baseLocatarios
+                    .Where(l => !idsOutros.Contains(l.Id) || (idAtual.HasValue && l.Id == idAtual.Value))
+                    .ToList();
+
+                combos[i].ItemsSource = itens;
+                RestaurarSelecaoPorId<ClienteDAO>(combos[i], idAtual);
+            }
+        }
+
+        private bool PossuiContratantesRepetidos(params ClienteDAO[] contratantes)
+        {
+            var ids = contratantes
+                .Where(c => c != null)
+                .Select(c => c.Id)
+                .ToList();
+
+            return ids.Count != ids.Distinct().Count();
+        }
+
+        private void ComboModalidadeContratoCriar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarPermissoesModalidadeCriar();
+        }
+
+        private void ComboModalidadeContratoVisualizar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarPermissoesModalidadeVisualizar();
+        }
+
+        private void ComboContratoProprietarioCriar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroProprietarioImovelCriar(true);
+        }
+
+        private void ComboContratoImovelCriar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroProprietarioImovelCriar(false);
+        }
+
+        private void ComboContratoProprietarioVisualizar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroProprietarioImovelVisualizar(true);
+        }
+
+        private void ComboContratoImovelVisualizar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroProprietarioImovelVisualizar(false);
+        }
+
+        private void ComboContratanteCriar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroContratantesCriar();
+        }
+
+        private void ComboContratanteVisualizar_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AtualizarFiltroContratantesVisualizar();
+        }
+
         // Funções auxilires Fim
 
         public Sistema()
@@ -488,6 +893,24 @@ namespace Imob
 
             FotosSelecionadasList.ItemsSource = _fotosSelecionadasPreview;
 			FotosSelecionadasListEditar.ItemsSource = _fotosSelecionadasPreview;
+
+            ComboModalidadeContratoCriar.SelectionChanged += ComboModalidadeContratoCriar_SelectionChanged;
+            ComboModalidadeContratoVisualizar.SelectionChanged += ComboModalidadeContratoVisualizar_SelectionChanged;
+            ComboContratoProprietarioCriar.SelectionChanged += ComboContratoProprietarioCriar_SelectionChanged;
+            ComboContratoImovelCriar.SelectionChanged += ComboContratoImovelCriar_SelectionChanged;
+            ComboContratoProprietarioVisualizar.SelectionChanged += ComboContratoProprietarioVisualizar_SelectionChanged;
+            ComboContratoImovelVisualizar.SelectionChanged += ComboContratoImovelVisualizar_SelectionChanged;
+            ComboContratoContratante1Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
+            ComboContratoContratante2Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
+            ComboContratoContratante3Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
+            ComboContratoContratante4Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
+            ComboContratoContratante1Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
+            ComboContratoContratante2Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
+            ComboContratoContratante3Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
+            ComboContratoContratante4Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
+
+            AtualizarPermissoesModalidadeCriar();
+            AtualizarPermissoesModalidadeVisualizar();
 
             ImgPwrOff.MouseEnter += (s, e) =>
             {
@@ -864,33 +1287,41 @@ namespace Imob
                 ComboObjetoContratoCriar.SelectedValuePath = "Id";
                 ComboObjetoContratoCriar.ItemsSource = objetosContratoTask.Result;
 
+                _proprietariosContratoCriar = proprietariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+                _imoveisContratoCriar = imoveisTask.Result?.ToList() ?? new List<ImovelDAO>();
+                _locatariosContratoCriar = locatariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+
                 ComboContratoProprietarioCriar.DisplayMemberPath = "Nome";
                 ComboContratoProprietarioCriar.SelectedValuePath = "Id";
-                ComboContratoProprietarioCriar.ItemsSource = proprietariosTask.Result;
+                ComboContratoProprietarioCriar.ItemsSource = _proprietariosContratoCriar;
 
                 ComboContratoImovelCriar.DisplayMemberPath = "Logradouro";
                 ComboContratoImovelCriar.SelectedValuePath = "Id";
-                ComboContratoImovelCriar.ItemsSource = imoveisTask.Result;
+                ComboContratoImovelCriar.ItemsSource = _imoveisContratoCriar;
 
                 ComboContratoContratante1Criar.DisplayMemberPath = "Nome";
                 ComboContratoContratante1Criar.SelectedValuePath = "Id";
-                ComboContratoContratante1Criar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante1Criar.ItemsSource = _locatariosContratoCriar;
 
                 ComboContratoContratante2Criar.DisplayMemberPath = "Nome";
                 ComboContratoContratante2Criar.SelectedValuePath = "Id";
-                ComboContratoContratante2Criar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante2Criar.ItemsSource = _locatariosContratoCriar;
 
                 ComboContratoContratante3Criar.DisplayMemberPath = "Nome";
                 ComboContratoContratante3Criar.SelectedValuePath = "Id";
-                ComboContratoContratante3Criar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante3Criar.ItemsSource = _locatariosContratoCriar;
 
                 ComboContratoContratante4Criar.DisplayMemberPath = "Nome";
                 ComboContratoContratante4Criar.SelectedValuePath = "Id";
-                ComboContratoContratante4Criar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante4Criar.ItemsSource = _locatariosContratoCriar;
 
                 ComboContratoFiadorCriar.DisplayMemberPath = "Nome";
                 ComboContratoFiadorCriar.SelectedValuePath = "Id";
                 ComboContratoFiadorCriar.ItemsSource = fiadoresTask.Result;
+
+                AtualizarPermissoesModalidadeCriar();
+                AtualizarFiltroProprietarioImovelCriar(true);
+                AtualizarFiltroContratantesCriar();
             }
             catch (Exception ex)
             {
@@ -931,33 +1362,41 @@ namespace Imob
                 ComboObjetoContratoVisualizar.SelectedValuePath = "Id";
                 ComboObjetoContratoVisualizar.ItemsSource = objetosContratoTask.Result;
 
+                _proprietariosContratoVisualizar = proprietariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+                _imoveisContratoVisualizar = imoveisTask.Result?.ToList() ?? new List<ImovelDAO>();
+                _locatariosContratoVisualizar = locatariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+
                 ComboContratoProprietarioVisualizar.DisplayMemberPath = "Nome";
                 ComboContratoProprietarioVisualizar.SelectedValuePath = "Id";
-                ComboContratoProprietarioVisualizar.ItemsSource = proprietariosTask.Result;
+                ComboContratoProprietarioVisualizar.ItemsSource = _proprietariosContratoVisualizar;
 
                 ComboContratoImovelVisualizar.DisplayMemberPath = "Logradouro";
                 ComboContratoImovelVisualizar.SelectedValuePath = "Id";
-                ComboContratoImovelVisualizar.ItemsSource = imoveisTask.Result;
+                ComboContratoImovelVisualizar.ItemsSource = _imoveisContratoVisualizar;
 
                 ComboContratoContratante1Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante1Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante1Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante1Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante2Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante2Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante2Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante2Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante3Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante3Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante3Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante3Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante4Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante4Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante4Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante4Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoFiadorVisualizar.DisplayMemberPath = "Nome";
                 ComboContratoFiadorVisualizar.SelectedValuePath = "Id";
                 ComboContratoFiadorVisualizar.ItemsSource = fiadoresTask.Result;
+
+                AtualizarPermissoesModalidadeVisualizar();
+                AtualizarFiltroProprietarioImovelVisualizar(true);
+                AtualizarFiltroContratantesVisualizar();
             }
             catch (Exception ex)
             {
@@ -987,6 +1426,10 @@ namespace Imob
             ComboContratoContratante3Criar.SelectedItem = null;
             ComboContratoContratante4Criar.SelectedItem = null;
             ComboContratoFiadorCriar.SelectedItem = null;
+
+            AtualizarPermissoesModalidadeCriar();
+            AtualizarFiltroProprietarioImovelCriar(true);
+            AtualizarFiltroContratantesCriar();
         }
 
         private void SearchBarContratos_KeyDown(object sender, KeyEventArgs e)
@@ -1050,33 +1493,41 @@ namespace Imob
                 ComboObjetoContratoVisualizar.SelectedValuePath = "Id";
                 ComboObjetoContratoVisualizar.ItemsSource = objetosContratoTask.Result;
 
+                _proprietariosContratoVisualizar = proprietariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+                _imoveisContratoVisualizar = imoveisTask.Result?.ToList() ?? new List<ImovelDAO>();
+                _locatariosContratoVisualizar = locatariosTask.Result?.ToList() ?? new List<ClienteDAO>();
+
                 ComboContratoProprietarioVisualizar.DisplayMemberPath = "Nome";
                 ComboContratoProprietarioVisualizar.SelectedValuePath = "Id";
-                ComboContratoProprietarioVisualizar.ItemsSource = proprietariosTask.Result;
+                ComboContratoProprietarioVisualizar.ItemsSource = _proprietariosContratoVisualizar;
 
                 ComboContratoImovelVisualizar.DisplayMemberPath = "Logradouro";
                 ComboContratoImovelVisualizar.SelectedValuePath = "Id";
-                ComboContratoImovelVisualizar.ItemsSource = imoveisTask.Result;
+                ComboContratoImovelVisualizar.ItemsSource = _imoveisContratoVisualizar;
 
                 ComboContratoContratante1Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante1Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante1Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante1Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante2Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante2Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante2Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante2Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante3Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante3Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante3Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante3Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoContratante4Visualizar.DisplayMemberPath = "Nome";
                 ComboContratoContratante4Visualizar.SelectedValuePath = "Id";
-                ComboContratoContratante4Visualizar.ItemsSource = locatariosTask.Result;
+                ComboContratoContratante4Visualizar.ItemsSource = _locatariosContratoVisualizar;
 
                 ComboContratoFiadorVisualizar.DisplayMemberPath = "Nome";
                 ComboContratoFiadorVisualizar.SelectedValuePath = "Id";
                 ComboContratoFiadorVisualizar.ItemsSource = fiadoresTask.Result;
+
+                AtualizarPermissoesModalidadeVisualizar();
+                AtualizarFiltroProprietarioImovelVisualizar(true);
+                AtualizarFiltroContratantesVisualizar();
             }
             catch (Exception ex)
             {
@@ -1087,6 +1538,9 @@ namespace Imob
         private void BtnFecharModalContratosVisualizar_Click(object sender, RoutedEventArgs e)
         {
             ContratoModalOverlayVisualizar.Visibility = Visibility.Hidden;
+            AtualizarPermissoesModalidadeVisualizar();
+            AtualizarFiltroProprietarioImovelVisualizar(true);
+            AtualizarFiltroContratantesVisualizar();
         }
 
         private async void BtnInativarContrato_Click(object sender, RoutedEventArgs e)
@@ -2426,9 +2880,16 @@ namespace Imob
                 return;
             }
 
-            if (!int.TryParse(DpContratoVencimentoCriar.Text, out int vencimento) || (vencimento < 1 && vencimento > 31))
+            if (!int.TryParse(DpContratoVencimentoCriar.Text, out int vencimento) || (vencimento < 1 || vencimento > 31))
             {
                 MessageBox.Show("Vencimento inválido Utilize apenas números de 1 a 31.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (PossuiContratantesRepetidos(locatario1Selecionado, locatario2Selecionado, locatario3Selecionado, locatario4Selecionado))
+            {
+                MessageBox.Show("Não é permitido repetir contratantes.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
 
             if (string.IsNullOrEmpty(nomeContrato) ||
@@ -2485,6 +2946,10 @@ namespace Imob
             TxtContratoPropostaSegFiancaCriar.Clear();
             TxtContratoApoliceSegFiancaCriar.Clear();
 
+            AtualizarPermissoesModalidadeCriar();
+            AtualizarFiltroProprietarioImovelCriar(true);
+            AtualizarFiltroContratantesCriar();
+
             ContratoModalOverlayCriar.Visibility = Visibility.Hidden;
 
             await AdicionarItensGridContratos();
@@ -2517,6 +2982,7 @@ namespace Imob
             string nomeContrato = TxtContratoNomeVisualizar.Text;
             int? tipoContratoId = ObterIdSelecionado(ComboTipoContratoVisualizar);
             int? modalidadeId = ObterIdSelecionado(ComboModalidadeContratoVisualizar);
+            var modalidadeSelecionada = ComboModalidadeContratoVisualizar.SelectedItem as ModalidadeContratoDAO;
             int? objetoId = ObterIdSelecionado(ComboObjetoContratoVisualizar);
             int? proprietarioId = ObterIdSelecionado(ComboContratoProprietarioVisualizar);
             int? imovelId = ObterIdSelecionado(ComboContratoImovelVisualizar);
@@ -2528,6 +2994,22 @@ namespace Imob
             DateTime? inicio = DpContratoDataInicioVisualizar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaVisualizar.Text;
             string apolice = TxtContratoApoliceSegFiancaVisualizar.Text;
+
+            if (!ModalidadeEhFiador(modalidadeSelecionada))
+            {
+                fiadorId = null;
+            }
+
+            if (!ModalidadeEhSeguroFianca(modalidadeSelecionada))
+            {
+                proposta = null;
+                apolice = null;
+            }
+            else
+            {
+                proposta = string.IsNullOrWhiteSpace(proposta) ? null : proposta;
+                apolice = string.IsNullOrWhiteSpace(apolice) ? null : apolice;
+            }
 
             if (!int.TryParse(TxtContratoPrazoMesesVisualizar.Text, out int prazo))
             {
@@ -2613,17 +3095,6 @@ namespace Imob
 
                 TxtContratoNomeVisualizar.Text = contratoSelecionado.Nome;
 
-                //ComboTipoContratoVisualizar.Text = contratoSelecionado.NomeTipoContrato;
-                //ComboModalidadeContratoVisualizar.Text = contratoSelecionado.NomeModalidadeContrato;
-                //ComboObjetoContratoCriar.Text = contratoSelecionado.NomeObjetoContrato;
-                //ComboContratoProprietarioVisualizar.Text = contratoSelecionado.NomeProprietario;
-                //ComboContratoImovelVisualizar.Text = contratoSelecionado.NomeImovel;
-                //ComboContratoContratante1Visualizar.Text = contratoSelecionado.NomeContratante1;
-                //ComboContratoContratante2Visualizar.Text = contratoSelecionado.NomeContratante2;
-                //ComboContratoContratante3Visualizar.Text = contratoSelecionado.NomeContratante3;
-                //ComboContratoContratante4Visualizar.Text = contratoSelecionado.NomeContratante4;
-                //ComboContratoFiadorVisualizar.Text = contratoSelecionado.NomeFiador;
-
                 ComboTipoContratoVisualizar.SelectedValue = contratoSelecionado.TipoContrato?.Id ?? contratoSelecionado.TipoContratoId;
                 ComboModalidadeContratoVisualizar.SelectedValue = contratoSelecionado.ModalidadeContrato?.Id ?? contratoSelecionado.ModalidadeContratoId;
                 ComboObjetoContratoVisualizar.SelectedValue = contratoSelecionado.ObjetoContrato?.Id ?? contratoSelecionado.ObjetoContratoId;
@@ -2644,13 +3115,16 @@ namespace Imob
                 if (ComboContratoContratante2Visualizar.SelectedItem == null) ComboContratoContratante2Visualizar.Text = contratoSelecionado.Contratante2?.Nome;
                 if (ComboContratoContratante3Visualizar.SelectedItem == null) ComboContratoContratante3Visualizar.Text = contratoSelecionado.Contratante3?.Nome;
                 if (ComboContratoContratante4Visualizar.SelectedItem == null) ComboContratoContratante4Visualizar.Text = contratoSelecionado.Contratante4?.Nome;
-                if (ComboContratoFiadorVisualizar.SelectedItem == null) ComboContratoFiadorVisualizar.Text = contratoSelecionado.Fiador?.Nome;
 
                 DpContratoDataInicioVisualizar.SelectedDate = contratoSelecionado.DataInicioVigencia;
                 TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
                 TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
                 TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
                 TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
+
+                AtualizarFiltroProprietarioImovelVisualizar(true);
+                AtualizarFiltroContratantesVisualizar();
+                AtualizarPermissoesModalidadeVisualizar();
 
                 ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
             }
