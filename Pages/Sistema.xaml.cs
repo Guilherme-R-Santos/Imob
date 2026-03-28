@@ -26,6 +26,7 @@ using System.Threading;
 using System.Windows.Threading;
 using System.Linq;
 using System.Globalization;
+using Imob.Services.Pdf;
 
 namespace Imob
 {
@@ -3132,6 +3133,13 @@ namespace Imob
             {
                 MessageBox.Show("Erro ao carregar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void BtnGerarContratoVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            GeradorContratoPdf gerador = new GeradorContratoPdf();
+
+            gerador.CriarContrato();
         }
     }
 }
