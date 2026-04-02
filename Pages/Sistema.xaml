@@ -763,7 +763,7 @@
             </Border>
         </Grid>
 
-        <Grid x:Name="ContratoModalOverlayVisualizar" Visibility="Visible" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ContratoModalOverlayVisualizar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>

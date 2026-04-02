@@ -35,7 +35,8 @@ namespace Imob.Services.Pdf
             gfx.DrawString("DO IMÓVEL: Rua Marechal Cantuária, 102, loja C, URCA, Rio de Janeiro,", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
 
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
-            document.Save(filename);
+            //document.Save(filename);
+            PdfFileUtility.SaveAndShowDocument(document, filename);
         }
     }
 }
