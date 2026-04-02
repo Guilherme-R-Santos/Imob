@@ -115,6 +115,7 @@ namespace Imob
                 sistemaWindow.SetUsuarioLogado(usuarioLogado);
                 sistemaWindow.SetAutenticacao(tokenJwt, tokenExpiration, login, senha);
                 sistemaWindow.MenuNav.Visibility = Visibility.Hidden;
+                sistemaWindow.WindowState = WindowState.Maximized;
                 sistemaWindow.Show();
                 this.Close();
             }
