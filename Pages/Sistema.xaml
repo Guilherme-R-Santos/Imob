@@ -348,9 +348,7 @@
                 <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown" MouseDoubleClick="LocatariosTree_MouseDown"/>
                 <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown" MouseDoubleClick="FiadoresTree_MouseDown"/>
             </TreeViewItem>
-            <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="VistoriaTreeListar" Header="Listar" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeListar_MouseDown" MouseDoubleClick="VistoriaTreeListar_MouseDown"/>
-                <TreeViewItem x:Name="VistoriaTreeCriar" Header="Realizar vistoria" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="VistoriaTreeCriar_MouseDown" MouseDoubleClick="VistoriaTreeCriar_MouseDown"/>
+            <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDoubleClick="VistoriaTreeListar_MouseDown">
             </TreeViewItem>
         </TreeView>
 
@@ -648,7 +646,7 @@
                         <TextBlock Text="Listagem de Vistorias" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
 
-                    <Button x:Name="BtnAdicionarVistoria" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Nova Vistoria</Button>
+                    <Button x:Name="BtnAdicionarVistoria" Grid.Column="1" Style="{StaticResource ModernButton}" Width="180" Height="40" HorizontalAlignment="Right" VerticalAlignment="Center">Realizar Vistoria</Button>
                 </Grid>
 
                 <DataGrid x:Name="VistoriasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2">

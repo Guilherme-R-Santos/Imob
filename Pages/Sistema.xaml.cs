@@ -1053,12 +1053,6 @@ namespace Imob
             VistoriasPanel.Visibility = Visibility.Visible;
         }
 
-        private void VistoriaTreeCriar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            FecharPanelsAtivos();
-            VistoriasPanel.Visibility = Visibility.Visible;
-        }
-
         private void BtnAdicionarImovel_Click(object sender, RoutedEventArgs e)
         {
             Task task = AdicionarItensComboProprietarios();
