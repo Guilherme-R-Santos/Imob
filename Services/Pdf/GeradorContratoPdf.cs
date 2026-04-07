@@ -29,10 +29,10 @@ namespace Imob.Services.Pdf
             var fontTitulo = new XFont("Times New Roman", 18, XFontStyleEx.Bold);
             var fontTituloPrincipal = new XFont("Times New Roman", 24, XFontStyleEx.Bold);
 
-            gfx.DrawString("CONTRATO DE LOCAÇÃO", fontTituloPrincipal, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+            gfx.DrawString("CONTRATO DE LOCAÇÃO", fontTituloPrincipal, XBrushes.Black, new XRect(0, 50, page.Width, page.Height), XStringFormats.TopCenter);
             gfx.DrawString("Pelo presente instrumento, na melhor forma de direito e de acordo com todas as", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
-            gfx.DrawString("disposições legais expressas em lei, fica acordada a seguinte locação:", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
-            gfx.DrawString("DO IMÓVEL: Rua Marechal Cantuária, 102, loja C, URCA, Rio de Janeiro,", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+            //gfx.DrawString("disposições legais expressas em lei, fica acordada a seguinte locação:", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+            //gfx.DrawString("DO IMÓVEL: Rua Marechal Cantuária, 102, loja C, URCA, Rio de Janeiro,", fontCorpo, XBrushes.Black, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
 
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
             //document.Save(filename);
