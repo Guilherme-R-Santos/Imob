@@ -3132,8 +3132,18 @@ namespace Imob
         private void BtnGerarContratoVisualizar_Click(object sender, RoutedEventArgs e)
         {
             GeradorContratoPdf gerador = new GeradorContratoPdf();
+            ContratoDAO contratoSelecionado = ContratosDataGrid.SelectedItem as ContratoDAO;
 
-            gerador.CriarContrato();
+            try
+            {
+                MessageBox.Show("Em andamento", "Aguarde", MessageBoxButton.OK, MessageBoxImage.Information);
+                gerador.CriarContratoLocacao(contratoSelecionado);
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao gerar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
     }
 }
