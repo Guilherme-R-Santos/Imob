@@ -17,7 +17,7 @@ namespace Imob.Services.Pdf
         public int linhaX = 25;
         public int linhaY = 110;
         PdfDocument document = new PdfDocument();
-        
+
         public void CriarContratoLocacao(ContratoDAO contrato)
         {
             //var document = new PdfDocument();
@@ -52,7 +52,7 @@ namespace Imob.Services.Pdf
 
             AdicionarLinhaParagrafo(gfx, $"1º LOCATÁRIO: {contrato.Contratante1.Nome.ToUpper()}, {contrato.Contratante1.Nacionalidade}, {contrato.Contratante1.EstadoCivil}, {contrato.Contratante1.Profissao},", fontCorpo, linhaX, linhaY, page);
             AdicionarLinhaParagrafo(gfx, $"Nascido em {contrato.Contratante1.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante1.Identidade} e CPF nº {contrato.Contratante1.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
-            
+
             if (contrato.Contratante1.Endereco != null)
             {
                 AdicionarLinhaParagrafo(gfx, $"residente à {contrato.Contratante1.Endereco},", fontCorpo, linhaX, linhaY, page);
@@ -109,6 +109,36 @@ namespace Imob.Services.Pdf
             AdicionarLinhaParagrafo(gfx, "As partes acima identificadas têm entre si justo e contratado o presente contrato de Locação Residencial,", fontCorpo, linhaX, linhaY, page);
             AdicionarLinhaParagrafo(gfx, "que se regerá pelas cláusulas e condições seguintes:", fontCorpo, linhaX, linhaY, page);
 
+            AdicionarLinhaDivisoria(gfx, page);
+
+            AdicionarLinhaParagrafo(gfx, "CLÁUSULA 1ª - DO IMÓVEL:", fontTitulo, linhaX, linhaY, page);
+
+            linhaY += 20;
+
+            AdicionarLinhaParagrafo(gfx, "O LOCADOR dá em locação ao(s) LOCATÁRIO(S) o imóvel situado à:", fontCorpo, linhaX, linhaY, page);
+
+            linhaY += 20;
+
+            AdicionarLinhaParagrafo(gfx, $"{contrato.Imovel.Logradouro}, {contrato.Imovel.Numero} {(!string.IsNullOrEmpty(contrato.Imovel.Complemento) ? ", " + contrato.Imovel.Complemento : "")}, {contrato.Imovel.Bairro}, {contrato.Imovel.Cidade} / {contrato.Imovel.Estado}, CEP {contrato.Imovel.Cep}.", fontCorpo, linhaX, linhaY, page);
+
+            if (contrato.Imovel.TipoImovel.Nome != null)
+            {
+                if (contrato.Imovel.TipoImovel.Nome.Equals("Residencial"))
+                {
+                    AdicionarLinhaParagrafo(gfx, $"O imóvel destina-se exclusivamente para fins residenciais.", fontCorpo, linhaX, linhaY, page);
+                }
+
+                if (contrato.Imovel.TipoImovel.Nome.Equals("Comercial"))
+                {
+                    AdicionarLinhaParagrafo(gfx, $"O imóvel destina-se exclusivamente para fins comerciais.", fontCorpo, linhaX, linhaY, page);
+                }
+
+                if (contrato.Imovel.TipoImovel.Nome.Equals("Misto"))
+                {
+                    AdicionarLinhaParagrafo(gfx, $"O imóvel destina-se para fins residenciais e comerciais.", fontCorpo, linhaX, linhaY, page);
+                }
+            }
+
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
             PdfFileUtility.SaveAndShowDocument(document, filename);
         }
@@ -118,6 +148,13 @@ namespace Imob.Services.Pdf
             var rect = new XRect(x, y, page.Width - x - 40, page.Height - y);
             gfx.DrawString(texto, fonte, XBrushes.Black, rect, XStringFormats.TopLeft);
             linhaY += 16;
+        }
+
+        public void AdicionarLinhaDivisoria(XGraphics gfx, PdfPage page)
+        {
+            linhaY += 20;
+            gfx.DrawLine(XPens.Black, 50, linhaY + 4, page.Width.Point - 50, linhaY + 4);
+            linhaY += 20;
         }
     }
 }

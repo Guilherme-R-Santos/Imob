@@ -67,6 +67,13 @@
             </Setter>
         </Style>
 
+        <Style x:Key="PanelSearchBox" TargetType="TextBox" BasedOn="{StaticResource ModernSearchBox}">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="16,0,16,0"/>
+            <Setter Property="MinWidth" Value="220"/>
+        </Style>
+
         <!-- Estilo PasswordBox -->
         <Style x:Key="ModernPasswordBox" TargetType="PasswordBox">
             <Setter Property="FontSize" Value="14"/>
@@ -366,21 +373,18 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
                         <TextBlock Text="Proprietarios" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Proprietarios" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <Button x:Name="BtnAtualizarProprietarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarProprietarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarProprietario" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarProprietario_Click">Novo Proprietario</Button>
-                    <TextBox x:Name="SearchBarProprietarios" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarProprietarios_KeyDown"/>
+                    <TextBox x:Name="SearchBarProprietarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarProprietarios_KeyDown"/>
+                    <Button x:Name="BtnAtualizarProprietarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarProprietarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarProprietario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarProprietario_Click">Novo Proprietario</Button>
                 </Grid>
 
                 <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
@@ -420,21 +424,18 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
                         <TextBlock Text="Locatários" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Locatários" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <Button x:Name="BtnAtualizarLocatarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarLocatarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarLocatario" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarLocatario_Click">Novo Locatário</Button>
-                    <TextBox x:Name="SearchBarLocatarios" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarLocatarios_KeyDown"/>
+                    <TextBox x:Name="SearchBarLocatarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarLocatarios_KeyDown"/>
+                    <Button x:Name="BtnAtualizarLocatarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarLocatarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarLocatario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarLocatario_Click">Novo Locatário</Button>
                 </Grid>
 
                 <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
@@ -474,21 +475,18 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
                         <TextBlock Text="Fiadores" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Fiadores" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <Button x:Name="BtnAtualizarFiadores" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarFiadores_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarFiador" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarFiador_Click">Novo Fiador</Button>
-                    <TextBox x:Name="SearchBarFiadores" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarFiadores_KeyDown"/>
+                    <TextBox x:Name="SearchBarFiadores" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarFiadores_KeyDown"/>
+                    <Button x:Name="BtnAtualizarFiadores" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarFiadores_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarFiador" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarFiador_Click">Novo Fiador</Button>
                 </Grid>
 
                 <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
@@ -528,21 +526,18 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center">
                         <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" Width="99" HorizontalAlignment="Left" />
                         <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}" Width="127" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <Button x:Name="BtnAtualizar" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizar_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarImovel" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click">Novo Imóvel</Button>
-                    <TextBox x:Name="SearchBarImoveis" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarImoveis_KeyDown"/>
+                    <TextBox x:Name="SearchBarImoveis" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarImoveis_KeyDown"/>
+                    <Button x:Name="BtnAtualizar" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizar_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarImovel" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click">Novo Imóvel</Button>
                 </Grid>
 
                 <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Extended"  AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
@@ -584,21 +579,18 @@
 
                 <Grid Grid.Row="0" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
                         <TextBlock Text="Contratos" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de contratos" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <Button x:Name="BtnAtualizarContratos" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarContratos_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarContrato" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarContrato_Click">Novo Contrato</Button>
-                    <TextBox x:Name="SearchBarContratos" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0" Style="{StaticResource ModernSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarContratos_KeyDown"/>
+                    <TextBox x:Name="SearchBarContratos" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarContratos_KeyDown"/>
+                    <Button x:Name="BtnAtualizarContratos" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarContratos_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarContrato" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarContrato_Click">Novo Contrato</Button>
                 </Grid>
 
                 <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
