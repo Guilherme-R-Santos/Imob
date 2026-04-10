@@ -6,7 +6,6 @@
   <img alt="WPF" src="https://img.shields.io/badge/UI-WPF-0C54C2" />
   <img alt="C#" src="https://img.shields.io/badge/C%23-14.0-239120" />
   <img alt="Plataforma" src="https://img.shields.io/badge/Windows-Desktop-0078D6" />
-  <img alt="Licença" src="https://img.shields.io/badge/licen%C3%A7a-N%C3%A3o%20definida-lightgrey" />
 </p>
 
 Sistema desktop para gestão imobiliária, focado em **cadastro e administração de imóveis, clientes e contratos**, com interface moderna em **WPF** e integração com API HTTP.
