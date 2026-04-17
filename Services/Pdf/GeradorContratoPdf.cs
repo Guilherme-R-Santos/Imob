@@ -40,8 +40,7 @@ namespace Imob.Services.Pdf
             var linhaFimX = linhaInicioX + tituloSize.Width;
             gfx.DrawLine(XPens.Black, linhaInicioX, 80, linhaFimX, 80);
 
-            AdicionarLinhaParagrafo(gfx, $"LOCADOR: {contrato.Proprietario.Nome.ToUpper()}, {contrato.Proprietario.Nacionalidade}, {contrato.Proprietario.EstadoCivil}, {contrato.Proprietario.Profissao},", fontCorpo, linhaX, linhaY, page);
-            AdicionarLinhaParagrafo(gfx, $"portador do CPF nº {contrato.Proprietario.CpfCnpj}, residente nesta cidade. E-MAIL: {contrato.Proprietario.Email}.", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"LOCADOR: {contrato.Proprietario.Nome.ToUpper()}, {contrato.Proprietario.Nacionalidade}, {contrato.Proprietario.EstadoCivil}, {contrato.Proprietario.Profissao}, portador do CPF nº {contrato.Proprietario.CpfCnpj}, residente nesta cidade. E-MAIL: {contrato.Proprietario.Email}.", fontCorpo, linhaX, linhaY, page);
 
             linhaY += 20;
 
@@ -50,28 +49,26 @@ namespace Imob.Services.Pdf
             linhaY += 20;
             linhaX = 50;
 
-            AdicionarLinhaParagrafo(gfx, $"1º LOCATÁRIO: {contrato.Contratante1.Nome.ToUpper()}, {contrato.Contratante1.Nacionalidade}, {contrato.Contratante1.EstadoCivil}, {contrato.Contratante1.Profissao},", fontCorpo, linhaX, linhaY, page);
-            AdicionarLinhaParagrafo(gfx, $"Nascido em {contrato.Contratante1.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante1.Identidade} e CPF nº {contrato.Contratante1.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"1º LOCATÁRIO: {contrato.Contratante1.Nome.ToUpper()}, {contrato.Contratante1.Nacionalidade}, {contrato.Contratante1.EstadoCivil}, {contrato.Contratante1.Profissao}, Nascido em {contrato.Contratante1.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante1.Identidade} e CPF nº {contrato.Contratante1.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
             if (contrato.Contratante1.Endereco != null)
             {
-                AdicionarLinhaParagrafo(gfx, $"residente à {contrato.Contratante1.Endereco},", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"residente à {contrato.Contratante1.Endereco},", fontCorpo, linhaX, linhaY, page);
             }
 
-            AdicionarLinhaParagrafo(gfx, $"e-mail: {contrato.Contratante1.Email}.", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"e-mail: {contrato.Contratante1.Email}.", fontCorpo, linhaX, linhaY, page);
 
             if (contrato.Contratante2 != null)
             {
                 linhaY += 5;
-                AdicionarLinhaParagrafo(gfx, $"2º LOCATÁRIO: {contrato.Contratante2.Nome.ToUpper()}, {contrato.Contratante2.Nacionalidade}, {contrato.Contratante2.EstadoCivil}, {contrato.Contratante2.Profissao},", fontCorpo, linhaX, linhaY, page);
-                AdicionarLinhaParagrafo(gfx, $"Nascido em {contrato.Contratante2.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante2.Identidade} e CPF nº {contrato.Contratante2.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"2º LOCATÁRIO: {contrato.Contratante2.Nome.ToUpper()}, {contrato.Contratante2.Nacionalidade}, {contrato.Contratante2.EstadoCivil}, {contrato.Contratante2.Profissao}, Nascido em {contrato.Contratante2.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante2.Identidade} e CPF nº {contrato.Contratante2.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
                 if (contrato.Contratante2.Endereco != null)
                 {
-                    AdicionarLinhaParagrafo(gfx, $"residente à {contrato.Contratante2.Endereco},", fontCorpo, linhaX, linhaY, page);
+                    AdicionaParagrafo(gfx, $"residente à {contrato.Contratante2.Endereco},", fontCorpo, linhaX, linhaY, page);
                 }
 
-                AdicionarLinhaParagrafo(gfx, $"e-mail: {contrato.Contratante2.Email}.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"e-mail: {contrato.Contratante2.Email}.", fontCorpo, linhaX, linhaY, page);
 
             }
 
@@ -139,6 +136,18 @@ namespace Imob.Services.Pdf
                 }
             }
 
+            AdicionarLinhaDivisoria(gfx, page);
+
+            AdicionarLinhaParagrafo(gfx, "CLÁUSULA 2ª - DO PRAZO:", fontTitulo, linhaX, linhaY, page);
+
+            linhaY += 20;
+
+            AdicionarLinhaParagrafo(gfx, $"O prazo da locação é de {contrato.PrazoMeses} meses, iniciando-se em {contrato.DataInicioVigencia?.ToString("dd/MM/yyyy")} e terminando em {contrato.DataFimVigencia?.ToString("dd/MM/yyyy")}.", fontCorpo, linhaX, linhaY, page);
+
+            linhaY += 20;
+
+            AdicionarLinhaParagrafo(gfx, "Ao término do prazo, caso não haja manifestação contrária, a locação prorrogar-se-á por prazo indeterminado. ", fontCorpo, linhaX, linhaY, page);
+
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
             PdfFileUtility.SaveAndShowDocument(document, filename);
         }
@@ -148,6 +157,47 @@ namespace Imob.Services.Pdf
             var rect = new XRect(x, y, page.Width - x - 40, page.Height - y);
             gfx.DrawString(texto, fonte, XBrushes.Black, rect, XStringFormats.TopLeft);
             linhaY += 16;
+        }
+
+        public void AdicionaParagrafo(XGraphics gfx, string texto, XFont fonte, int x, int y, PdfPage page)
+        {
+            if (linhaY != y)
+            {
+                linhaY = y;
+            }
+
+            var larguraMaxima = page.Width.Point - x - 40;
+            var palavras = texto.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var linhaAtual = new StringBuilder();
+
+            foreach (var palavra in palavras)
+            {
+                var textoTeste = linhaAtual.Length == 0 ? palavra : $"{linhaAtual} {palavra}";
+
+                if (gfx.MeasureString(textoTeste, fonte).Width <= larguraMaxima)
+                {
+                    linhaAtual.Clear();
+                    linhaAtual.Append(textoTeste);
+                    continue;
+                }
+
+                if (linhaAtual.Length > 0)
+                {
+                    var rectLinha = new XRect(x, linhaY, larguraMaxima, page.Height - linhaY);
+                    gfx.DrawString(linhaAtual.ToString(), fonte, XBrushes.Black, rectLinha, XStringFormats.TopLeft);
+                    linhaY += 16;
+                }
+
+                linhaAtual.Clear();
+                linhaAtual.Append(palavra);
+            }
+
+            if (linhaAtual.Length > 0)
+            {
+                var rectLinha = new XRect(x, linhaY, larguraMaxima, page.Height - linhaY);
+                gfx.DrawString(linhaAtual.ToString(), fonte, XBrushes.Black, rectLinha, XStringFormats.TopLeft);
+                linhaY += 16;
+            }
         }
 
         public void AdicionarLinhaDivisoria(XGraphics gfx, PdfPage page)
