@@ -218,7 +218,7 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            AdicionaParagrafo(gfx, "O aluguel será reajustado anualmente com base no índice IGP-M ou IPCA, prevalecendo aquele\r\nque estiver vigente à época da correção, ou outro índice que venha a substituí-lo.", fontCorpo, linhaX, linhaY, page2);
+            AdicionaParagrafo(gfx, "O aluguel será reajustado anualmente com base no índice IGP-M ou IPCA, prevalecendo aquele que estiver vigente à época da correção, ou outro índice que venha a substituí-lo.", fontCorpo, linhaX, linhaY, page2);
 
             AdicionarLinhaDivisoria(gfx, page2);
 
