@@ -152,16 +152,16 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            int valorAluguelReais = int.Parse(contrato.Imovel.Valor.ToString("F2").Split(',')[0]);
+            int valorAluguelReais = int.Parse(contrato.Imovel.ValorLocacao.ToString("F2").Split(',')[0]);
 
-            int valorAluguelCentavos = int.Parse(contrato.Imovel.Valor.ToString("F2").Split(',')[1]);
+            int valorAluguelCentavos = int.Parse(contrato.Imovel.ValorLocacao.ToString("F2").Split(',')[1]);
 
             if (valorAluguelCentavos > 0)
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.Valor.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             } else
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.Valor.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             }
 
             var page2 = document.AddPage();

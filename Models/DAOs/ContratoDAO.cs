@@ -12,6 +12,7 @@ namespace Imob.Models
         public int Id { get; set; }
         public string Nome { get; set; }
         public bool Ativo { get; set; }
+        public decimal ValorContrato { get; set; }
         public int? TipoContratoId { get; set; }
         public int? ProprietarioId { get; set; }
         public int? Contratante1Id { get; set; }

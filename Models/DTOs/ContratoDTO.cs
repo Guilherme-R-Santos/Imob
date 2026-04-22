@@ -12,6 +12,7 @@ namespace Imob.Models
         public int Id { get; set; }
         public string Nome { get; set; }
         public bool Ativo { get; set; }
+        public decimal ValorContrato { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
         public TipoContratoDAO TipoContrato { get; set; }
         public ClienteDAO Proprietario { get; set; }
@@ -50,6 +51,7 @@ namespace Imob.Models
             var contratoJson = new System.Collections.Generic.Dictionary<string, object>
             {
                 { "Nome", this.Nome },
+                { "ValorContrato", this.ValorContrato },
                 { "Cadastrador", new { Id = this.Cadastrador.Id } },
                 { "TipoContrato", new { Id = this.TipoContrato.Id } },
                 { "ModalidadeContrato", new { Id = this.ModalidadeContrato.Id } },
@@ -125,6 +127,7 @@ namespace Imob.Models
             {
                 { "Id", this.Id },
                 { "Nome", this.Nome },
+                { "ValorContrato", this.ValorContrato },
                 { "TipoContrato", new { Id = this.TipoContrato.Id } },
                 { "ModalidadeContrato", new { Id = this.ModalidadeContrato.Id } },
                 { "ObjetoContrato", new { Id = this.ObjetoContrato.Id } },

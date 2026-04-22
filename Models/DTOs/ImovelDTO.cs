@@ -28,7 +28,8 @@ namespace Imob.Models
         public string InscricaoIptu { get; set; }
         public string NumeroCbmerj { get; set; }
         public decimal Metragem { get; set; }
-        public decimal Valor { get; set; }
+        public decimal ValorLocacao { get; set; }
+        public decimal ValorVenda { get; set; }
         public decimal? Condominio { get; set; }
         public decimal? Iptu { get; set; }
         public decimal? TaxaIncendio { get; set; }
@@ -53,7 +54,8 @@ namespace Imob.Models
                 Pais = this.Pais,
                 Complemento = this.Complemento,
                 Metragem = this.Metragem,
-                Valor = this.Valor,
+                ValorLocacao = this.ValorLocacao,
+                ValorVenda = this.ValorVenda,
                 Condominio = this.Condominio,
                 Iptu = this.Iptu,
                 TaxaIncendio = this.TaxaIncendio,
@@ -115,7 +117,8 @@ namespace Imob.Models
                 Pais = this.Pais,
                 Complemento = this.Complemento,
                 Metragem = this.Metragem,
-                Valor = this.Valor,
+                ValorLocacao = this.ValorLocacao,
+                ValorVenda = this.ValorVenda,
                 Condominio = this.Condominio,
                 Iptu = this.Iptu,
                 TaxaIncendio = this.TaxaIncendio,

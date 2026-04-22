@@ -1079,7 +1079,8 @@ namespace Imob
             TxtBoxObservacoes.Clear();
             TxtBoxDescricao.Clear();
             TxtBoxMetragem.Clear();
-            TxtBoxValor.Clear();
+            TxtBoxValorVenda.Clear();
+            TxtBoxValorLocacao.Clear();
             TxtBoxIptu.Clear();
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
@@ -1112,8 +1113,13 @@ namespace Imob
                 return;
             }
 
-            if (!double.TryParse(TxtBoxValor.Text, out double valor)) {
-                MessageBox.Show("Valor inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            if (!double.TryParse(TxtBoxValorVenda.Text, out double valorVenda)) {
+                MessageBox.Show("Valor de venda inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxValorLocacao.Text, out double valorLocacao)) {
+                MessageBox.Show("Valor de locação inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1174,7 +1180,8 @@ namespace Imob
             imovel.Estado = TxtBoxEstado.Text;
             imovel.Pais = TxtBoxPais.Text;
             imovel.Metragem = metragem;
-            imovel.Valor = (decimal)valor;
+            imovel.ValorVenda = (decimal)valorVenda;
+            imovel.ValorLocacao = (decimal)valorLocacao;
             imovel.Condominio = string.IsNullOrWhiteSpace(condominio) ? null : (decimal?)Convert.ToDecimal(condominio);
             imovel.Iptu = (decimal?)iptu;
             imovel.TaxaIncendio = (decimal?)taxaIncendio;
@@ -1206,7 +1213,8 @@ namespace Imob
             TxtBoxObservacoes.Clear();
             TxtBoxDescricao.Clear();
             TxtBoxMetragem.Clear();
-            TxtBoxValor.Clear();
+            TxtBoxValorVenda.Clear();
+            TxtBoxValorLocacao.Clear();
             TxtBoxIptu.Clear();
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
@@ -1611,7 +1619,8 @@ namespace Imob
             TxtBoxBairroEditar.Text = imovelSelecionado.Bairro;
             TxtBoxMetragemEditar.Text = imovelSelecionado.Metragem.ToString();
             TxtBoxComplementoEditar.Text = imovelSelecionado.Complemento;
-            TxtBoxValorEditar.Text = imovelSelecionado.Valor.ToString();
+            TxtBoxValorVendaEditar.Text = imovelSelecionado.ValorVenda.ToString();
+            TxtBoxValorLocacaoEditar.Text = imovelSelecionado.ValorLocacao.ToString();
             TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio.ToString();
             TxtBoxIptuEditar.Text = imovelSelecionado.Iptu.ToString();
             TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio.ToString();
@@ -1635,9 +1644,15 @@ namespace Imob
                 return;
             }
 
-            if (!double.TryParse(TxtBoxValorEditar.Text, out double valor))
+            if (!double.TryParse(TxtBoxValorVendaEditar.Text, out double valorVenda))
             {
-                MessageBox.Show("Valor inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Valor de venda inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(TxtBoxValorLocacaoEditar.Text, out double valorLocacao))
+            {
+                MessageBox.Show("Valor de locação inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1674,7 +1689,8 @@ namespace Imob
             imovelAtualizado.TaxaIncendio = Convert.ToDecimal(TxtBoxTaxaIncendioEditar.Text);
             imovelAtualizado.Foro = Convert.ToDecimal(TxtBoxForoEditar.Text);
             imovelAtualizado.Iptu = Convert.ToDecimal(TxtBoxIptuEditar.Text);
-            imovelAtualizado.Valor = Convert.ToDecimal(TxtBoxValorEditar.Text);
+            imovelAtualizado.ValorVenda = Convert.ToDecimal(TxtBoxValorVendaEditar.Text);
+            imovelAtualizado.ValorLocacao = Convert.ToDecimal(TxtBoxValorLocacaoEditar.Text);
             imovelAtualizado.Metragem = Convert.ToDecimal(TxtBoxMetragemEditar.Text);
             imovelAtualizado.Descricao = TxtBoxDescricaoEditar.Text;
             imovelAtualizado.Observacao = TxtBoxObservacoesEditar.Text;
@@ -2017,7 +2033,8 @@ namespace Imob
             TxtBoxObservacoesEditar.Clear();
             TxtBoxDescricaoEditar.Clear();
             TxtBoxMetragemEditar.Clear();
-            TxtBoxValorEditar.Clear();
+            TxtBoxValorVendaEditar.Clear();
+            TxtBoxValorLocacaoEditar.Clear();
             TxtBoxIptuEditar.Clear();
             TxtBoxTaxaIncendioEditar.Clear();
             TxtBoxForoEditar.Clear();
@@ -2629,7 +2646,8 @@ namespace Imob
                                          imovel.Bairro.ToLower().Contains(texto) ||
                                          imovel.Cep.ToLower().Contains(texto) ||
                                          imovel.Intencao.Nome.ToLower().Contains(texto) ||
-                                         imovel.Valor.ToString().ToLower().Contains(texto) ||
+                                         imovel.ValorVenda.ToString().ToLower().Contains(texto) ||
+                                         imovel.ValorLocacao.ToString().ToLower().Contains(texto) ||
                                          imovel.Metragem.ToString().ToLower().Contains(texto);
                         var row = ImoveisDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
                         if (row != null)
