@@ -166,9 +166,3 @@ O projeto **não está finalizado**. Pontos observados no estado atual:
 2. Abra a solução no Visual Studio.
 3. Garanta que a API esteja ativa em `https://localhost:7251/`.
 4. Execute o projeto WPF (`Imob`).
-
----
-
-## 📌 Observações finais
-
-Este README foi estruturado para refletir o estado real atual do projeto: **funcional, promissor e em construção contínua**.
