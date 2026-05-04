@@ -1107,34 +1107,52 @@ namespace Imob
                 return;
             }
 
+            if (TxtBoxValorLocacao.Text == "" && TxtBoxValorVenda.Text == "")
+            {
+                MessageBox.Show("Por favor, preencha pelo menos um dos campos de valor: Valor de Venda ou Valor de Locação.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (!int.TryParse(TxtBoxMetragem.Text, out int metragem))
             {
                 MessageBox.Show("Metragem inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!double.TryParse(TxtBoxValorVenda.Text, out double valorVenda)) {
+            double valorVenda = 0;
+
+            if (TxtBoxValorVenda.Text != "" && !double.TryParse(TxtBoxValorVenda.Text, out valorVenda))
+            {
                 MessageBox.Show("Valor de venda inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!double.TryParse(TxtBoxValorLocacao.Text, out double valorLocacao)) {
+            double valorLocacao = 0;
+
+            if (TxtBoxValorLocacao.Text != "" && !double.TryParse(TxtBoxValorLocacao.Text, out valorLocacao))
+            {
                 MessageBox.Show("Valor de locação inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!double.TryParse(TxtBoxIptu.Text, out double iptu)) {
+            double iptu = 0;
+
+            if (TxtBoxIptu.Text != "" && !double.TryParse(TxtBoxIptu.Text, out iptu))
+            {
                 MessageBox.Show("IPTU inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!double.TryParse(TxtBoxTaxaIncendio.Text, out double taxaIncendio))
+            double taxaIncendio = 0;
+
+            if (TxtBoxTaxaIncendio.Text != "" && !double.TryParse(TxtBoxTaxaIncendio.Text, out taxaIncendio))
             {
                 MessageBox.Show("Taxa de Incêndio inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!double.TryParse(TxtBoxForo.Text, out double foro)) {
+            double foro = 0;
+
+            if (TxtBoxForo.Text != "" && !double.TryParse(TxtBoxForo.Text, out foro)) {
                 MessageBox.Show("Foro inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
@@ -1145,8 +1163,15 @@ namespace Imob
                 return;
             }
 
+            double condominio = 0;
+
+            if (TxtBoxCondominio.Text != "" && !double.TryParse(TxtBoxCondominio.Text, out condominio))
+            {
+                MessageBox.Show("Condomínio inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             var complemento = TxtBoxComplemento.Text;
-            var condominio = TxtBoxCondominio.Text;
             var observacao = TxtBoxObservacoes.Text;
             var descricao = TxtBoxDescricao.Text;
             var inscricaoIptu = TxtBoxInscricaoIptu.Text;
@@ -1182,7 +1207,7 @@ namespace Imob
             imovel.Metragem = metragem;
             imovel.ValorVenda = (decimal)valorVenda;
             imovel.ValorLocacao = (decimal)valorLocacao;
-            imovel.Condominio = string.IsNullOrWhiteSpace(condominio) ? null : (decimal?)Convert.ToDecimal(condominio);
+            imovel.Condominio = (decimal)condominio;
             imovel.Iptu = (decimal?)iptu;
             imovel.TaxaIncendio = (decimal?)taxaIncendio;
             imovel.Foro = (decimal?)foro;
@@ -1621,7 +1646,7 @@ namespace Imob
             TxtBoxComplementoEditar.Text = imovelSelecionado.Complemento;
             TxtBoxValorVendaEditar.Text = imovelSelecionado.ValorVenda.ToString();
             TxtBoxValorLocacaoEditar.Text = imovelSelecionado.ValorLocacao.ToString();
-            TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio.ToString();
+            TxtBoxCondominioEditar.Text = imovelSelecionado.Condominio?.ToString();
             TxtBoxIptuEditar.Text = imovelSelecionado.Iptu.ToString();
             TxtBoxTaxaIncendioEditar.Text = imovelSelecionado.TaxaIncendio.ToString();
             TxtBoxForoEditar.Text = imovelSelecionado.Foro.ToString();

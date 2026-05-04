@@ -152,16 +152,16 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            int valorAluguelReais = int.Parse(contrato.Imovel.ValorLocacao.ToString("F2").Split(',')[0]);
+            int valorAluguelReais = int.Parse(contrato.Imovel.ValorLocacao.Value.ToString("F2").Split(',')[0]);
 
-            int valorAluguelCentavos = int.Parse(contrato.Imovel.ValorLocacao.ToString("F2").Split(',')[1]);
+            int valorAluguelCentavos = int.Parse(contrato.Imovel.ValorLocacao.Value.ToString("F2").Split(',')[1]);
 
             if (valorAluguelCentavos > 0)
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.Value.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             } else
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.Value.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             }
 
             var page2 = document.AddPage();
@@ -198,12 +198,12 @@ namespace Imob.Services.Pdf
 
             AdicionaParagrafo(gfx, "● Contas de consumo (água, luz, gás);", fontCorpo, linhaX, linhaY, page2);
             
-            if (contrato.Imovel.Condominio > 0)
+            if (contrato.Imovel.Condominio.HasValue && contrato.Imovel.Condominio > 0)
             {
-                AdicionaParagrafo(gfx, $"● Taxa de condomínio no valor atual de R$ {contrato.Imovel.Condominio.ToString("N2")}", fontCorpo, linhaX, linhaY, page2);
+                AdicionaParagrafo(gfx, $"● Taxa de condomínio no valor atual de R$ {contrato.Imovel.Condominio.Value.ToString("N2")}", fontCorpo, linhaX, linhaY, page2);
             }
 
-            if (contrato.Imovel.TaxaIncendio > 0)
+            if (contrato.Imovel.TaxaIncendio.HasValue && contrato.Imovel.TaxaIncendio > 0)
             {
 
                 AdicionaParagrafo(gfx, "● Funesbom anual;", fontCorpo, linhaX, linhaY, page2);

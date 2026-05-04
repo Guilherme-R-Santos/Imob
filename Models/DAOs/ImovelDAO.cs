@@ -46,16 +46,16 @@ namespace Imob.Models
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public string Pais { get; set; }
-        public string Complemento { get; set; }
-        public string InscricaoIptu { get; set; }
-        public string NumeroCbmerj { get; set; }
+        public string? Complemento { get; set; }
+        public string? InscricaoIptu { get; set; }
+        public string? NumeroCbmerj { get; set; }
         public decimal Metragem { get; set; }
-        public decimal ValorLocacao { get; set; }
-        public decimal ValorVenda { get; set; }
-        public decimal Condominio { get; set; }
-        public decimal Iptu { get; set; }
-        public decimal TaxaIncendio { get; set; }
-        public decimal Foro { get; set; }
+        public decimal? ValorLocacao { get; set; }
+        public decimal? ValorVenda { get; set; }
+        public decimal? Condominio { get; set; }
+        public decimal? Iptu { get; set; }
+        public decimal? TaxaIncendio { get; set; }
+        public decimal? Foro { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataAtualizacao { get; set; }
