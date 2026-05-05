@@ -2910,11 +2910,18 @@ namespace Imob
             DateTime? inicio = DpContratoDataInicioCriar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaCriar.Text;
             string apolice = TxtContratoApoliceSegFiancaCriar.Text;
+            var valorContratoTexto = TxtContratoValorCriar.Text;
 
 
             if (!int.TryParse(TxtContratoPrazoMesesCriar.Text, out int prazo))
             {
                 MessageBox.Show("Prazo inválido Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!decimal.TryParse(valorContratoTexto, NumberStyles.Number, CultureInfo.CurrentCulture, out var valorContrato))
+            {
+                MessageBox.Show("Valor do contrato inválido. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -2956,6 +2963,7 @@ namespace Imob
                 Contratante3 = locatario3Selecionado,
                 Contratante4 = locatario4Selecionado,
                 Fiador = fiadorSelecionado,
+                ValorContrato = valorContrato,
                 DataInicioVigencia = inicio.Value,
                 PrazoMeses = prazo,
                 Vencimento = vencimento,
@@ -2966,7 +2974,7 @@ namespace Imob
 
             await contrato.CadastrarContrato(HttpClientFixo);
 
-            MessageBox.Show("Imóvel Contrato com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Contrato cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
             TxtContratoNomeCriar.Clear();
             ComboModalidadeContratoCriar.SelectedItem = null;
@@ -2980,6 +2988,7 @@ namespace Imob
             ComboContratoFiadorCriar.SelectedItem = null;
             DpContratoDataInicioCriar.SelectedDate = null;
             TxtContratoPrazoMesesCriar.Clear();
+            TxtContratoValorCriar.Clear();
             DpContratoVencimentoCriar.Clear();
             TxtContratoPropostaSegFiancaCriar.Clear();
             TxtContratoApoliceSegFiancaCriar.Clear();
@@ -3032,6 +3041,7 @@ namespace Imob
             DateTime? inicio = DpContratoDataInicioVisualizar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaVisualizar.Text;
             string apolice = TxtContratoApoliceSegFiancaVisualizar.Text;
+            var valorContratoTexto = TxtContratoValorVisualizar.Text;
 
             if (!ModalidadeEhFiador(modalidadeSelecionada))
             {
@@ -3058,6 +3068,12 @@ namespace Imob
             if (!int.TryParse(TxtContratoVencimentoVisualizar.Text, out int vencimento) || (vencimento < 1 || vencimento > 31))
             {
                 MessageBox.Show("Vencimento inválido. Utilize apenas números de 1 a 31.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!decimal.TryParse(valorContratoTexto, NumberStyles.Number, CultureInfo.CurrentCulture, out var valorContrato))
+            {
+                MessageBox.Show("Valor do contrato inválido. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -3091,6 +3107,7 @@ namespace Imob
                     Contratante3 = locatario3Id.HasValue ? new ClienteDAO { Id = locatario3Id.Value } : null,
                     Contratante4 = locatario4Id.HasValue ? new ClienteDAO { Id = locatario4Id.Value } : null,
                     Fiador = fiadorId.HasValue ? new ClienteDAO { Id = fiadorId.Value } : null,
+                    ValorContrato = valorContrato,
                     DataInicioVigencia = inicio.Value,
                     PrazoMeses = prazo,
                     Vencimento = vencimento,
@@ -3156,6 +3173,7 @@ namespace Imob
 
                 DpContratoDataInicioVisualizar.SelectedDate = contratoSelecionado.DataInicioVigencia;
                 TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
+                TxtContratoValorVisualizar.Text = contratoSelecionado.ValorContrato.ToString(CultureInfo.CurrentCulture);
                 TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
                 TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
                 TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
