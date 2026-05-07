@@ -41,7 +41,9 @@ namespace Imob.Services.Pdf
             var linhaFimX = linhaInicioX + tituloSize.Width;
             gfx.DrawLine(XPens.Black, linhaInicioX, 80, linhaFimX, 80);
 
-            AdicionaParagrafo(gfx, $"LOCADOR: {contrato.Proprietario.Nome.ToUpper()}, {contrato.Proprietario.Nacionalidade}, {contrato.Proprietario.EstadoCivil}, {contrato.Proprietario.Profissao}, portador do CPF nº {contrato.Proprietario.CpfCnpj}, residente nesta cidade. E-MAIL: {contrato.Proprietario.Email}.", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"LOCADOR: {contrato.Proprietario.Nome.ToUpper()}, {contrato.Proprietario.Nacionalidade}, {contrato.Proprietario.EstadoCivil}, " +
+                $"{contrato.Proprietario.Profissao}, portador do CPF nº {contrato.Proprietario.CpfCnpj}, residente nesta cidade. E-MAIL: {contrato.Proprietario.Email}.", 
+                fontCorpo, linhaX, linhaY, page);
 
             linhaY += 20;
 
@@ -50,7 +52,9 @@ namespace Imob.Services.Pdf
             linhaY += 20;
             linhaX += 25;
 
-            AdicionaParagrafo(gfx, $"1º LOCATÁRIO: {contrato.Contratante1.Nome.ToUpper()}, {contrato.Contratante1.Nacionalidade}, {contrato.Contratante1.EstadoCivil}, {contrato.Contratante1.Profissao}, Nascido em {contrato.Contratante1.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante1.Identidade} e CPF nº {contrato.Contratante1.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"1º LOCATÁRIO: {contrato.Contratante1.Nome.ToUpper()}, {contrato.Contratante1.Nacionalidade}, " +
+                $"{contrato.Contratante1.EstadoCivil}, {contrato.Contratante1.Profissao}, Nascido em {contrato.Contratante1.DataNascimento?.ToString("dd/MM/yyyy")}, " +
+                $"portador da identidade nº {contrato.Contratante1.Identidade} e CPF nº {contrato.Contratante1.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
             if (contrato.Contratante1.Endereco != null)
             {
@@ -62,7 +66,9 @@ namespace Imob.Services.Pdf
             if (contrato.Contratante2 != null)
             {
                 linhaY += 5;
-                AdicionaParagrafo(gfx, $"2º LOCATÁRIO: {contrato.Contratante2.Nome.ToUpper()}, {contrato.Contratante2.Nacionalidade}, {contrato.Contratante2.EstadoCivil}, {contrato.Contratante2.Profissao}, Nascido em {contrato.Contratante2.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante2.Identidade} e CPF nº {contrato.Contratante2.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"2º LOCATÁRIO: {contrato.Contratante2.Nome.ToUpper()}, {contrato.Contratante2.Nacionalidade}, " +
+                    $"{contrato.Contratante2.EstadoCivil}, {contrato.Contratante2.Profissao}, Nascido em {contrato.Contratante2.DataNascimento?.ToString("dd/MM/yyyy")}, " +
+                    $"portador da identidade nº {contrato.Contratante2.Identidade} e CPF nº {contrato.Contratante2.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
                 if (contrato.Contratante2.Endereco != null)
                 {
@@ -76,7 +82,9 @@ namespace Imob.Services.Pdf
             if (contrato.Contratante3 != null)
             {
                 linhaY += 5;
-                AdicionaParagrafo(gfx, $"3º LOCATÁRIO: {contrato.Contratante3.Nome.ToUpper()}, {contrato.Contratante3.Nacionalidade}, {contrato.Contratante3.EstadoCivil}, {contrato.Contratante3.Profissao}, Nascido em {contrato.Contratante3.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante3.Identidade} e CPF nº {contrato.Contratante3.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"3º LOCATÁRIO: {contrato.Contratante3.Nome.ToUpper()}, {contrato.Contratante3.Nacionalidade}, " +
+                    $"{contrato.Contratante3.EstadoCivil}, {contrato.Contratante3.Profissao}, Nascido em {contrato.Contratante3.DataNascimento?.ToString("dd/MM/yyyy")}, " +
+                    $"portador da identidade nº {contrato.Contratante3.Identidade} e CPF nº {contrato.Contratante3.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
                 if (contrato.Contratante3.Endereco != null)
                 {
@@ -89,7 +97,9 @@ namespace Imob.Services.Pdf
             if (contrato.Contratante4 != null)
             {
                 linhaY += 5;
-                AdicionaParagrafo(gfx, $"4º LOCATÁRIO: {contrato.Contratante4.Nome.ToUpper()}, {contrato.Contratante4.Nacionalidade}, {contrato.Contratante4.EstadoCivil}, {contrato.Contratante4.Profissao}, Nascido em {contrato.Contratante4.DataNascimento?.ToString("dd/MM/yyyy")}, portador da identidade nº {contrato.Contratante4.Identidade} e CPF nº {contrato.Contratante4.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"4º LOCATÁRIO: {contrato.Contratante4.Nome.ToUpper()}, {contrato.Contratante4.Nacionalidade}, " +
+                    $"{contrato.Contratante4.EstadoCivil}, {contrato.Contratante4.Profissao}, Nascido em {contrato.Contratante4.DataNascimento?.ToString("dd/MM/yyyy")}, " +
+                    $"portador da identidade nº {contrato.Contratante4.Identidade} e CPF nº {contrato.Contratante4.CpfCnpj},", fontCorpo, linhaX, linhaY, page);
 
                 if (contrato.Contratante4.Endereco != null)
                 {
@@ -102,7 +112,8 @@ namespace Imob.Services.Pdf
             linhaY += 20;
             linhaX -= 25;
 
-            AdicionaParagrafo(gfx, "As partes acima identificadas têm entre si justo e contratado o presente contrato de Locação Residencial, que se regerá pelas cláusulas e condições seguintes:", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, "As partes acima identificadas têm entre si justo e contratado o presente contrato de Locação Residencial, " +
+                "que se regerá pelas cláusulas e condições seguintes:", fontCorpo, linhaX, linhaY, page);
 
             AdicionarLinhaDivisoria(gfx, page);
 
@@ -114,7 +125,9 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            AdicionaParagrafo(gfx, $"{contrato.Imovel.Logradouro}, {contrato.Imovel.Numero} {(!string.IsNullOrEmpty(contrato.Imovel.Complemento) ? ", " + contrato.Imovel.Complemento : "")}, {contrato.Imovel.Bairro}, {contrato.Imovel.Cidade} / {contrato.Imovel.Estado}, CEP {contrato.Imovel.Cep}.", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"{contrato.Imovel.Logradouro}, {contrato.Imovel.Numero} {(!string.IsNullOrEmpty(contrato.Imovel.Complemento) ? ", " +
+                "" + contrato.Imovel.Complemento : "")}, {contrato.Imovel.Bairro}, {contrato.Imovel.Cidade} / {contrato.Imovel.Estado}, " +
+                $"CEP {contrato.Imovel.Cep}.", fontCorpo, linhaX, linhaY, page);
 
             if (contrato.Imovel.TipoImovel.Nome != null)
             {
@@ -140,7 +153,8 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            AdicionaParagrafo(gfx, $"O prazo da locação é de {contrato.PrazoMeses} meses, iniciando-se em {contrato.DataInicioVigencia?.ToString("dd/MM/yyyy")} e terminando em {contrato.DataFimVigencia?.ToString("dd/MM/yyyy")}.", fontCorpo, linhaX, linhaY, page);
+            AdicionaParagrafo(gfx, $"O prazo da locação é de {contrato.PrazoMeses} meses, iniciando-se em {contrato.DataInicioVigencia?.ToString("dd/MM/yyyy")} e " +
+                $"terminando em {contrato.DataFimVigencia?.ToString("dd/MM/yyyy")}.", fontCorpo, linhaX, linhaY, page);
 
             linhaY += 20;
 
@@ -152,16 +166,19 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            int valorAluguelReais = int.Parse(contrato.Imovel.ValorLocacao.Value.ToString("F2").Split(',')[0]);
+            int valorAluguelReais = int.Parse(contrato.ValorContrato.ToString("F2").Split(',')[0]);
 
-            int valorAluguelCentavos = int.Parse(contrato.Imovel.ValorLocacao.Value.ToString("F2").Split(',')[1]);
+            int valorAluguelCentavos = int.Parse(contrato.ValorContrato.ToString("F2").Split(',')[1]);
 
             if (valorAluguelCentavos > 0)
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.Value.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.ValorContrato.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais " +
+                    $"e {valorAluguelCentavos.ToWords(new CultureInfo("pt-BR"))} centavos), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros" +
+                    $" de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             } else
             {
-                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.Imovel.ValorLocacao.Value.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
+                AdicionaParagrafo(gfx, $"O valor mensal do aluguel será de R$ {contrato.ValorContrato.ToString("N2")} ({valorAluguelReais.ToWords(new CultureInfo("pt-BR"))} reais), " +
+                    $"a ser pago até o dia {contrato.Vencimento} de cada mês, sob pena de multa de 10% acrescida de juros de 1% ao mês e correção monetária.", fontCorpo, linhaX, linhaY, page);
             }
 
             var page2 = document.AddPage();
@@ -218,9 +235,201 @@ namespace Imob.Services.Pdf
 
             linhaY += 20;
 
-            AdicionaParagrafo(gfx, "O aluguel será reajustado anualmente com base no índice IGP-M ou IPCA, prevalecendo aquele que estiver vigente à época da correção, ou outro índice que venha a substituí-lo.", fontCorpo, linhaX, linhaY, page2);
+            AdicionaParagrafo(gfx, "O aluguel será reajustado anualmente com base no índice IGP-M ou IPCA, prevalecendo aquele que estiver vigente à época da correção, ou " +
+                "outro índice que venha a substituí-lo.", fontCorpo, linhaX, linhaY, page2);
 
             AdicionarLinhaDivisoria(gfx, page2);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 6 - DA GARANTIA:", fontTitulo, linhaX, linhaY, page2);
+
+            linhaY += 20;
+
+            decimal valorCaucao = contrato.ValorContrato * 3;
+
+            int valorCaucaoReais = int.Parse(valorCaucao.ToString("F2").Split(',')[0]);
+
+            int valorCaucaoCentavos = int.Parse(valorCaucao.ToString("F2").Split(',')[1]);
+
+            string caucaoExtenso = "";
+
+            if (valorCaucaoCentavos > 0)
+            {
+                caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorCaucaoCentavos.ToWords(new CultureInfo("pt-BR"))} centavos";
+            } else
+            {
+                caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais";
+            }
+            
+            AdicionaParagrafo(gfx, $"Como garantia da locação, os LOCATARIOS oferecem caução no valor equivalente a 03 (três) meses de aluguel, " +
+                $"totalizando R$ {valorCaucao.ToString("N2")} ({caucaoExtenso}), a ser pago, através de depósito bancário na conta do LOCADOR, banco: " +
+                $"({contrato.Proprietario.CodBanco}) {contrato.Proprietario.Banco}, AG: {contrato.Proprietario.Agencia}; Conta corrente: {contrato.Proprietario.Conta}, " +
+                $"(CHAVE PIX: {contrato.Proprietario.ChavePix}) nome e CPF do LOCADOR.", fontCorpo, linhaX, linhaY, page2);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "PARÁGRADO ÚNICO: A devolução da garantia ocorrerá da seguinte forma: Os valores correspondentes a 02 (dois) meses serão utilizados para quitação do dois" +
+                "últimos meses da locação, e o valor correspondente a 01 (um) mês será devolvido ao final do contrato, desde que não haja débitos ou danos ao imóvel.", fontCorpo, linhaX, linhaY, page2);
+
+            AdicionarLinhaDivisoria(gfx, page2);
+
+            var page3 = document.AddPage();
+            width = page3.Width.Point;
+            height = page3.Height.Point;
+            page3.Size = PageSize.A4;
+            page3.Orientation = PageOrientation.Portrait;
+            gfx = XGraphics.FromPdfPage(page3);
+            linhaY = 70;
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 7 - DAS OBRIGAÇÕES DO(s) LOCATÁRIO(s):", fontTitulo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "O(s) LOCATARIO(S) se obriga(m) a:", fontCorpo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "●   Zelar pelo imóvel;", fontCorpo, linhaX, linhaY, page3);
+            AdicionaParagrafo(gfx, "●   Restituí-lo no mesmo estado em que receberam, devendo entregá-lo com pintura nova na cor branca;", fontCorpo, linhaX, linhaY, page3);
+            AdicionaParagrafo(gfx, "●   Não realizar modificações sem autorização do LOCADOR;", fontCorpo, linhaX, linhaY, page3);
+            AdicionaParagrafo(gfx, "●   Permitir vistoria mediante prévio aviso;", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionarLinhaDivisoria(gfx, page3);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 8 - DAS OBRIGAÇÕES DO LOCADOR:", fontTitulo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "O LOCADOR se obriga a:", fontCorpo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "●   Entregar o imóvel em condições de uso;", fontCorpo, linhaX, linhaY, page3);
+            AdicionaParagrafo(gfx, "●   Garantir o uso pacífico do imóvel;", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionarLinhaDivisoria(gfx, page3);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 9 - DA RESPONSABILIDADE SOLIDÁRIA:", fontTitulo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "Os LOCATÁRIOS assumem responsabilidade solidária por todas as obrigações decorrentes deste contrato, respondendo conjunta e individualmente pelo pagamento dos " +
+                "aluguéis, encargos, danos ao imóvel e demais obrigações aqui pactuadas.", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionarLinhaDivisoria(gfx, page3);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 10 - DO USO E CONVIVÊNCIA:", fontTitulo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "Os LOCATÁRIOS comprometem-se a respeitar a Lei do Silêncio, abstendo-se de produzir ruídos que perturbem o sossego após as 22h.", fontCorpo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "Compromentem-se ainda a cumprir integralmente as regras do condomínio, caso o mesmo esteja localizado em um, bem como manter comportamento compatível com a boa convivência, " +
+                "respeitando os demais moradores e vizinhos.", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionarLinhaDivisoria(gfx, page3);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 11 - DA RECISÃO:", fontTitulo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "O contrato poderá ser rescindido:", fontCorpo, linhaX, linhaY, page3);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "●   Por acordo entre as partes", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionaParagrafo(gfx, "●   Por infração contratual;", fontCorpo, linhaX, linhaY, page3);
+
+            AdicionaParagrafo(gfx, "●   Pelo LOCATÁRIO, mediante aviso prévio de 30 dias;", fontCorpo, linhaX, linhaY, page3);
+
+            var page4 = document.AddPage();
+            width = page4.Width.Point;
+            height = page4.Height.Point;
+            page4.Size = PageSize.A4;
+            page4.Orientation = PageOrientation.Portrait;
+            gfx = XGraphics.FromPdfPage(page4);
+            linhaY = 70;
+
+            AdicionarLinhaDivisoria(gfx, page4);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 12 - DA MULTA:", fontTitulo, linhaX, linhaY, page4);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "Em caso de rescisão antecipada por iniciativa dos LOCATÁRIOS, será devida multa equivalente a 03 (três) meses de aluguel, calculada" +
+                " de forma proporcional ao período restante do contrato.", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 20;
+
+            AdicionaParagrafo(gfx, "A proporcionalidade será apurada considerando-se o tempo faltante para o término do prazo \r\ncontratual, nos termos da legislação vigente.", fontCorpo, linhaX, linhaY, page4);
+
+            AdicionarLinhaDivisoria(gfx, page4);
+
+            AdicionaParagrafo(gfx, "CLÁUSULA 13 - DO FORO:", fontTitulo, linhaX, linhaY, page4);
+
+            AdicionaParagrafo(gfx, "Fica eleito o foro da comarca do imóvel para dirimir quaisquer controvérsias.", fontCorpo, linhaX, linhaY, page4);
+
+            AdicionarLinhaDivisoria(gfx, page4);
+
+            AdicionaParagrafo(gfx, "E, por estarem assim justos e contratados, assinam DE FORMA REMOTA, por e-mail, PELO ASSINADOR AUTENTIQUE, o presente" +
+                " instrumento, que será enviado por e-mail à todas as partes.", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 40;
+            linhaX = 200;
+
+            string dataHoje = DateTime.Now.ToString("dd/MM/yyyy");
+
+            string dia = dataHoje.Substring(0, 2);
+            string mesExtenso = DateTime.Now.ToString("MMMM", new CultureInfo("pt-BR"));
+            string ano = dataHoje.Substring(6, 4);
+
+            AdicionaParagrafo(gfx, $"Rio de Janeiro, {dia} de {mesExtenso} de {ano}", fontCorpo, linhaX, linhaY, page4);
+
+            linhaX = 50;
+
+            AdicionarLinhaDivisoria(gfx, page4);
+
+            linhaY += 40;
+
+            AdicionaParagrafo(gfx, "LOCADOR:_______________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 15;
+
+            AdicionaParagrafo(gfx, "LOCATÁRIO 1:____________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 15;
+
+            if (contrato.Contratante2 != null)
+            {
+                AdicionaParagrafo(gfx, "LOCATÁRIO 2:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 15;
+            }
+
+            if (contrato.Contratante3 != null)
+            {
+                AdicionaParagrafo(gfx, "LOCATÁRIO 3:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 15;
+            }
+
+            if (contrato.Contratante4 != null)
+            {
+                AdicionaParagrafo(gfx, "LOCATÁRIO 4:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 15;
+            }
+
+            AdicionaParagrafo(gfx, "TESTEMUNHA 1:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 15;
+
+            AdicionaParagrafo(gfx, "TESTEMUNHA 2:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+            linhaY += 15;
+
 
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
             PdfFileUtility.SaveAndShowDocument(document, filename);

@@ -26,6 +26,7 @@ namespace Imob.Models
         public string Endereco { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }
+        public string ChavePix { get; set; }
         public string CodBanco { get; set; }
         public string Banco { get; set; }
         public string Email { get; set; }
@@ -51,6 +52,7 @@ namespace Imob.Models
                 Endereco = this.Endereco,
                 Agencia = this.Agencia,
                 Conta = this.Conta,
+                ChavePix = this.ChavePix,
                 CodBanco = this.CodBanco,
                 Banco = this.Banco,
                 Email = this.Email,
@@ -110,6 +112,7 @@ namespace Imob.Models
                 Endereco = this.Endereco,
                 Agencia = this.Agencia,
                 Conta = this.Conta,
+                ChavePix = this.ChavePix,
                 CodBanco = this.CodBanco,
                 Banco = this.Banco,
                 Email = this.Email,

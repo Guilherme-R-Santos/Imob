@@ -683,110 +683,110 @@
                     <TextBlock Text="Cadastrar Contrato" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
                     <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <TextBox x:Name="TxtContratoNomeCriar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Tipo de Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <ComboBox x:Name="ComboTipoContratoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Modalidade*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                        <ComboBox x:Name="ComboModalidadeContratoCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <TextBlock Text="Objeto do Contrato*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboObjetoContratoCriar" Grid.Row="3" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Proprietário*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboContratoProprietarioCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Imóvel*" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <ComboBox x:Name="ComboContratoImovelCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <Grid Grid.Row="4" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.4*"/>
-                                <ColumnDefinition Width="1.4*"/>
-                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Contratante 1*" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                            <TextBlock Text="Contratante 2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                        </Grid>
+                        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ComboContratoContratante1Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                            <ComboBox x:Name="ComboContratoContratante2Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                        </Grid>
+
+                        <Grid Grid.Row="6" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Contratante 3" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                            <TextBlock Text="Contratante 4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                        </Grid>
+                        <Grid Grid.Row="7" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ComboContratoContratante3Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                            <ComboBox x:Name="ComboContratoContratante4Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                        </Grid>
+
+                        <TextBlock Text="Fiador" Grid.Row="8" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboContratoFiadorCriar" Grid.Row="9" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Data Início*" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <DatePicker x:Name="DpContratoDataInicioCriar" Grid.Row="9" Grid.Column="1" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <TextBox x:Name="TxtContratoPrazoMesesCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                        <Grid Grid.Row="10" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+                            <TextBlock Text="Valor do Contrato*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoValorCriar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
-                            <TextBox x:Name="TxtContratoNomeCriar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Vencimento (dia)*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="DpContratoVencimentoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Tipo de Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
-                            <ComboBox x:Name="ComboTipoContratoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+                            <TextBlock Text="Proposta Seg. Fiança" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoPropostaSegFiancaCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Modalidade*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <ComboBox x:Name="ComboModalidadeContratoCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
-
-                            <TextBlock Text="Objeto do Contrato*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboObjetoContratoCriar" Grid.Row="3" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Proprietário*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboContratoProprietarioCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Imóvel*" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <ComboBox x:Name="ComboContratoImovelCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
-
-                            <Grid Grid.Row="4" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contratante 1*" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
-                                <TextBlock Text="Contratante 2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
-                            </Grid>
-                            <Grid Grid.Row="5" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ComboContratoContratante1Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
-                                <ComboBox x:Name="ComboContratoContratante2Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
-                            </Grid>
-
-                            <Grid Grid.Row="6" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contratante 3" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
-                                <TextBlock Text="Contratante 4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
-                            </Grid>
-                            <Grid Grid.Row="7" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ComboContratoContratante3Criar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
-                                <ComboBox x:Name="ComboContratoContratante4Criar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
-                            </Grid>
-
-                            <TextBlock Text="Fiador" Grid.Row="8" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboContratoFiadorCriar" Grid.Row="9" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Data Início*" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <DatePicker x:Name="DpContratoDataInicioCriar" Grid.Row="9" Grid.Column="1" Margin="0,0,12,10"/>
-
-                            <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtContratoPrazoMesesCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-
-                            <Grid Grid.Row="10" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Valor do Contrato*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="TxtContratoValorCriar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Vencimento (dia)*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="DpContratoVencimentoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Proposta Seg. Fiança" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="TxtContratoPropostaSegFiancaCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Apólice Seg. Fiança" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                                <TextBox x:Name="TxtContratoApoliceSegFiancaCriar" Grid.Row="1" Grid.Column="3" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            </Grid>
+                            <TextBlock Text="Apólice Seg. Fiança" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtContratoApoliceSegFiancaCriar" Grid.Row="1" Grid.Column="3" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                         </Grid>
+                    </Grid>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosCriar_Click"/>
@@ -813,110 +813,110 @@
                     <TextBlock Text="Visualização do Contrato" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
 
                     <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <TextBox x:Name="TxtContratoNomeVisualizar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Tipo de Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <ComboBox x:Name="ComboTipoContratoVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Modalidade*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                        <ComboBox x:Name="ComboModalidadeContratoVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <TextBlock Text="Objeto do Contrato*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboObjetoContratoVisualizar" Grid.Row="3" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Proprietário*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboContratoProprietarioVisualizar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Imóvel*" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <ComboBox x:Name="ComboContratoImovelVisualizar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <Grid Grid.Row="4" Grid.ColumnSpan="3">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1.4*"/>
-                                <ColumnDefinition Width="1.4*"/>
-                                <ColumnDefinition Width="1.2*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Contratante 1*" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                            <TextBlock Text="Contratante 2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                        </Grid>
+                        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ComboContratoContratante1Visualizar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                            <ComboBox x:Name="ComboContratoContratante2Visualizar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                        </Grid>
+
+                        <Grid Grid.Row="6" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Contratante 3" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
+                            <TextBlock Text="Contratante 4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
+                        </Grid>
+                        <Grid Grid.Row="7" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox x:Name="ComboContratoContratante3Visualizar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
+                            <ComboBox x:Name="ComboContratoContratante4Visualizar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
+                        </Grid>
+
+                        <TextBlock Text="Fiador" Grid.Row="8" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <ComboBox x:Name="ComboContratoFiadorVisualizar" Grid.Row="9" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Data Início*" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <DatePicker x:Name="DpContratoDataInicioVisualizar" Grid.Row="9" Grid.Column="1" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <TextBox x:Name="TxtContratoPrazoMesesVisualizar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                        <Grid Grid.Row="10" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
+                            <TextBlock Text="Valor do Contrato*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoValorVisualizar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
-                            <TextBox x:Name="TxtContratoNomeVisualizar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Vencimento (dia)*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoVencimentoVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Tipo de Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
-                            <ComboBox x:Name="ComboTipoContratoVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+                            <TextBlock Text="Proposta Seg. Fiança" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtContratoPropostaSegFiancaVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Modalidade*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <ComboBox x:Name="ComboModalidadeContratoVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
-
-                            <TextBlock Text="Objeto do Contrato*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboObjetoContratoVisualizar" Grid.Row="3" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Proprietário*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboContratoProprietarioVisualizar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Imóvel*" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <ComboBox x:Name="ComboContratoImovelVisualizar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
-
-                            <Grid Grid.Row="4" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contratante 1*" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
-                                <TextBlock Text="Contratante 2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
-                            </Grid>
-                            <Grid Grid.Row="5" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ComboContratoContratante1Visualizar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
-                                <ComboBox x:Name="ComboContratoContratante2Visualizar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
-                            </Grid>
-
-                            <Grid Grid.Row="6" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contratante 3" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,8,2"/>
-                                <TextBlock Text="Contratante 4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="8,8,0,2"/>
-                            </Grid>
-                            <Grid Grid.Row="7" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ComboContratoContratante3Visualizar" Grid.Column="0" Style="{StaticResource ModernComboBox}" Margin="0,0,8,10" Height="36"/>
-                                <ComboBox x:Name="ComboContratoContratante4Visualizar" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="8,0,0,10" Height="36"/>
-                            </Grid>
-
-                            <TextBlock Text="Fiador" Grid.Row="8" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <ComboBox x:Name="ComboContratoFiadorVisualizar" Grid.Row="9" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
-
-                            <TextBlock Text="Data Início*" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                            <DatePicker x:Name="DpContratoDataInicioVisualizar" Grid.Row="9" Grid.Column="1" Margin="0,0,12,10"/>
-
-                            <TextBlock Text="Prazo (meses)*" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtContratoPrazoMesesVisualizar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-
-                            <Grid Grid.Row="10" Grid.ColumnSpan="3">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Text="Valor do Contrato*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="TxtContratoValorVisualizar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Vencimento (dia)*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="TxtContratoVencimentoVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Proposta Seg. Fiança" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
-                                <TextBox x:Name="TxtContratoPropostaSegFiancaVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-
-                                <TextBlock Text="Apólice Seg. Fiança" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                                <TextBox x:Name="TxtContratoApoliceSegFiancaVisualizar" Grid.Row="1" Grid.Column="3" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            </Grid>
+                            <TextBlock Text="Apólice Seg. Fiança" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtContratoApoliceSegFiancaVisualizar" Grid.Row="1" Grid.Column="3" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                         </Grid>
+                    </Grid>
 
                     <Grid Grid.Row="2" Grid.ColumnSpan="3">
                         <Button x:Name="BtnGerarContratoVisualizar" Content="Gerar contrato" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" HorizontalAlignment="Left" Click="BtnGerarContratoVisualizar_Click"/>
@@ -993,8 +993,11 @@
                             <TextBox x:Name="TxtClienteProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
 
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,10,48,50" Grid.ColumnSpan="2" Grid.RowSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtClienteChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,3,12,8" Grid.ColumnSpan="2"/>
+                            
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
@@ -1085,8 +1088,11 @@
                             <TextBox x:Name="TxtClienteProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
 
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtClienteChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
@@ -1174,8 +1180,10 @@
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtLocatarioChavePixCriar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
                             <TextBox x:Name="TxtLocatarioBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
@@ -1248,7 +1256,9 @@
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtLocatarioChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
@@ -1328,7 +1338,9 @@
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,18,1" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtFiadorChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,1,12,10" Grid.ColumnSpan="2"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
@@ -1402,7 +1414,9 @@
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
+                            <TextBox x:Name="TxtFiadorChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>

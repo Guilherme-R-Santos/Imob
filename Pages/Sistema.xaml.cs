@@ -1829,6 +1829,7 @@ namespace Imob
             TxtFiadorBancoCriar.Clear();
             TxtFiadorAgenciaCriar.Clear();
             TxtFiadorContaCriar.Clear();
+            TxtFiadorChavePixCriar.Clear();
             TxtFiadorCodBancoCriar.Clear();
             TxtFiadorEmailCriar.Clear();
             TxtFiadorTelefoneCriar.Clear();
@@ -1875,6 +1876,7 @@ namespace Imob
                 Profissao = TxtFiadorProfissaoCriar.Text,
                 Endereco = TxtFiadorEnderecoCriar.Text,
                 Banco = TxtFiadorBancoCriar.Text,
+                ChavePix = TxtFiadorChavePixCriar.Text,
                 Agencia = TxtFiadorAgenciaCriar.Text,
                 Conta = TxtFiadorContaCriar.Text,
                 CodBanco = TxtFiadorCodBancoCriar.Text,
@@ -1920,6 +1922,7 @@ namespace Imob
             TxtFiadorProfissaoEditar.Text = fiadorCompleto.Profissao;
             TxtFiadorEnderecoEditar.Text = fiadorCompleto.Endereco;
             TxtFiadorBancoEditar.Text = fiadorCompleto.Banco;
+            TxtFiadorChavePixEditar.Text = fiadorCompleto.ChavePix;
             TxtFiadorAgenciaEditar.Text = fiadorCompleto.Agencia;
             TxtFiadorContaEditar.Text = fiadorCompleto.Conta;
             TxtFiadorCodBancoEditar.Text = fiadorCompleto.CodBanco;
@@ -1981,6 +1984,7 @@ namespace Imob
                 Profissao = TxtFiadorProfissaoEditar.Text,
                 Endereco = TxtFiadorEnderecoEditar.Text,
                 Banco = TxtFiadorBancoEditar.Text,
+                ChavePix = TxtFiadorChavePixEditar.Text,
                 Agencia = TxtFiadorAgenciaEditar.Text,
                 Conta = TxtFiadorContaEditar.Text,
                 CodBanco = TxtFiadorCodBancoEditar.Text,
@@ -2108,6 +2112,7 @@ namespace Imob
             TxtLocatarioAgenciaCriar.Clear();
             TxtLocatarioContaCriar.Clear();
             TxtLocatarioCodBancoCriar.Clear();
+            TxtLocatarioChavePixCriar.Clear();
             TxtLocatarioEmailCriar.Clear();
             TxtLocatarioTelefoneCriar.Clear();
             DpLocatarioNascimentoCriar.Text = "";
@@ -2153,6 +2158,7 @@ namespace Imob
                 Profissao = TxtLocatarioProfissaoCriar.Text,
                 Endereco = TxtLocatarioEnderecoCriar.Text,
                 Banco = TxtLocatarioBancoCriar.Text,
+                ChavePix = TxtLocatarioChavePixCriar.Text,
                 Agencia = TxtLocatarioAgenciaCriar.Text,
                 Conta = TxtLocatarioContaCriar.Text,
                 CodBanco = TxtLocatarioCodBancoCriar.Text,
@@ -2201,6 +2207,7 @@ namespace Imob
             TxtLocatarioAgenciaEditar.Text = locatarioCompleto.Agencia;
             TxtLocatarioContaEditar.Text = locatarioCompleto.Conta;
             TxtLocatarioCodBancoEditar.Text = locatarioCompleto.CodBanco;
+            TxtLocatarioChavePixEditar.Text = locatarioCompleto.ChavePix;
             TxtLocatarioEmailEditar.Text = locatarioCompleto.Email;
             TxtLocatarioTelefoneEditar.Text = locatarioCompleto.Telefone;
             DpLocatarioNascimentoEditar.SelectedDate = locatarioCompleto.DataNascimento;
@@ -2259,6 +2266,7 @@ namespace Imob
                 Profissao = TxtLocatarioProfissaoEditar.Text,
                 Endereco = TxtLocatarioEnderecoEditar.Text,
                 Banco = TxtLocatarioBancoEditar.Text,
+                ChavePix = TxtLocatarioChavePixEditar.Text,
                 Agencia = TxtLocatarioAgenciaEditar.Text,
                 Conta = TxtLocatarioContaEditar.Text,
                 CodBanco = TxtLocatarioCodBancoEditar.Text,
@@ -2702,6 +2710,7 @@ namespace Imob
             TxtClienteProfissaoCriar.Clear();
             TxtClienteEnderecoCriar.Clear();
             TxtClienteBancoCriar.Clear();
+            TxtClienteChavePixCriar.Clear();
             TxtClienteAgenciaCriar.Clear();
             TxtClienteContaCriar.Clear();
             TxtClienteCodBancoCriar.Clear();
@@ -2750,6 +2759,7 @@ namespace Imob
                 Profissao = TxtClienteProfissaoCriar.Text,
                 Endereco = TxtClienteEnderecoCriar.Text,
                 Banco = TxtClienteBancoCriar.Text,
+                ChavePix = TxtClienteChavePixCriar.Text,
                 Agencia = TxtClienteAgenciaCriar.Text,
                 Conta = TxtClienteContaCriar.Text,
                 CodBanco = TxtClienteCodBancoCriar.Text,
@@ -2791,7 +2801,6 @@ namespace Imob
             }
         }
 
-        // TODO: Refatorar para funcionar corretamente.
         private void BtnVisualizarProprietario_Click(object sender, RoutedEventArgs e)
         {
             if (ProprietariosDataGrid.SelectedItem is not ClienteDAO proprietarioSelecionado)
@@ -2813,6 +2822,7 @@ namespace Imob
             TxtClienteAgenciaEditar.Text = proprietarioSelecionado.Agencia;
             TxtClienteContaEditar.Text = proprietarioSelecionado.Conta;
             TxtClienteCodBancoEditar.Text = proprietarioSelecionado.CodBanco;
+            TxtClienteChavePixEditar.Text = proprietarioSelecionado.ChavePix;
             TxtClienteEmailEditar.Text = proprietarioSelecionado.Email;
             TxtClienteTelefoneEditar.Text = proprietarioSelecionado.Telefone;
             DpClienteNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;
@@ -2871,6 +2881,7 @@ namespace Imob
                 Profissao = TxtClienteProfissaoEditar.Text,
                 Endereco = TxtClienteEnderecoEditar.Text,
                 Banco = TxtClienteBancoEditar.Text,
+                ChavePix = TxtClienteChavePixEditar.Text,
                 Agencia = TxtClienteAgenciaEditar.Text,
                 Conta = TxtClienteContaEditar.Text,
                 CodBanco = TxtClienteCodBancoEditar.Text,
