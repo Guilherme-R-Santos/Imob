@@ -22,6 +22,7 @@ namespace Imob
     {
         private readonly HttpClient client;
         private bool sucessoConect = false;
+        private bool isLoggingIn = false;
         private string tokenJwt;
         private DateTime? tokenExpiration;
 
@@ -70,12 +71,16 @@ namespace Imob
 
         private async void ButtonLogin_Click(object sender, RoutedEventArgs e)
         {
+            if (isLoggingIn) return;
+            isLoggingIn = true;
+
             var login = txtUsuario.Text;
             var senha = txtSenha.Password;
 
             if (!sucessoConect)
             {
                 MessageBox.Show("Não foi possível carregar os usuários. Entre em contato com o administrador do sistema", "Erro", MessageBoxButton.OK, MessageBoxImage.Warning);
+                isLoggingIn = false;
                 return;
             }
 
@@ -85,6 +90,7 @@ namespace Imob
                 if (!response.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Usuário ou senha incorretos. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    isLoggingIn = false;
                     return;
                 }
 
@@ -94,6 +100,7 @@ namespace Imob
                 if (loginResponse == null || string.IsNullOrWhiteSpace(loginResponse.Token))
                 {
                     MessageBox.Show("Resposta de autenticação inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    isLoggingIn = false;
                     return;
                 }
 
@@ -105,6 +112,7 @@ namespace Imob
                 if (!userResponse.IsSuccessStatusCode)
                 {
                     MessageBox.Show("Não foi possível obter os dados do usuário. Tente novamente.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    isLoggingIn = false;
                     return;
                 }
 
@@ -122,6 +130,7 @@ namespace Imob
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                isLoggingIn = false;
             }
         }
 
