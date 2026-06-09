@@ -12,6 +12,8 @@ using System.Windows.Input.Manipulations;
 using Humanizer;
 using System.Globalization;
 
+// TODO: FIX contrato fiador para adequação de páginas. Provavelmente reescrever todo o contrato dentro do if de fiador
+
 namespace Imob.Services.Pdf
 {
     public class GeradorContratoPdf
@@ -186,6 +188,7 @@ namespace Imob.Services.Pdf
             height = page2.Height.Point;
             page2.Size = PageSize.A4;
             page2.Orientation = PageOrientation.Portrait;
+            gfx.Dispose();
             gfx = XGraphics.FromPdfPage(page2);
             linhaY = 70;
 
@@ -240,195 +243,247 @@ namespace Imob.Services.Pdf
 
             AdicionarLinhaDivisoria(gfx, page2);
 
-            AdicionaParagrafo(gfx, "CLÁUSULA 6 - DA GARANTIA:", fontTitulo, linhaX, linhaY, page2);
-
-            linhaY += 20;
-
-            decimal valorCaucao = contrato.ValorContrato * 3;
-
-            int valorCaucaoReais = int.Parse(valorCaucao.ToString("F2").Split(',')[0]);
-
-            int valorCaucaoCentavos = int.Parse(valorCaucao.ToString("F2").Split(',')[1]);
-
-            string caucaoExtenso = "";
-
-            if (valorCaucaoCentavos > 0)
-            {
-                caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorCaucaoCentavos.ToWords(new CultureInfo("pt-BR"))} centavos";
-            } else
-            {
-                caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais";
-            }
-            
-            AdicionaParagrafo(gfx, $"Como garantia da locação, os LOCATARIOS oferecem caução no valor equivalente a 03 (três) meses de aluguel, " +
-                $"totalizando R$ {valorCaucao.ToString("N2")} ({caucaoExtenso}), a ser pago, através de depósito bancário na conta do LOCADOR, banco: " +
-                $"({contrato.Proprietario.CodBanco}) {contrato.Proprietario.Banco}, AG: {contrato.Proprietario.Agencia}; Conta corrente: {contrato.Proprietario.Conta}, " +
-                $"(CHAVE PIX: {contrato.Proprietario.ChavePix}) nome e CPF do LOCADOR.", fontCorpo, linhaX, linhaY, page2);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "PARÁGRADO ÚNICO: A devolução da garantia ocorrerá da seguinte forma: Os valores correspondentes a 02 (dois) meses serão utilizados para quitação do dois" +
-                "últimos meses da locação, e o valor correspondente a 01 (um) mês será devolvido ao final do contrato, desde que não haja débitos ou danos ao imóvel.", fontCorpo, linhaX, linhaY, page2);
-
-            AdicionarLinhaDivisoria(gfx, page2);
-
             var page3 = document.AddPage();
             width = page3.Width.Point;
             height = page3.Height.Point;
             page3.Size = PageSize.A4;
             page3.Orientation = PageOrientation.Portrait;
+            gfx.Dispose();
             gfx = XGraphics.FromPdfPage(page3);
             linhaY = 70;
 
-            AdicionaParagrafo(gfx, "CLÁUSULA 7 - DAS OBRIGAÇÕES DO(s) LOCATÁRIO(s):", fontTitulo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "O(s) LOCATARIO(S) se obriga(m) a:", fontCorpo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "●   Zelar pelo imóvel;", fontCorpo, linhaX, linhaY, page3);
-            AdicionaParagrafo(gfx, "●   Restituí-lo no mesmo estado em que receberam, devendo entregá-lo com pintura nova na cor branca;", fontCorpo, linhaX, linhaY, page3);
-            AdicionaParagrafo(gfx, "●   Não realizar modificações sem autorização do LOCADOR;", fontCorpo, linhaX, linhaY, page3);
-            AdicionaParagrafo(gfx, "●   Permitir vistoria mediante prévio aviso;", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionarLinhaDivisoria(gfx, page3);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 8 - DAS OBRIGAÇÕES DO LOCADOR:", fontTitulo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "O LOCADOR se obriga a:", fontCorpo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "●   Entregar o imóvel em condições de uso;", fontCorpo, linhaX, linhaY, page3);
-            AdicionaParagrafo(gfx, "●   Garantir o uso pacífico do imóvel;", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionarLinhaDivisoria(gfx, page3);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 9 - DA RESPONSABILIDADE SOLIDÁRIA:", fontTitulo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "Os LOCATÁRIOS assumem responsabilidade solidária por todas as obrigações decorrentes deste contrato, respondendo conjunta e individualmente pelo pagamento dos " +
-                "aluguéis, encargos, danos ao imóvel e demais obrigações aqui pactuadas.", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionarLinhaDivisoria(gfx, page3);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 10 - DO USO E CONVIVÊNCIA:", fontTitulo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "Os LOCATÁRIOS comprometem-se a respeitar a Lei do Silêncio, abstendo-se de produzir ruídos que perturbem o sossego após as 22h.", fontCorpo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "Compromentem-se ainda a cumprir integralmente as regras do condomínio, caso o mesmo esteja localizado em um, bem como manter comportamento compatível com a boa convivência, " +
-                "respeitando os demais moradores e vizinhos.", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionarLinhaDivisoria(gfx, page3);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 11 - DA RECISÃO:", fontTitulo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "O contrato poderá ser rescindido:", fontCorpo, linhaX, linhaY, page3);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "●   Por acordo entre as partes", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionaParagrafo(gfx, "●   Por infração contratual;", fontCorpo, linhaX, linhaY, page3);
-
-            AdicionaParagrafo(gfx, "●   Pelo LOCATÁRIO, mediante aviso prévio de 30 dias;", fontCorpo, linhaX, linhaY, page3);
-
-            var page4 = document.AddPage();
-            width = page4.Width.Point;
-            height = page4.Height.Point;
-            page4.Size = PageSize.A4;
-            page4.Orientation = PageOrientation.Portrait;
-            gfx = XGraphics.FromPdfPage(page4);
-            linhaY = 70;
-
-            AdicionarLinhaDivisoria(gfx, page4);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 12 - DA MULTA:", fontTitulo, linhaX, linhaY, page4);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "Em caso de rescisão antecipada por iniciativa dos LOCATÁRIOS, será devida multa equivalente a 03 (três) meses de aluguel, calculada" +
-                " de forma proporcional ao período restante do contrato.", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 20;
-
-            AdicionaParagrafo(gfx, "A proporcionalidade será apurada considerando-se o tempo faltante para o término do prazo \r\ncontratual, nos termos da legislação vigente.", fontCorpo, linhaX, linhaY, page4);
-
-            AdicionarLinhaDivisoria(gfx, page4);
-
-            AdicionaParagrafo(gfx, "CLÁUSULA 13 - DO FORO:", fontTitulo, linhaX, linhaY, page4);
-
-            AdicionaParagrafo(gfx, "Fica eleito o foro da comarca do imóvel para dirimir quaisquer controvérsias.", fontCorpo, linhaX, linhaY, page4);
-
-            AdicionarLinhaDivisoria(gfx, page4);
-
-            AdicionaParagrafo(gfx, "E, por estarem assim justos e contratados, assinam DE FORMA REMOTA, por e-mail, PELO ASSINADOR AUTENTIQUE, o presente" +
-                " instrumento, que será enviado por e-mail à todas as partes.", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 40;
-            linhaX = 200;
-
-            string dataHoje = DateTime.Now.ToString("dd/MM/yyyy");
-
-            string dia = dataHoje.Substring(0, 2);
-            string mesExtenso = DateTime.Now.ToString("MMMM", new CultureInfo("pt-BR"));
-            string ano = dataHoje.Substring(6, 4);
-
-            AdicionaParagrafo(gfx, $"Rio de Janeiro, {dia} de {mesExtenso} de {ano}", fontCorpo, linhaX, linhaY, page4);
-
-            linhaX = 50;
-
-            AdicionarLinhaDivisoria(gfx, page4);
-
-            linhaY += 40;
-
-            AdicionaParagrafo(gfx, "LOCADOR:_______________________________________________________", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 15;
-
-            AdicionaParagrafo(gfx, "LOCATÁRIO 1:____________________________________________________", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 15;
-
-            if (contrato.Contratante2 != null)
+            if (contrato.ModalidadeContrato.Id == 1 || contrato.ModalidadeContratoId == 2) // Caução
             {
-                AdicionaParagrafo(gfx, "LOCATÁRIO 2:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+                AdicionaParagrafo(gfx, "CLÁUSULA 6 - DA GARANTIA:", fontTitulo, linhaX, linhaY, page2);
 
-                linhaY += 15;
+                linhaY += 20;
+
+                decimal valorCaucao = contrato.ValorContrato * 3;
+
+                int valorCaucaoReais = int.Parse(valorCaucao.ToString("F2").Split(',')[0]);
+
+                int valorCaucaoCentavos = int.Parse(valorCaucao.ToString("F2").Split(',')[1]);
+
+                string caucaoExtenso = "";
+
+                if (valorCaucaoCentavos > 0)
+                {
+                    caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais e {valorCaucaoCentavos.ToWords(new CultureInfo("pt-BR"))} centavos";
+                } else
+                {
+                    caucaoExtenso = $"{valorCaucaoReais.ToWords(new CultureInfo("pt-BR"))} reais";
+                }
+            
+                AdicionaParagrafo(gfx, $"Como garantia da locação, os LOCATARIOS oferecem caução no valor equivalente a 03 (três) meses de aluguel, " +
+                    $"totalizando R$ {valorCaucao.ToString("N2")} ({caucaoExtenso}), a ser pago, através de depósito bancário na conta do LOCADOR, banco: " +
+                    $"({contrato.Proprietario.CodBanco}) {contrato.Proprietario.Banco}, AG: {contrato.Proprietario.Agencia}; Conta corrente: {contrato.Proprietario.Conta}, " +
+                    $"(CHAVE PIX: {contrato.Proprietario.ChavePix}) nome e CPF do LOCADOR.", fontCorpo, linhaX, linhaY, page2);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "PARÁGRADO ÚNICO: A devolução da garantia ocorrerá da seguinte forma: Os valores correspondentes a 02 (dois) meses serão utilizados para quitação do dois" +
+                    "últimos meses da locação, e o valor correspondente a 01 (um) mês será devolvido ao final do contrato, desde que não haja débitos ou danos ao imóvel.", fontCorpo, linhaX, linhaY, page2);
+
+                AdicionarLinhaDivisoria(gfx, page2);
+
+            } else if (contrato.ModalidadeContrato.Id == 3) // Fiador
+            {
+                linhaY = 70;
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 6 - DA GARANTIA FIDEJUSSÓRIA (FIADOR):", fontTitulo, linhaX, linhaY, page3);
+                linhaY += 20;
+                AdicionaParagrafo(gfx, $"Como garantia do fiel cumprimento de todas as obrigações assumidas neste contrato, o LOCATÁRIO apresenta como FIADOR(ES) o(s) Sr.(a)(s) {contrato.Fiador.Nome}, " +
+                    $"nacionalidade {contrato.Fiador.Nacionalidade}, estado civil {contrato.Fiador.EstadoCivil}, profissão {contrato.Fiador.Profissao}, portador(a) do RG nº {contrato.Fiador.Identidade} " +
+                    $"e CPF nº {contrato.Fiador.CpfCnpj}, residente(s) e domiciliado(s) à {contrato.Fiador.Endereco}, que assina(m)" +
+                    $" o presente instrumento na qualidade de principal(is) pagador(es) e solidariamente responsável(is) com o LOCATÁRIO por todas as obrigações decorrentes desta locação, inclusive" +
+                    $" alugueis, encargos locatícios, multas, tributos, danos ao imóvel, honorários advocatícios, custas processuais e demais encargos contratuais e legais. Parágrafo Primeiro" +
+                    $" – A responsabilidade do(s) FIADOR(ES) permanecerá válida até a efetiva entrega das chaves, desocupação do imóvel e quitação integral de todos os débitos decorrentes da locação," +
+                    $" ainda que haja prorrogação do contrato por prazo indeterminado, renunciando expressamente aos benefícios previstos nos artigos 827, 835, 837 e 838 do Código Civil. Parágrafo" +
+                    $" Segundo – O(s) FIADOR(ES) declara(m) possuir plena capacidade civil e idoneidade financeira para assumir as obrigações decorrentes desta fiança, obrigando-se solidariamente ao" +
+                    $" cumprimento integral do presente contrato. Parágrafo Terceiro – Em caso de falecimento, insolvência, incapacidade civil, exoneração, venda do imóvel do fiador ou qualquer hipótese" +
+                    $" que comprometa a garantia prestada, o LOCATÁRIO obriga-se a apresentar novo fiador idôneo ou outra garantia aceita pelo LOCADOR no prazo máximo de 15 (quinze) dias, sob pena de infração" +
+                    $" contratual e possibilidade de rescisão da locação. Parágrafo Quarto - O(s) FIADOR(ES) acima qualificado(s) assume(m), de forma irrevogável e irretratável, a condição de responsável(is)" +
+                    $" solidário(s) com o LOCATÁRIO pelo fiel cumprimento de todas as obrigações decorrentes do presente contrato de locação, incluindo alugueis, encargos locatícios, tributos, multas," +
+                    $" danos ao imóvel, custas processuais, honorários advocatícios e demais obrigações legais e contratuais, permanecendo sua responsabilidade válida e integral até a efetiva entrega das chaves" +
+                    $" do imóvel ao LOCADOR, mediante quitação de todos os débitos eventualmente existentes. Parágrafo quinto – O(s) FIADOR(ES) renuncia(m) expressamente aos benefícios de ordem, divisão e exoneração" +
+                    $" previstos nos artigos 827, 835, 837 e 838 do Código Civil, obrigando-se solidariamente ao LOCATÁRIO até o encerramento definitivo da locação e devolução formal das chaves, ainda que o contrato venha" +
+                    $" a ser prorrogado por prazo indeterminado.",
+                    fontCorpo, linhaX, linhaY, page3);
+
+            } else if (contrato.ModalidadeContrato.Id == 4)
+            {
+                AdicionaParagrafo(gfx, "CLÁUSULA 6 - DO SEGURO FIANÇA LOCATÍCIA:", fontTitulo, linhaX, linhaY, page2);
+                linhaY += 20;
+                AdicionaParagrafo(gfx, $"O LOCATÁRIO obriga-se a contratar e manter vigente, durante toda a duração da locação e eventuais prorrogações, seguro fiança locatícia junto a seguradora regularmente autorizada pela SUSEP" +
+                    $", em valor e condições suficientes para garantir o integral cumprimento das obrigações assumidas neste contrato, abrangendo, inclusive, alugueis, encargos locatícios, multas contratuais, danos ao imóvel," +
+                    $" custas processuais e honorários advocatícios.\r\n\r\nParágrafo Primeiro – A apólice do seguro fiança deverá ser apresentada ao LOCADOR antes da entrega das chaves, bem como renovada sucessivamente enquanto" +
+                    $" perdurar a locação, sob pena de caracterização de infração contratual.\r\n\r\nParágrafo Segundo – O não pagamento do prêmio do seguro, o cancelamento da apólice, sua não renovação ou qualquer situação que" +
+                    $" implique perda ou redução da garantia contratada obrigará o LOCATÁRIO a regularizar a garantia no prazo máximo de 10 (dez) dias, contados da notificação, sob pena de rescisão contratual, independentemente" +
+                    $" das demais penalidades previstas neste instrumento.\r\n\r\nParágrafo Terceiro – Todas as despesas decorrentes da contratação, renovação e manutenção do seguro fiança correrão exclusivamente por conta do" +
+                    $" LOCATÁRIO.\r\n\r\nParágrafo Quarto – O LOCADOR poderá exigir substituição ou complementação da garantia caso a apólice apresentada não cubra integralmente as obrigações locatícias assumidas neste contrato.",
+                    fontCorpo, linhaX, linhaY, page2);
+
+                AdicionarLinhaDivisoria(gfx, page2);
             }
 
-            if (contrato.Contratante3 != null)
+            if (contrato.ModalidadeContrato.Id != 3)
             {
-                AdicionaParagrafo(gfx, "LOCATÁRIO 3:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY = 70;
+
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 7 - DAS OBRIGAÇÕES DO(s) LOCATÁRIO(s):", fontTitulo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "O(s) LOCATARIO(S) se obriga(m) a:", fontCorpo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "●   Zelar pelo imóvel;", fontCorpo, linhaX, linhaY, page3);
+                AdicionaParagrafo(gfx, "●   Restituí-lo no mesmo estado em que receberam, devendo entregá-lo com pintura nova na cor branca;", fontCorpo, linhaX, linhaY, page3);
+                AdicionaParagrafo(gfx, "●   Não realizar modificações sem autorização do LOCADOR;", fontCorpo, linhaX, linhaY, page3);
+                AdicionaParagrafo(gfx, "●   Permitir vistoria mediante prévio aviso;", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionarLinhaDivisoria(gfx, page3);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 8 - DAS OBRIGAÇÕES DO LOCADOR:", fontTitulo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "O LOCADOR se obriga a:", fontCorpo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "●   Entregar o imóvel em condições de uso;", fontCorpo, linhaX, linhaY, page3);
+                AdicionaParagrafo(gfx, "●   Garantir o uso pacífico do imóvel;", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionarLinhaDivisoria(gfx, page3);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 9 - DA RESPONSABILIDADE SOLIDÁRIA:", fontTitulo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "Os LOCATÁRIOS assumem responsabilidade solidária por todas as obrigações decorrentes deste contrato, respondendo conjunta e individualmente pelo pagamento dos " +
+                    "aluguéis, encargos, danos ao imóvel e demais obrigações aqui pactuadas.", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionarLinhaDivisoria(gfx, page3);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 10 - DO USO E CONVIVÊNCIA:", fontTitulo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "Os LOCATÁRIOS comprometem-se a respeitar a Lei do Silêncio, abstendo-se de produzir ruídos que perturbem o sossego após as 22h.", fontCorpo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "Compromentem-se ainda a cumprir integralmente as regras do condomínio, caso o mesmo esteja localizado em um, bem como manter comportamento compatível com a boa convivência, " +
+                    "respeitando os demais moradores e vizinhos.", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionarLinhaDivisoria(gfx, page3);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 11 - DA RECISÃO:", fontTitulo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "O contrato poderá ser rescindido:", fontCorpo, linhaX, linhaY, page3);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "●   Por acordo entre as partes", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionaParagrafo(gfx, "●   Por infração contratual;", fontCorpo, linhaX, linhaY, page3);
+
+                AdicionaParagrafo(gfx, "●   Pelo LOCATÁRIO, mediante aviso prévio de 30 dias;", fontCorpo, linhaX, linhaY, page3);
+
+                var page4 = document.AddPage();
+                width = page4.Width.Point;
+                height = page4.Height.Point;
+                page4.Size = PageSize.A4;
+                page4.Orientation = PageOrientation.Portrait;
+                gfx.Dispose();
+                gfx = XGraphics.FromPdfPage(page4);
+                linhaY = 70;
+
+                AdicionarLinhaDivisoria(gfx, page4);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 12 - DA MULTA:", fontTitulo, linhaX, linhaY, page4);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "Em caso de rescisão antecipada por iniciativa dos LOCATÁRIOS, será devida multa equivalente a 03 (três) meses de aluguel, calculada" +
+                    " de forma proporcional ao período restante do contrato.", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 20;
+
+                AdicionaParagrafo(gfx, "A proporcionalidade será apurada considerando-se o tempo faltante para o término do prazo \r\ncontratual, nos termos da legislação vigente.", fontCorpo, linhaX, linhaY, page4);
+
+                AdicionarLinhaDivisoria(gfx, page4);
+
+                AdicionaParagrafo(gfx, "CLÁUSULA 13 - DO FORO:", fontTitulo, linhaX, linhaY, page4);
+
+                AdicionaParagrafo(gfx, "Fica eleito o foro da comarca do imóvel para dirimir quaisquer controvérsias.", fontCorpo, linhaX, linhaY, page4);
+
+                AdicionarLinhaDivisoria(gfx, page4);
+
+                AdicionaParagrafo(gfx, "E, por estarem assim justos e contratados, assinam DE FORMA REMOTA, por e-mail, PELO ASSINADOR AUTENTIQUE, o presente" +
+                    " instrumento, que será enviado por e-mail à todas as partes.", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 40;
+                linhaX = 200;
+
+                string dataHoje = DateTime.Now.ToString("dd/MM/yyyy");
+
+                string dia = dataHoje.Substring(0, 2);
+                string mesExtenso = DateTime.Now.ToString("MMMM", new CultureInfo("pt-BR"));
+                string ano = dataHoje.Substring(6, 4);
+
+                AdicionaParagrafo(gfx, $"Rio de Janeiro, {dia} de {mesExtenso} de {ano}", fontCorpo, linhaX, linhaY, page4);
+
+                linhaX = 50;
+
+                AdicionarLinhaDivisoria(gfx, page4);
+
+                linhaY += 40;
+
+                AdicionaParagrafo(gfx, "LOCADOR:_______________________________________________________", fontCorpo, linhaX, linhaY, page4);
 
                 linhaY += 15;
-            }
 
-            if (contrato.Contratante4 != null)
-            {
-                AdicionaParagrafo(gfx, "LOCATÁRIO 4:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+                AdicionaParagrafo(gfx, "LOCATÁRIO 1:____________________________________________________", fontCorpo, linhaX, linhaY, page4);
 
                 linhaY += 15;
+
+                if (contrato.Contratante2 != null)
+                {
+                    AdicionaParagrafo(gfx, "LOCATÁRIO 2:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                    linhaY += 15;
+                }
+
+                if (contrato.Contratante3 != null)
+                {
+                    AdicionaParagrafo(gfx, "LOCATÁRIO 3:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                    linhaY += 15;
+                }
+
+                if (contrato.Contratante4 != null)
+                {
+                    AdicionaParagrafo(gfx, "LOCATÁRIO 4:________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                    linhaY += 15;
+                }
+
+                AdicionaParagrafo(gfx, "TESTEMUNHA 1:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 15;
+
+                AdicionaParagrafo(gfx, "TESTEMUNHA 2:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
+
+                linhaY += 15;
+
             }
-
-            AdicionaParagrafo(gfx, "TESTEMUNHA 1:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 15;
-
-            AdicionaParagrafo(gfx, "TESTEMUNHA 2:__________________________________________________", fontCorpo, linhaX, linhaY, page4);
-
-            linhaY += 15;
 
 
             var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
