@@ -997,7 +997,7 @@
 
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,10,48,50" Grid.ColumnSpan="2" Grid.RowSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
                             <TextBox x:Name="TxtClienteChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,3,12,8" Grid.ColumnSpan="2"/>
-                            
+
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
@@ -1092,7 +1092,7 @@
 
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
                             <TextBox x:Name="TxtClienteChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            
+
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
@@ -1465,9 +1465,10 @@
                     <ComboBox x:Name="ComboProprietarios" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,15,460" Grid.Row="1" Grid.ColumnSpan="2">
                     </ComboBox>
                     <ComboBox x:Name="ComboIntencao" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,460" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="ComboTipoImovel" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,262,378" Grid.Row="1"/>
-                    <TextBox x:Name="TxtBoxCep" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="282,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="180"/>
-                    <TextBox x:Name="TxtBoxLogradouro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="482,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="462" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="ComboTipoImovel" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,378" Grid.Row="1" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="ComboFinalidade" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,378" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxCep" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="450,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxLogradouro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="102,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="320" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBox x:Name="TxtBoxNumero" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxPais" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxEstado" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="313,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="98"/>
@@ -1488,8 +1489,9 @@
                     <TextBlock HorizontalAlignment="Left" Margin="22,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Proprietário*" VerticalAlignment="Top" Style="{StaticResource ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="5,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Intenção*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.497,-0.115" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Tipo do imóvel*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="282,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="CEP*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="482,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Logradouro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="240,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Finalidade*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="450,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="CEP*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="102,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Logradouro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="175,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="País*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="313,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Estado*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="424,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Cidade*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
@@ -1558,12 +1560,13 @@
                         <Button x:Name="BtnFecharModalImovelEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovelEditar_Click"/>
                         <Button x:Name="BtnEditarModalImovel" Content="Confirmar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="BtnEditarModalImovel_Click"/>
                     </StackPanel>
-                    <ComboBox x:Name="ComboProprietariosEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,15,460" Grid.Row="1" Grid.ColumnSpan="2">
+                    <ComboBox x:Name="ComboProprietariosEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,296,460" Grid.Row="1" Grid.ColumnSpan="2">
                     </ComboBox>
-                    <ComboBox x:Name="ComboIntencaoEditar" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,460" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="ComboTipoImovelEditar" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,262,378" Grid.Row="1"/>
-                    <TextBox x:Name="TxtBoxCepEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="282,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="180"/>
-                    <TextBox x:Name="TxtBoxLogradouroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="482,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="462" Grid.ColumnSpan="2"/>
+                    <ComboBox x:Name="ComboIntencaoEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="156,40,20,460" Grid.Row="1" Grid.Column="1"/>
+                    <ComboBox x:Name="ComboTipoImovelEditar" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,378" Grid.Row="1" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="ComboFinalidadeEditar" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,378" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxCepEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="440,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
+                    <TextBox x:Name="TxtBoxLogradouroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="92,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="340" Grid.Column="1"/>
                     <TextBox x:Name="TxtBoxNumeroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxPaisEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxEstadoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="313,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="98"/>
@@ -1582,10 +1585,11 @@
                     <TextBox x:Name="TxtBoxObservacoesEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,423,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3"/>
                     <TextBox x:Name="TxtBoxDescricaoEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,495,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Proprietário*" VerticalAlignment="Top" Style="{StaticResource ModernLabel}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="5,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Intenção*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.497,-0.115" Grid.Column="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="156,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Intenção*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.497,-0.115" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Tipo do imóvel*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="282,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="CEP*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="482,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Logradouro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="240,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Finalidade*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.ColumnSpan="2"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="440,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="CEP*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="92,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Logradouro*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="175,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="País*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="313,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Estado*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="424,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Cidade*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>

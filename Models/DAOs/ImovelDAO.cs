@@ -39,6 +39,14 @@ namespace Imob.Models
                 return Intencao != null ? Intencao.Nome : string.Empty;
             }
         }
+        public Imob.Models.DAOs.FinalidadeDAO Finalidade { get; set; }
+        public string NomeFinalidade
+        {
+            get
+            {
+                return Finalidade != null ? Finalidade.Nome : string.Empty;
+            }
+        }
         public string Cep { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }

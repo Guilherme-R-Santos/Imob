@@ -17,6 +17,7 @@ namespace Imob.Models
         public int Proprietario { get; set; }
         public int TipoImovel { get; set; }
         public int Intencao { get; set; }
+        public int Finalidade { get; set; }
         public string Cep { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }
@@ -45,6 +46,7 @@ namespace Imob.Models
                 Proprietario = new { Id = this.Proprietario },
                 TipoImovel = new { Id = this.TipoImovel },
                 Intencao = new { Id = this.Intencao },
+                Finalidade = new { Id = this.Finalidade },
                 Cep = this.Cep,
                 Logradouro = this.Logradouro,
                 Numero = this.Numero,
@@ -108,6 +110,7 @@ namespace Imob.Models
                 Proprietario = new { Id = this.Proprietario },
                 TipoImovel = new { Id = this.TipoImovel },
                 Intencao = new { Id = this.Intencao },
+                Finalidade = new { Id = this.Finalidade },
                 Cep = this.Cep,
                 Logradouro = this.Logradouro,
                 Numero = this.Numero,

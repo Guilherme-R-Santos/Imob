@@ -294,6 +294,15 @@ namespace Imob
             }
         }
 
+        public void AdicionarItensComboFinalidades()
+        {
+            var listaFinalidades = Imob.Models.DAOs.FinalidadeDAO.GetFinalidades(HttpClientFixo);
+            foreach (var finalidade in listaFinalidades)
+            {
+                ComboFinalidade.Items.Add(finalidade.Nome.ToString());
+            }
+        }
+
         private void ComboBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (sender is not ComboBox comboBox || string.IsNullOrWhiteSpace(e.Text))
@@ -1058,6 +1067,7 @@ namespace Imob
             Task task = AdicionarItensComboProprietarios();
             AdicionarItensComboIntencoes();
             AdicionarItensComboTiposImovel();
+            AdicionarItensComboFinalidades();
             ImovelModalOverlayCriar.Visibility = Visibility.Visible;
         }
 
@@ -1067,6 +1077,7 @@ namespace Imob
             ComboProprietarios.Items.Clear();
             ComboIntencao.Items.Clear();
             ComboTipoImovel.Items.Clear();
+            ComboFinalidade.Items.Clear();
             TxtBoxCep.Clear();
             TxtBoxLogradouro.Clear();
             TxtBoxNumero.Clear();
@@ -1091,10 +1102,12 @@ namespace Imob
             var clienteSelecionado = ComboProprietarios.SelectedItem as string;
             var intencaoSelecionada = ComboIntencao.SelectedItem as string;
             var tipoImovelSelecionado = ComboTipoImovel.SelectedItem as string;
+            var finalidadeSelecionada = ComboFinalidade.SelectedItem as string;
 
             if (string.IsNullOrWhiteSpace(clienteSelecionado) ||
                 string.IsNullOrWhiteSpace(intencaoSelecionada) ||
                 string.IsNullOrWhiteSpace(tipoImovelSelecionado) ||
+                string.IsNullOrWhiteSpace(finalidadeSelecionada) ||
                 string.IsNullOrWhiteSpace(TxtBoxCep.Text) ||
                 string.IsNullOrWhiteSpace(TxtBoxLogradouro.Text) ||
                 string.IsNullOrWhiteSpace(TxtBoxNumero.Text) ||
@@ -1197,6 +1210,7 @@ namespace Imob
             imovel.Proprietario = ClienteDAO.GetIdPorNome(clienteSelecionado, HttpClientFixo);
             imovel.TipoImovel = TipoImovelDAO.GetIdPorNome(tipoImovelSelecionado, HttpClientFixo);
             imovel.Intencao = IntencaoDAO.GetIdPorNome(intencaoSelecionada, HttpClientFixo);
+            imovel.Finalidade = Imob.Models.DAOs.FinalidadeDAO.GetIdPorNome(finalidadeSelecionada, HttpClientFixo);
             imovel.Cep = TxtBoxCep.Text;
             imovel.Logradouro = TxtBoxLogradouro.Text;
             imovel.Numero = int.Parse(TxtBoxNumero.Text);
@@ -1226,6 +1240,7 @@ namespace Imob
             ComboProprietarios.Items.Clear();
             ComboIntencao.Items.Clear();
             ComboTipoImovel.Items.Clear();
+            ComboFinalidade.Items.Clear();
             TxtBoxCep.Clear();
             TxtBoxLogradouro.Clear();
             TxtBoxNumero.Clear();
@@ -1632,9 +1647,16 @@ namespace Imob
                 ComboTipoImovelEditar.Items.Add(tipoImovel.Nome.ToString());
             }
 
+            var listaFinalidades = Imob.Models.DAOs.FinalidadeDAO.GetFinalidades(HttpClientFixo);
+            foreach (var finalidade in listaFinalidades)
+            {
+                ComboFinalidadeEditar.Items.Add(finalidade.Nome.ToString());
+            }
+
             ComboProprietariosEditar.Text = imovelSelecionado.NomeProprietario;
             ComboIntencaoEditar.Text = imovelSelecionado.NomeIntencao;
             ComboTipoImovelEditar.Text = imovelSelecionado.NomeTipoImovel;
+            ComboFinalidadeEditar.Text = imovelSelecionado.NomeFinalidade;
             TxtBoxCepEditar.Text = imovelSelecionado.Cep;
             TxtBoxLogradouroEditar.Text = imovelSelecionado.Logradouro;
             TxtBoxNumeroEditar.Text = Convert.ToInt32(imovelSelecionado.Numero).ToString();
@@ -1732,6 +1754,7 @@ namespace Imob
             imovelAtualizado.NumeroCbmerj = TxtBoxNumeroCbmerjEditar.Text;
             imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string, HttpClientFixo);
             imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string, HttpClientFixo);
+            imovelAtualizado.Finalidade = Imob.Models.DAOs.FinalidadeDAO.GetIdPorNome(ComboFinalidadeEditar.SelectedItem as string, HttpClientFixo);
             imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string, HttpClientFixo);
 
 
@@ -1744,6 +1767,7 @@ namespace Imob
                 ComboProprietariosEditar.Items.Clear();
                 ComboIntencaoEditar.Items.Clear();
                 ComboTipoImovelEditar.Items.Clear();
+                ComboFinalidadeEditar.Items.Clear();
                 await AdicionarItensGridImoveis();
 
             } catch (Exception ex)
