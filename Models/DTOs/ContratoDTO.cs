@@ -21,6 +21,7 @@ namespace Imob.Models
         public ClienteDAO Contratante3 { get; set; }
         public ClienteDAO Contratante4 { get; set; }
         public ClienteDAO Fiador { get; set; }
+        public ClienteDAO Fiador2 { get; set; }
         public ImovelDAO Imovel { get; set; }
         public ObjetoContratoDAO ObjetoContrato { get; set; }
         public ModalidadeContratoDAO ModalidadeContrato { get; set; }
@@ -85,6 +86,11 @@ namespace Imob.Models
             if (this.Fiador != null)
             {
                 contratoJson["Fiador"] = new { Id = this.Fiador.Id };
+            }
+
+            if (this.Fiador2 != null)
+            {
+                contratoJson["Fiador2"] = new { Id = this.Fiador2.Id };
             }
 
             var json = JsonConvert.SerializeObject(contratoJson);
@@ -160,6 +166,11 @@ namespace Imob.Models
             if (this.Fiador != null)
             {
                 contratoJson["Fiador"] = new { Id = this.Fiador.Id };
+            }
+
+            if (this.Fiador2 != null)
+            {
+                contratoJson["Fiador2"] = new { Id = this.Fiador2.Id };
             }
 
             var json = JsonConvert.SerializeObject(contratoJson);

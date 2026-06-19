@@ -17,13 +17,14 @@ namespace Imob.Models.DAOs
         public DateTime? DataInativacao { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
 
-        public static List<FinalidadeDAO> GetPorNome(string nome, HttpClient httpClient)
+        public static FinalidadeDAO GetPorNome(string nome, HttpClient httpClient)
         {
             var response = httpClient.GetAsync("Finalidade/ObterPorNome/" + nome).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<List<FinalidadeDAO>>(response.Content.ReadAsStringAsync().Result);
+                var finalidade = JsonConvert.DeserializeObject<FinalidadeDAO>(response.Content.ReadAsStringAsync().Result);
+                return finalidade;
             }
             else
             {
@@ -47,8 +48,8 @@ namespace Imob.Models.DAOs
 
         public static int GetIdPorNome(string nome, HttpClient httpClient)
         {
-            var finalidades = GetPorNome(nome, httpClient);
-            return finalidades?.FirstOrDefault()?.Id ?? 0;
+            var finalidade = GetPorNome(nome, httpClient);
+            return finalidade?.Id ?? 0;
         }
     }
 }

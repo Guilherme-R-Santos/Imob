@@ -20,6 +20,7 @@ namespace Imob.Models
         public int? Contratante3Id { get; set; }
         public int? Contratante4Id { get; set; }
         public int? FiadorId { get; set; }
+        public int? Fiador2Id { get; set; }
         public int? ImovelId { get; set; }
         public int? ObjetoContratoId { get; set; }
         public int? ModalidadeContratoId { get; set; }
@@ -80,6 +81,14 @@ namespace Imob.Models
             }
         }
 
+        public string NomeFiador2
+        {
+            get
+            {
+                return Fiador2 != null ? Fiador2.Nome : string.Empty;
+            }
+        }
+
         public string NomeImovel
         {
             get
@@ -112,6 +121,7 @@ namespace Imob.Models
         public ClienteDAO Contratante3 { get; set; }
         public ClienteDAO Contratante4 { get; set; }
         public ClienteDAO Fiador { get; set; }
+        public ClienteDAO Fiador2 { get; set; }
         public ImovelDAO Imovel { get; set; }
         public ObjetoContratoDAO ObjetoContrato { get; set; }
         public ModalidadeContratoDAO ModalidadeContrato { get; set; }

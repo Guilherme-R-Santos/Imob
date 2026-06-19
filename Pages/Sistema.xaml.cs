@@ -561,6 +561,11 @@ namespace Imob
             comboBox.SelectedItem = item;
         }
 
+        private ComboBox? ObterComboContratoFiador2Visualizar()
+        {
+            return FindName("ComboContratoFiador2Visualizar") as ComboBox;
+        }
+
         private void AtualizarPermissoesModalidadeCriar()
         {
             var modalidade = ComboModalidadeContratoCriar.SelectedItem as ModalidadeContratoDAO;
@@ -1362,6 +1367,10 @@ namespace Imob
                 ComboContratoFiadorCriar.SelectedValuePath = "Id";
                 ComboContratoFiadorCriar.ItemsSource = fiadoresTask.Result;
 
+                ComboContratoFiador2Criar.DisplayMemberPath = "Nome";
+                ComboContratoFiador2Criar.SelectedValuePath = "Id";
+                ComboContratoFiador2Criar.ItemsSource = fiadoresTask.Result;
+
                 AtualizarPermissoesModalidadeCriar();
                 AtualizarFiltroProprietarioImovelCriar(true);
                 AtualizarFiltroContratantesCriar();
@@ -1437,6 +1446,14 @@ namespace Imob
                 ComboContratoFiadorVisualizar.SelectedValuePath = "Id";
                 ComboContratoFiadorVisualizar.ItemsSource = fiadoresTask.Result;
 
+                var comboContratoFiador2Visualizar = ObterComboContratoFiador2Visualizar();
+                if (comboContratoFiador2Visualizar != null)
+                {
+                    comboContratoFiador2Visualizar.DisplayMemberPath = "Nome";
+                    comboContratoFiador2Visualizar.SelectedValuePath = "Id";
+                    comboContratoFiador2Visualizar.ItemsSource = fiadoresTask.Result;
+                }
+
                 AtualizarPermissoesModalidadeVisualizar();
                 AtualizarFiltroProprietarioImovelVisualizar(true);
                 AtualizarFiltroContratantesVisualizar();
@@ -1469,6 +1486,7 @@ namespace Imob
             ComboContratoContratante3Criar.SelectedItem = null;
             ComboContratoContratante4Criar.SelectedItem = null;
             ComboContratoFiadorCriar.SelectedItem = null;
+            ComboContratoFiador2Criar.SelectedItem = null;
 
             AtualizarPermissoesModalidadeCriar();
             AtualizarFiltroProprietarioImovelCriar(true);
@@ -2942,6 +2960,7 @@ namespace Imob
             ClienteDAO locatario3Selecionado = ComboContratoContratante3Criar.SelectedItem as ClienteDAO;
             ClienteDAO locatario4Selecionado = ComboContratoContratante4Criar.SelectedItem as ClienteDAO;
             ClienteDAO fiadorSelecionado = ComboContratoFiadorCriar.SelectedItem as ClienteDAO;
+            ClienteDAO fiador2Selecionado = ComboContratoFiador2Criar.SelectedItem as ClienteDAO;
             DateTime? inicio = DpContratoDataInicioCriar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaCriar.Text;
             string apolice = TxtContratoApoliceSegFiancaCriar.Text;
@@ -2998,6 +3017,7 @@ namespace Imob
                 Contratante3 = locatario3Selecionado,
                 Contratante4 = locatario4Selecionado,
                 Fiador = fiadorSelecionado,
+                Fiador2 = fiador2Selecionado,
                 ValorContrato = valorContrato,
                 DataInicioVigencia = inicio.Value,
                 PrazoMeses = prazo,
@@ -3021,6 +3041,7 @@ namespace Imob
             ComboContratoContratante3Criar.SelectedItem = null;
             ComboContratoContratante4Criar.SelectedItem = null;
             ComboContratoFiadorCriar.SelectedItem = null;
+            ComboContratoFiador2Criar.SelectedItem = null;
             DpContratoDataInicioCriar.SelectedDate = null;
             TxtContratoPrazoMesesCriar.Clear();
             TxtContratoValorCriar.Clear();
@@ -3073,6 +3094,9 @@ namespace Imob
             int? locatario3Id = ObterIdSelecionado(ComboContratoContratante3Visualizar);
             int? locatario4Id = ObterIdSelecionado(ComboContratoContratante4Visualizar);
             int? fiadorId = ObterIdSelecionado(ComboContratoFiadorVisualizar);
+            int? fiador2Id = ObterComboContratoFiador2Visualizar() is ComboBox comboContratoFiador2Visualizar
+                ? ObterIdSelecionado(comboContratoFiador2Visualizar)
+                : null;
             DateTime? inicio = DpContratoDataInicioVisualizar.SelectedDate;
             string proposta = TxtContratoPropostaSegFiancaVisualizar.Text;
             string apolice = TxtContratoApoliceSegFiancaVisualizar.Text;
@@ -3081,6 +3105,7 @@ namespace Imob
             if (!ModalidadeEhFiador(modalidadeSelecionada))
             {
                 fiadorId = null;
+                fiador2Id = null;
             }
 
             if (!ModalidadeEhSeguroFianca(modalidadeSelecionada))
@@ -3142,6 +3167,7 @@ namespace Imob
                     Contratante3 = locatario3Id.HasValue ? new ClienteDAO { Id = locatario3Id.Value } : null,
                     Contratante4 = locatario4Id.HasValue ? new ClienteDAO { Id = locatario4Id.Value } : null,
                     Fiador = fiadorId.HasValue ? new ClienteDAO { Id = fiadorId.Value } : null,
+                    Fiador2 = fiador2Id.HasValue ? new ClienteDAO { Id = fiador2Id.Value } : null,
                     ValorContrato = valorContrato,
                     DataInicioVigencia = inicio.Value,
                     PrazoMeses = prazo,
@@ -3195,6 +3221,11 @@ namespace Imob
                 ComboContratoContratante3Visualizar.SelectedValue = contratoSelecionado.Contratante3?.Id ?? contratoSelecionado.Contratante3Id;
                 ComboContratoContratante4Visualizar.SelectedValue = contratoSelecionado.Contratante4?.Id ?? contratoSelecionado.Contratante4Id;
                 ComboContratoFiadorVisualizar.SelectedValue = contratoSelecionado.Fiador?.Id ?? contratoSelecionado.FiadorId;
+                var comboContratoFiador2Visualizar = ObterComboContratoFiador2Visualizar();
+                if (comboContratoFiador2Visualizar != null)
+                {
+                    comboContratoFiador2Visualizar.SelectedValue = contratoSelecionado.Fiador2?.Id ?? contratoSelecionado.Fiador2Id;
+                }
 
                 if (ComboTipoContratoVisualizar.SelectedItem == null) ComboTipoContratoVisualizar.Text = contratoSelecionado.TipoContrato?.Nome;
                 if (ComboModalidadeContratoVisualizar.SelectedItem == null) ComboModalidadeContratoVisualizar.Text = contratoSelecionado.ModalidadeContrato?.Nome;
@@ -3205,6 +3236,8 @@ namespace Imob
                 if (ComboContratoContratante2Visualizar.SelectedItem == null) ComboContratoContratante2Visualizar.Text = contratoSelecionado.Contratante2?.Nome;
                 if (ComboContratoContratante3Visualizar.SelectedItem == null) ComboContratoContratante3Visualizar.Text = contratoSelecionado.Contratante3?.Nome;
                 if (ComboContratoContratante4Visualizar.SelectedItem == null) ComboContratoContratante4Visualizar.Text = contratoSelecionado.Contratante4?.Nome;
+                if (ComboContratoFiadorVisualizar.SelectedItem == null) ComboContratoFiadorVisualizar.Text = contratoSelecionado.Fiador?.Nome;
+                if (comboContratoFiador2Visualizar != null && comboContratoFiador2Visualizar.SelectedItem == null) comboContratoFiador2Visualizar.Text = contratoSelecionado.Fiador2?.Nome;
 
                 DpContratoDataInicioVisualizar.SelectedDate = contratoSelecionado.DataInicioVigencia;
                 TxtContratoPrazoMesesVisualizar.Text = contratoSelecionado.PrazoMeses.ToString();
