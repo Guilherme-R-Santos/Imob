@@ -41,4 +41,13 @@
     <None Include=".github\copilot-instructions.md" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

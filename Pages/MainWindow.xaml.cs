@@ -41,7 +41,8 @@ namespace Imob
         public MainWindow()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:7251/");
+            var baseUrlApi = App.Configuration["Api:BaseUrl"];
+            client.BaseAddress = new Uri(baseUrlApi ?? throw new InvalidOperationException("Configuração 'Api:BaseUrl' não encontrada."));
             InitializeComponent();
             WindowState = WindowState.Maximized;
             Loaded += MainWindow_Loaded;

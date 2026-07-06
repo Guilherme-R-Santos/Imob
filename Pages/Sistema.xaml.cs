@@ -89,7 +89,8 @@ namespace Imob
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.BaseAddress = new Uri("https://localhost:7251/");
+            var baseUrlApi = App.Configuration["Api:BaseUrl"];
+            client.BaseAddress = new Uri(baseUrlApi ?? throw new InvalidOperationException("Configuração 'Api:BaseUrl' não encontrada."));
             return client;
         }
 
