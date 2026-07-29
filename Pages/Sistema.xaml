@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:Imob"
         mc:Ignorable="d"
         Title="Sistema" Height="1080" Width="1920" Icon="/IcoImob.png" Cursor="">
@@ -179,9 +180,6 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <EventSetter Event="PreviewTextInput" Handler="ComboBox_PreviewTextInput"/>
-            <EventSetter Event="PreviewKeyDown" Handler="ComboBox_PreviewKeyDown"/>
-            <EventSetter Event="Loaded" Handler="ComboBox_Loaded"/>
         </Style>
 
         <Style TargetType="ComboBoxItem">
@@ -348,19 +346,54 @@
             <TreeView.Effect>
                 <DropShadowEffect BlurRadius="5" ShadowDepth="1"/>
             </TreeView.Effect>
-            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ImoveisTree_MouseDown" MouseDoubleClick="ImoveisTree_MouseDown"/>
-            <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ContratosTree_MouseDown" MouseDoubleClick="ContratosTree_MouseDown"/>
-            <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
-                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="ProprietariosTree_MouseDown" MouseDoubleClick="ProprietariosTree_MouseDown"/>
-                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown" MouseDoubleClick="LocatariosTree_MouseDown"/>
-                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown" MouseDoubleClick="FiadoresTree_MouseDown"/>
+            <TreeViewItem x:Name="ImoveisTree" Header="Imóveis" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding AbrirImoveisCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TreeViewItem>
-            <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" Visibility="Hidden" MouseDoubleClick="VistoriaTreeListar_MouseDown">
+            <TreeViewItem x:Name="ContratosTree" Header="Contratos" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding AbrirContratosCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TreeViewItem>
+            <TreeViewItem x:Name="PessoasTree" Header="Pessoas" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                <TreeViewItem x:Name="ProprietariosTree" Header="Proprietários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding AbrirProprietariosCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TreeViewItem>
+                <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding AbrirLocatariosCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TreeViewItem>
+                <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                            <i:InvokeCommandAction Command="{Binding AbrirFiadoresCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TreeViewItem>
+            </TreeViewItem>
+            <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" Visibility="Hidden">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                        <i:InvokeCommandAction Command="{Binding AbrirVistoriasCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TreeViewItem>
         </TreeView>
 
 
-        <Border x:Name="ProprietariosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="ProprietariosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding ProprietariosPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -382,12 +415,12 @@
                         <TextBlock Text="Proprietarios" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Proprietarios" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <TextBox x:Name="SearchBarProprietarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarProprietarios_KeyDown"/>
-                    <Button x:Name="BtnAtualizarProprietarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarProprietarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarProprietario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarProprietario_Click">Novo Proprietario</Button>
+                    <TextBox x:Name="SearchBarProprietarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." Text="{Binding SearchProprietarios, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnAtualizarProprietarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AtualizarProprietariosCommand}" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarProprietario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AbrirProprietarioCriarCommand}">Novo Proprietario</Button>
                 </Grid>
 
-                <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="ProprietariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding ProprietariosView}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -400,8 +433,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizarProprietario" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarProprietario_Click"/>
-                                        <Button x:Name="BtnInativarProprietario" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarProprietario_Click"/>
+                                        <Button x:Name="BtnVisualizarProprietario" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Command="{Binding DataContext.VisualizarProprietarioCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        <Button x:Name="BtnInativarProprietario" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Command="{Binding DataContext.InativarProprietarioCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -411,7 +444,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="LocatariosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="LocatariosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding LocatariosPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -433,12 +466,12 @@
                         <TextBlock Text="Locatários" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Locatários" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <TextBox x:Name="SearchBarLocatarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarLocatarios_KeyDown"/>
-                    <Button x:Name="BtnAtualizarLocatarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarLocatarios_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarLocatario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarLocatario_Click">Novo Locatário</Button>
+                    <TextBox x:Name="SearchBarLocatarios" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." Text="{Binding SearchLocatarios, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnAtualizarLocatarios" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AtualizarLocatariosCommand}" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarLocatario" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AbrirLocatarioCriarCommand}">Novo Locatário</Button>
                 </Grid>
 
-                <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="LocatariosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding LocatariosView}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -451,8 +484,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizarLocatario" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarLocatario_Click"/>
-                                        <Button x:Name="BtnInativarLocatario" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarLocatario_Click"/>
+                                        <Button x:Name="BtnVisualizarLocatario" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Command="{Binding DataContext.VisualizarLocatarioCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        <Button x:Name="BtnInativarLocatario" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Command="{Binding DataContext.InativarLocatarioCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -462,7 +495,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="FiadoresPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="FiadoresPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding FiadoresPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -484,12 +517,12 @@
                         <TextBlock Text="Fiadores" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de Fiadores" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <TextBox x:Name="SearchBarFiadores" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarFiadores_KeyDown"/>
-                    <Button x:Name="BtnAtualizarFiadores" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarFiadores_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarFiador" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarFiador_Click">Novo Fiador</Button>
+                    <TextBox x:Name="SearchBarFiadores" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." Text="{Binding SearchFiadores, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnAtualizarFiadores" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AtualizarFiadoresCommand}" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarFiador" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AbrirFiadorCriarCommand}">Novo Fiador</Button>
                 </Grid>
 
-                <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="FiadoresDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding FiadoresView}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -502,8 +535,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizarFiador" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarFiador_Click"/>
-                                        <Button x:Name="BtnInativarFiador" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarFiador_Click"/>
+                                        <Button x:Name="BtnVisualizarFiador" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Command="{Binding DataContext.VisualizarFiadorCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        <Button x:Name="BtnInativarFiador" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Command="{Binding DataContext.InativarFiadorCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -513,7 +546,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="ImoveisPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="ImoveisPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding ImoveisPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -535,12 +568,12 @@
                         <TextBlock Text="Imóveis" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" Width="99" HorizontalAlignment="Left" />
                         <TextBlock Text="Listagem de Imóveis" Style="{StaticResource ModernLabel}" Width="127" HorizontalAlignment="Left"/>
                     </StackPanel>
-                    <TextBox x:Name="SearchBarImoveis" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarImoveis_KeyDown"/>
-                    <Button x:Name="BtnAtualizar" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizar_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarImovel" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarImovel_Click">Novo Imóvel</Button>
+                    <TextBox x:Name="SearchBarImoveis" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." Text="{Binding SearchImoveis, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnAtualizar" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AtualizarImoveisCommand}" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarImovel" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AbrirImovelCriarCommand}">Novo Imóvel</Button>
                 </Grid>
 
-                <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Extended"  AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="ImoveisDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Extended"  AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding ImoveisView}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="25"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -556,8 +589,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizar" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizar_Click"/>
-                                        <Button x:Name="BtnExcluir" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnExcluir_Click" Cursor=""/>
+                                        <Button x:Name="BtnVisualizar" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Command="{Binding DataContext.VisualizarImovelCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        <Button x:Name="BtnExcluir" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Command="{Binding DataContext.InativarImovelCommand, RelativeSource={RelativeSource AncestorType=Window}}" Cursor=""/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -567,7 +600,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="ContratosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="ContratosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding ContratosPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -589,12 +622,12 @@
                         <TextBlock Text="Contratos" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
                         <TextBlock Text="Listagem de contratos" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
-                    <TextBox x:Name="SearchBarContratos" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarContratos_KeyDown"/>
-                    <Button x:Name="BtnAtualizarContratos" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarContratos_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
-                    <Button x:Name="BtnAdicionarContrato" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarContrato_Click">Novo Contrato</Button>
+                    <TextBox x:Name="SearchBarContratos" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." Text="{Binding SearchContratos, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button x:Name="BtnAtualizarContratos" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AtualizarContratosCommand}" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarContrato" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Command="{Binding AbrirContratoCriarCommand}">Novo Contrato</Button>
                 </Grid>
 
-                <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True" ItemsSource="{Binding ContratosView}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
@@ -607,8 +640,8 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizarContrato" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarContrato_Click"/>
-                                        <Button x:Name="BtnInativarContrato" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarContrato_Click"/>
+                                        <Button x:Name="BtnVisualizarContrato" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Command="{Binding DataContext.VisualizarContratoCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                        <Button x:Name="BtnInativarContrato" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Command="{Binding DataContext.InativarContratoCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -618,7 +651,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="VistoriasPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
+        <Border x:Name="VistoriasPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="{Binding VistoriasPanelVisibility}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -666,7 +699,7 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="ContratoModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ContratoModalOverlayCriar" Visibility="{Binding ContratoModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -791,14 +824,14 @@
                     </Grid>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosCriar_Click"/>
-                        <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarContratoCriar_Click"/>
+                        <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharContratoCriarCommand}"/>
+                        <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarContratoCriarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="ContratoModalOverlayVisualizar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ContratoModalOverlayVisualizar" Visibility="{Binding ContratoModalVisualizarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -924,17 +957,17 @@
                     </Grid>
 
                     <Grid Grid.Row="2" Grid.ColumnSpan="3">
-                        <Button x:Name="BtnGerarContratoVisualizar" Content="Gerar contrato" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" HorizontalAlignment="Left" Click="BtnGerarContratoVisualizar_Click"/>
+                        <Button x:Name="BtnGerarContratoVisualizar" Content="Gerar contrato" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" HorizontalAlignment="Left" Command="{Binding GerarContratoVisualizarCommand}"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="BtnFecharModalContratosVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosVisualizar_Click"/>
-                            <Button x:Name="BtnSalvarContratoVisualizar" Content="Confirmar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarContratoVisualizar_Click"/>
+                            <Button x:Name="BtnFecharModalContratosVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharContratoVisualizarCommand}"/>
+                            <Button x:Name="BtnSalvarContratoVisualizar" Content="Confirmar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarContratoVisualizarCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="ProprietarioModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ProprietarioModalOverlayCriar" Visibility="{Binding ProprietarioModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -974,67 +1007,67 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtClienteNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtClienteNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtClienteCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,10,48,50" Grid.ColumnSpan="2" Grid.RowSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtClienteChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,3,12,8" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="TxtClienteChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,3,12,8" Grid.ColumnSpan="2" Text="{Binding ClienteChavePixCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpClienteNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpClienteNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoCriar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalProprietarioCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalProprietarioCriar_Click"/>
-                        <Button x:Name="BtnSalvarProprietarioCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarProprietarioCriar_Click"/>
+                        <Button x:Name="BtnFecharModalProprietarioCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharProprietarioCriarCommand}"/>
+                        <Button x:Name="BtnSalvarProprietarioCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarProprietarioCriarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="ProprietarioModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ProprietarioModalOverlayEditar" Visibility="{Binding ProprietarioModalEditarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -1069,67 +1102,67 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtClienteNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtClienteNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtClienteCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtClienteChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtClienteChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteChavePixEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtClienteCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtClienteTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpClienteNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpClienteNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoEditar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalProprietarioEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalProprietarioEditar_Click"/>
-                        <Button x:Name="BtnSalvarProprietarioEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarProprietarioEditar_Click"/>
+                        <Button x:Name="BtnFecharModalProprietarioEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharProprietarioEditarCommand}"/>
+                        <Button x:Name="BtnSalvarProprietarioEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarProprietarioEditarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="LocatarioModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="LocatarioModalOverlayCriar" Visibility="{Binding LocatarioModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1169,51 +1202,51 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtLocatarioNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtLocatarioNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtLocatarioChavePixCriar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBox x:Name="TxtLocatarioBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioChavePixCriar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteChavePixCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBox x:Name="TxtLocatarioBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpLocatarioNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpLocatarioNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoCriar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalLocatarioCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalLocatarioCriar_Click"/>
-                        <Button x:Name="BtnSalvarLocatarioCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarLocatarioCriar_Click"/>
+                        <Button x:Name="BtnFecharModalLocatarioCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharLocatarioCriarCommand}"/>
+                        <Button x:Name="BtnSalvarLocatarioCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarLocatarioCriarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="LocatarioModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="LocatarioModalOverlayEditar" Visibility="{Binding LocatarioModalEditarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -1245,50 +1278,50 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtLocatarioNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtLocatarioNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtLocatarioChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtLocatarioChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteChavePixEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtLocatarioTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpLocatarioNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpLocatarioNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoEditar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalLocatarioEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalLocatarioEditar_Click"/>
-                        <Button x:Name="BtnSalvarLocatarioEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarLocatarioEditar_Click"/>
+                        <Button x:Name="BtnFecharModalLocatarioEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharLocatarioEditarCommand}"/>
+                        <Button x:Name="BtnSalvarLocatarioEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarLocatarioEditarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="FiadorModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="FiadorModalOverlayCriar" Visibility="{Binding FiadorModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1327,51 +1360,51 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtFiadorNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtFiadorNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtFiadorCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,18,1" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtFiadorChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,1,12,10" Grid.ColumnSpan="2"/>
+                            <TextBox x:Name="TxtFiadorChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,1,12,10" Grid.ColumnSpan="2" Text="{Binding ClienteChavePixCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpFiadorNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpFiadorNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoCriar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalFiadorCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalFiadorCriar_Click"/>
-                        <Button x:Name="BtnSalvarFiadorCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarFiadorCriar_Click"/>
+                        <Button x:Name="BtnFecharModalFiadorCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharFiadorCriarCommand}"/>
+                        <Button x:Name="BtnSalvarFiadorCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarFiadorCriarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="FiadorModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="FiadorModalOverlayEditar" Visibility="{Binding FiadorModalEditarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -1403,50 +1436,50 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtFiadorNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtFiadorNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteNomeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtFiadorCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCpfCnpjEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteIdentidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteOrgaoExpedidorEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteNacionalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteNaturalidadeEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEstadoCivilEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteProfissaoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2" Text="{Binding ClienteEnderecoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtFiadorChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtFiadorChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2" Text="{Binding ClienteChavePixEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteAgenciaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteContaEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" Text="{Binding ClienteCodBancoEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteEmailEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtFiadorTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" Text="{Binding ClienteTelefoneEditar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpFiadorNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <DatePicker x:Name="DpFiadorNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10" SelectedDate="{Binding ClienteNascimentoEditar, Mode=TwoWay}"/>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnFecharModalFiadorEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalFiadorEditar_Click"/>
-                        <Button x:Name="BtnSalvarFiadorEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarFiadorEditar_Click"/>
+                        <Button x:Name="BtnFecharModalFiadorEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Command="{Binding FecharFiadorEditarCommand}"/>
+                        <Button x:Name="BtnSalvarFiadorEditar" Content="Atualizar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarFiadorEditarCommand}"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="ImovelModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImovelModalOverlayCriar" Visibility="{Binding ImovelModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1464,33 +1497,33 @@
                     <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="3"/>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0" Grid.ColumnSpan="2">
-                        <Button x:Name="BtnFecharModalImovel" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovel_Click"/>
-                        <Button x:Name="BtnCriarModalImovel" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="CadastrarImovelBanco"/>
+                        <Button x:Name="BtnFecharModalImovel" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Command="{Binding FecharImovelCriarCommand}"/>
+                        <Button x:Name="BtnCriarModalImovel" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Command="{Binding SalvarImovelCriarCommand}"/>
                     </StackPanel>
-                    <ComboBox x:Name="ComboProprietarios" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,15,460" Grid.Row="1" Grid.ColumnSpan="2">
+                    <ComboBox x:Name="ComboProprietarios" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,15,460" Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding ImovelProprietariosCriar}" SelectedItem="{Binding ImovelProprietarioCriarSelecionado, Mode=TwoWay}">
                     </ComboBox>
-                    <ComboBox x:Name="ComboIntencao" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,460" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <ComboBox x:Name="ComboTipoImovel" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,378" Grid.Row="1" HorizontalAlignment="Left"/>
-                    <ComboBox x:Name="ComboFinalidade" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,378" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxCep" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="450,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxLogradouro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="102,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="320" Grid.ColumnSpan="2" Grid.Column="1"/>
-                    <TextBox x:Name="TxtBoxNumero" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
-                    <TextBox x:Name="TxtBoxPais" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
-                    <TextBox x:Name="TxtBoxEstado" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="313,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="98"/>
-                    <TextBox x:Name="TxtBoxCidade" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="424,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxBairro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="156,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="268" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxMetragem" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="210"/>
-                    <TextBox x:Name="TxtBoxComplemento" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="262,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="243"/>
-                    <TextBox x:Name="TxtBoxInscricaoIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="198" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxNumeroCbmerj" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="53,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="194" Grid.Column="2"/>
-                    <TextBox x:Name="TxtBoxValorVenda" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxValorLocacao" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="170,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxCondominio" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="330,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxTaxaIncendio" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="490,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="140" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="640,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="140" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxForo" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="790,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="154" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxObservacoes" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,423,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3"/>
-                    <TextBox x:Name="TxtBoxDescricao" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,495,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3"/>
+                    <ComboBox x:Name="ComboIntencao" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,460" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" ItemsSource="{Binding ImovelIntencoesCriar}" SelectedItem="{Binding ImovelIntencaoCriarSelecionada, Mode=TwoWay}"/>
+                    <ComboBox x:Name="ComboTipoImovel" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,378" Grid.Row="1" HorizontalAlignment="Left" ItemsSource="{Binding ImovelTiposCriar}" SelectedItem="{Binding ImovelTipoCriarSelecionado, Mode=TwoWay}"/>
+                    <ComboBox x:Name="ComboFinalidade" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,378" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2" ItemsSource="{Binding ImovelFinalidadesCriar}" SelectedItem="{Binding ImovelFinalidadeCriarSelecionada, Mode=TwoWay}"/>
+                    <TextBox x:Name="TxtBoxCep" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="450,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2" Text="{Binding ImovelCepCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxLogradouro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="102,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="320" Grid.ColumnSpan="2" Grid.Column="1" Text="{Binding ImovelLogradouroCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxNumero" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137" Text="{Binding ImovelNumeroCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxPais" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137" Text="{Binding ImovelPaisCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxEstado" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="313,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="98" Text="{Binding ImovelEstadoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxCidade" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="424,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="237" Grid.ColumnSpan="2" Text="{Binding ImovelCidadeCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxBairro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="156,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="268" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ImovelBairroCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxMetragem" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="210" Text="{Binding ImovelMetragemCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxComplemento" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="262,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="243" Text="{Binding ImovelComplementoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxInscricaoIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="198" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding ImovelInscricaoIptuCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxNumeroCbmerj" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="53,283,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="194" Grid.Column="2" Text="{Binding ImovelNumeroCbmerjCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxValorVenda" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3" Text="{Binding ImovelValorVendaCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxValorLocacao" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="170,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3" Text="{Binding ImovelValorLocacaoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxCondominio" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="330,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="150" Grid.ColumnSpan="3" Text="{Binding ImovelCondominioCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxTaxaIncendio" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="490,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="140" Grid.ColumnSpan="3" Text="{Binding ImovelTaxaIncendioCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxIptu" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="640,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="140" Grid.ColumnSpan="3" Text="{Binding ImovelIptuCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxForo" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="790,348,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="154" Grid.ColumnSpan="3" Text="{Binding ImovelForoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxObservacoes" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,423,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3" Text="{Binding ImovelObservacoesCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBoxDescricao" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,495,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="934" Grid.ColumnSpan="3" Text="{Binding ImovelDescricaoCriar, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Proprietário*" VerticalAlignment="Top" Style="{StaticResource ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="5,12,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Intenção*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" RenderTransformOrigin="0.497,-0.115" Grid.Column="2"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,100,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Tipo do imóvel*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
@@ -1518,7 +1551,7 @@
             </Border>
         </Grid>
 
-        <Grid x:Name="ImoveilModalOverlayCriarFoto" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImoveilModalOverlayCriarFoto" Visibility="{Binding ImovelFotosModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1536,7 +1569,7 @@
                     <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="2"/>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0">
-                        <Button x:Name="BtnFecharModalImovelFoto" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovel_Click"/>
+                        <Button x:Name="BtnFecharModalImovelFoto" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Command="{Binding FecharImovelCriarCommand}"/>
                         <Button x:Name="BtnCriarModalImovelFoto" Content="Concluir" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10"/>
                     </StackPanel>
 
@@ -1545,7 +1578,7 @@
             <Button Content="Adicionar Fotos" HorizontalAlignment="Center" Margin="0,468,0,0" VerticalAlignment="Top" Style="{StaticResource ModernButton}"/>
         </Grid>
 
-        <Grid x:Name="ImovelModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImovelModalOverlayEditar" Visibility="{Binding ImovelModalEditarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -1562,8 +1595,8 @@
                     <Separator Grid.Row="1" Margin="0,12,0,524" Grid.ColumnSpan="3"/>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="172,0,0,0" Grid.ColumnSpan="2">
-                        <Button x:Name="BtnFecharModalImovelEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Click="BtnFecharModalImovelEditar_Click"/>
-                        <Button x:Name="BtnEditarModalImovel" Content="Confirmar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Click="BtnEditarModalImovel_Click"/>
+                        <Button x:Name="BtnFecharModalImovelEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" Margin="0,0,30,0" FontSize="10" Command="{Binding FecharImovelEditarCommand}"/>
+                        <Button x:Name="BtnEditarModalImovel" Content="Confirmar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Command="{Binding SalvarImovelEditarCommand}"/>
                     </StackPanel>
                     <ComboBox x:Name="ComboProprietariosEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,40,296,460" Grid.Row="1" Grid.ColumnSpan="2">
                     </ComboBox>
@@ -1612,12 +1645,12 @@
                     <TextBlock HorizontalAlignment="Left" Margin="22,172,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Número*" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,257,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="1"><Run Language="pt-br" Text="Inscrição IPTU"/></TextBlock>
                     <TextBlock HorizontalAlignment="Left" Margin="228,257,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Style="{StaticResource ResourceKey=ModernLabel}" Grid.Column="1" Width="106"><Run Text="Número "/><Run Language="pt-br" Text="C"/><Run Text="BMERJ"/></TextBlock>
-                    <Button x:Name="BtnEditarFotos" Style="{StaticResource ModernButton}" Content="Fotos" Margin="10,10,335,10" Grid.Row="2" Click="BtnEditarFotos_Click" Grid.ColumnSpan="2"/>
+                    <Button x:Name="BtnEditarFotos" Style="{StaticResource ModernButton}" Content="Fotos" Margin="10,10,335,10" Grid.Row="2" Command="{Binding AbrirFotosImovelCommand}" Grid.ColumnSpan="2"/>
                 </Grid>
             </Border>
         </Grid>
         <!--AQUI-->
-        <Grid x:Name="ImovelFotosModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImovelFotosModalOverlayCriar" Visibility="{Binding ImovelFotosModalCriarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -1635,16 +1668,13 @@
                     <!-- Drag & Drop zone -->
                     <Border x:Name="UploadDropArea"
                             Grid.Row="1"
-                            AllowDrop="True"
+                            AllowDrop="False"
                             Background="#FFFDF6F0"
                             BorderBrush="#FFE0E0E0"
                             BorderThickness="2"
                             CornerRadius="10"
                             Padding="16"
-                            Margin="0,8,0,8"
-                            DragEnter="UploadDropArea_DragEnter"
-                            DragOver="UploadDropArea_DragOver"
-                            Drop="UploadDropArea_Drop">
+                            Margin="0,8,0,8">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -1661,7 +1691,7 @@
                             <Path Grid.RowSpan="2" Data="M12,2 L12,10 L4,10 L4,14 L12,14 L12,22 L20,12 z" Fill="#FFF27F1D" Width="28" Height="28" Stretch="Uniform" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="2" Text="Arraste e solte imagens aqui" Foreground="#444" FontSize="16" VerticalAlignment="Center"/>
                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button x:Name="BtnAdicionarFotos" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnAdicionarFotos_Click"/>
+                                <Button x:Name="BtnAdicionarFotos" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Command="{Binding AdicionarFotosImovelCommand}"/>
                                 <Button x:Name="BtnLimparSelecao" Content="Limpar seleção" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Margin="8,0,0,0"/>
                             </StackPanel>
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="Formatos: JPG, PNG, JPEG • Máx. 10MB por imagem" Foreground="#777" FontSize="12" Margin="0,6,0,0"/>
@@ -1684,7 +1714,7 @@
                                                 <Grid Width="160" Height="120">
                                                     <Image Source="{Binding}" Stretch="UniformToFill" ClipToBounds="True"/>
                                                     <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
-                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
+                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Command="{Binding DataContext.RemoverFotoCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
                                                     </Border>
                                                 </Grid>
                                             </Border>
@@ -1698,15 +1728,15 @@
                     <!-- Footer actions -->
                     <Grid Grid.Row="3">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="BtnFecharModalImovelFotoCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoCriar_Click"/>
-                            <Button x:Name="BtnCriarModalImovelFotoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCadastrarModalImovelFotoCriar_Click"/>
+                            <Button x:Name="BtnFecharModalImovelFotoCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Command="{Binding FecharFotosImovelCriarCommand}"/>
+                            <Button x:Name="BtnCriarModalImovelFotoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarFotosImovelCriarCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
             </Border>
         </Grid>
 
-        <Grid x:Name="ImovelFotosModalOverlayEditar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+        <Grid x:Name="ImovelFotosModalOverlayEditar" Visibility="{Binding ImovelFotosModalEditarVisibility}" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -1724,16 +1754,13 @@
                     <!-- Drag & Drop zone -->
                     <Border x:Name="UploadDropAreaEditar"
                     Grid.Row="1"
-                    AllowDrop="True"
+                    AllowDrop="False"
                     Background="#FFFDF6F0"
                     BorderBrush="#FFE0E0E0"
                     BorderThickness="2"
                     CornerRadius="10"
                     Padding="16"
-                    Margin="0,8,0,8"
-                    DragEnter="UploadDropArea_DragEnter"
-                    DragOver="UploadDropArea_DragOver"
-                    Drop="UploadDropArea_Drop">
+                    Margin="0,8,0,8">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -1750,7 +1777,7 @@
                             <Path Grid.RowSpan="2" Data="M12,2 L12,10 L4,10 L4,14 L12,14 L12,22 L20,12 z" Fill="#FFF27F1D" Width="28" Height="28" Stretch="Uniform" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="2" Text="Arraste e solte imagens aqui" Foreground="#444" FontSize="16" VerticalAlignment="Center"/>
                             <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Button x:Name="BtnAdicionarFotosEditar" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Click="BtnAdicionarFotos_Click"/>
+                                <Button x:Name="BtnAdicionarFotosEditar" Content="Adicionar fotos" Style="{StaticResource ModernButton}" Width="160" Height="36" FontSize="12" Margin="8,0,0,0" Command="{Binding AdicionarFotosImovelCommand}"/>
                             </StackPanel>
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="Formatos: JPG, PNG, JPEG • Máx. 10MB por imagem" Foreground="#777" FontSize="12" Margin="0,6,0,0"/>
                         </Grid>
@@ -1772,7 +1799,7 @@
                                                 <Grid Width="160" Height="120">
                                                     <Image Source="{Binding}" Stretch="UniformToFill" ClipToBounds="True"/>
                                                     <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
-                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
+                                                        <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Command="{Binding DataContext.RemoverFotoCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
                                                     </Border>
                                                 </Grid>
                                             </Border>
@@ -1786,8 +1813,8 @@
                     <!-- Footer actions -->
                     <Grid Grid.Row="3">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Button x:Name="BtnFecharModalImovelFotoEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Click="BtnFecharModalImovelFotoEditar_Click"/>
-                            <Button x:Name="BtnCriarModalImovelFotoEditar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnCriarModalImovelFotoEditar_Click"/>
+                            <Button x:Name="BtnFecharModalImovelFotoEditar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="12" Margin="0,0,12,0" Command="{Binding FecharFotosImovelEditarCommand}"/>
+                            <Button x:Name="BtnCriarModalImovelFotoEditar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Command="{Binding SalvarFotosImovelEditarCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

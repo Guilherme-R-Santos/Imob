@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
-using System.Windows;
 
 namespace Imob.Models
 {
@@ -39,7 +38,7 @@ namespace Imob.Models
             var response = await httpClient.PostAsync("Foto/Criar", contentString);
             if (!response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Erro ao cadastrar foto: " + response.StatusCode);
+                throw new HttpRequestException($"Erro ao cadastrar foto: {response.StatusCode}");
             }
         }
 
@@ -48,7 +47,7 @@ namespace Imob.Models
             var response = await httpClient.PutAsync($"Foto/Inativar/{idFoto}", null);
             if (!response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Erro ao inativar foto: " + response.StatusCode);
+                throw new HttpRequestException($"Erro ao inativar foto: {response.StatusCode}");
             }
         }
     }
