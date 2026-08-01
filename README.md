@@ -87,16 +87,28 @@ O `Imob` é um cliente desktop que centraliza rotinas comuns de imobiliária:
 
 ## 🏗️ Arquitetura e estrutura
 
-Projeto organizado em camadas simples:
+Projeto reorganizado com foco em **MVVM** e separação clara de responsabilidades:
 
 - `Pages/`
-  - Telas WPF (`MainWindow`, `Sistema`) e code-behind com regras de UI.
+	- Telas WPF (`MainWindow`, `Sistema`) e code-behind focado em infraestrutura da janela/sessão.
+- `ViewModels/`
+  - Estado da UI, comandos e regras de fluxo (camada principal de orquestração).
+- `ViewModels/Commands/`
+  - Infraestrutura de comandos síncronos/assíncronos para binding.
+- `Services/`
+  - Fronteira de acesso à API (`listagem` e `crud`).
 - `Models/DAOs/`
   - Modelos de leitura/consulta de entidades recebidas da API.
 - `Models/DTOs/`
   - Objetos de envio para criação/atualização/inativação via API.
 - `Services/Pdf/`
   - Serviços relacionados à geração de PDF e resolução de fontes.
+
+### Atualização arquitetural recente
+- Fluxos principais de negócio migrados para `SistemaViewModel`.
+- Contratos (abrir/visualizar/salvar criar/salvar editar) operando via comandos e bindings.
+- Redução do acoplamento de regras de negócio no code-behind.
+- Serviços expandidos para catálogos de contratos (tipo, modalidade e objeto).
 
 ### Entidades centrais
 - `Imovel`
@@ -151,6 +163,15 @@ O projeto **não está finalizado**. Pontos observados no estado atual:
 - recuperação de senha/novo acesso ainda marcados para implementação;
 - geração de PDF de contrato ainda em formato base (template inicial);
 - melhorias de robustez e padronização arquitetural ainda podem evoluir.
+
+---
+
+## 📚 Documentação técnica
+
+Para entendimento detalhado da arquitetura MVVM atual, responsabilidades e guia de evolução:
+
+- `docs/ARQUITETURA-MVVM.md`
+- `docs/MAPA-DE-CLASSES.md`
 
 ---
 

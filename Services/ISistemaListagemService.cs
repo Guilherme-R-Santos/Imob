@@ -11,6 +11,9 @@ namespace Imob.Services
         Task<IReadOnlyList<ClienteDAO>> ObterLocatariosAsync();
         Task<IReadOnlyList<ClienteDAO>> ObterFiadoresAsync();
         Task<IReadOnlyList<ContratoDAO>> ObterContratosAsync();
+        Task<IReadOnlyList<TipoContratoDAO>> ObterTiposContratoAsync();
+        Task<IReadOnlyList<ModalidadeContratoDAO>> ObterModalidadesContratoAsync();
+        Task<IReadOnlyList<ObjetoContratoDAO>> ObterObjetosContratoAsync();
         Task<IReadOnlyList<FotoDAO>> ObterFotosPorImovelAsync(int imovelId);
         Task<IReadOnlyList<IntencaoDAO>> ObterIntencoesAsync();
         Task<IReadOnlyList<TipoImovelDAO>> ObterTiposImovelAsync();

@@ -221,8 +221,7 @@ namespace Imob
             InitializeComponent();
             _viewModel.ShowErrorAction = mensagem => MessageBox.Show(mensagem, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             _viewModel.ShowInfoAction = mensagem => MessageBox.Show(mensagem, "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-            _viewModel.SalvarContratoCriarRequested = () => BtnSalvarContratoCriar_Click(this, new RoutedEventArgs());
-            _viewModel.SalvarContratoVisualizarRequested = () => BtnSalvarContratoVisualizar_Click(this, new RoutedEventArgs());
+            _viewModel.ShowConfirmAction = mensagem => MessageBox.Show(mensagem, "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
             DataContext = _viewModel;
             WindowState = WindowState.Maximized;
 
@@ -239,18 +238,6 @@ namespace Imob
 
             ComboModalidadeContratoCriar.SelectionChanged += ComboModalidadeContratoCriar_SelectionChanged;
             ComboModalidadeContratoVisualizar.SelectionChanged += ComboModalidadeContratoVisualizar_SelectionChanged;
-            ComboContratoProprietarioCriar.SelectionChanged += ComboContratoProprietarioCriar_SelectionChanged;
-            ComboContratoImovelCriar.SelectionChanged += ComboContratoImovelCriar_SelectionChanged;
-            ComboContratoProprietarioVisualizar.SelectionChanged += ComboContratoProprietarioVisualizar_SelectionChanged;
-            ComboContratoImovelVisualizar.SelectionChanged += ComboContratoImovelVisualizar_SelectionChanged;
-            ComboContratoContratante1Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
-            ComboContratoContratante2Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
-            ComboContratoContratante3Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
-            ComboContratoContratante4Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
-            ComboContratoContratante1Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
-            ComboContratoContratante2Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
-            ComboContratoContratante3Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
-            ComboContratoContratante4Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
 
             AtualizarPermissoesModalidadeCriar();
             AtualizarPermissoesModalidadeVisualizar();

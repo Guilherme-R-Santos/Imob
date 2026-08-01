@@ -40,6 +40,21 @@ namespace Imob.Services
             return (await ContratoDAO.GetContratos(_httpClient)).ToList();
         }
 
+        public async Task<IReadOnlyList<TipoContratoDAO>> ObterTiposContratoAsync()
+        {
+            return (await TipoContratoDAO.GetTiposContrato(_httpClient)).ToList();
+        }
+
+        public async Task<IReadOnlyList<ModalidadeContratoDAO>> ObterModalidadesContratoAsync()
+        {
+            return (await ModalidadeContratoDAO.GetModalidadesContrato(_httpClient)).ToList();
+        }
+
+        public async Task<IReadOnlyList<ObjetoContratoDAO>> ObterObjetosContratoAsync()
+        {
+            return (await ObjetoContratoDAO.GetObjetosContrato(_httpClient)).ToList();
+        }
+
         public async Task<IReadOnlyList<FotoDAO>> ObterFotosPorImovelAsync(int imovelId)
         {
             return (await FotoDAO.GetFotosPorImovel(imovelId, _httpClient)).ToList();

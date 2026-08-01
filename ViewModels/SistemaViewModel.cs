@@ -132,6 +132,85 @@ namespace Imob.ViewModels
         private string _imovelObservacoesCriar = string.Empty;
         private string _imovelDescricaoCriar = string.Empty;
 
+        private ObservableCollection<string> _imovelProprietariosEditar = new ObservableCollection<string>();
+        private ObservableCollection<string> _imovelIntencoesEditar = new ObservableCollection<string>();
+        private ObservableCollection<string> _imovelTiposEditar = new ObservableCollection<string>();
+        private ObservableCollection<string> _imovelFinalidadesEditar = new ObservableCollection<string>();
+        private string _imovelProprietarioEditarSelecionado = string.Empty;
+        private string _imovelIntencaoEditarSelecionada = string.Empty;
+        private string _imovelTipoEditarSelecionado = string.Empty;
+        private string _imovelFinalidadeEditarSelecionada = string.Empty;
+        private string _imovelCepEditar = string.Empty;
+        private string _imovelLogradouroEditar = string.Empty;
+        private string _imovelNumeroEditar = string.Empty;
+        private string _imovelPaisEditar = string.Empty;
+        private string _imovelEstadoEditar = string.Empty;
+        private string _imovelCidadeEditar = string.Empty;
+        private string _imovelBairroEditar = string.Empty;
+        private string _imovelMetragemEditar = string.Empty;
+        private string _imovelComplementoEditar = string.Empty;
+        private string _imovelInscricaoIptuEditar = string.Empty;
+        private string _imovelNumeroCbmerjEditar = string.Empty;
+        private string _imovelValorVendaEditar = string.Empty;
+        private string _imovelValorLocacaoEditar = string.Empty;
+        private string _imovelCondominioEditar = string.Empty;
+        private string _imovelTaxaIncendioEditar = string.Empty;
+        private string _imovelIptuEditar = string.Empty;
+        private string _imovelForoEditar = string.Empty;
+        private string _imovelObservacoesEditar = string.Empty;
+        private string _imovelDescricaoEditar = string.Empty;
+
+        private IReadOnlyList<ClienteDAO> _catalogoProprietariosImovel = Array.Empty<ClienteDAO>();
+        private IReadOnlyList<IntencaoDAO> _catalogoIntencoesImovel = Array.Empty<IntencaoDAO>();
+        private IReadOnlyList<TipoImovelDAO> _catalogoTiposImovel = Array.Empty<TipoImovelDAO>();
+        private IReadOnlyList<Imob.Models.DAOs.FinalidadeDAO> _catalogoFinalidadesImovel = Array.Empty<Imob.Models.DAOs.FinalidadeDAO>();
+
+        private ObservableCollection<TipoContratoDAO> _tiposContrato = new ObservableCollection<TipoContratoDAO>();
+        private ObservableCollection<ModalidadeContratoDAO> _modalidadesContrato = new ObservableCollection<ModalidadeContratoDAO>();
+        private ObservableCollection<ObjetoContratoDAO> _objetosContrato = new ObservableCollection<ObjetoContratoDAO>();
+        private ObservableCollection<ClienteDAO> _proprietariosContrato = new ObservableCollection<ClienteDAO>();
+        private ObservableCollection<ImovelDAO> _imoveisContrato = new ObservableCollection<ImovelDAO>();
+        private ObservableCollection<ClienteDAO> _locatariosContrato = new ObservableCollection<ClienteDAO>();
+        private ObservableCollection<ClienteDAO> _fiadoresContrato = new ObservableCollection<ClienteDAO>();
+
+        private string _contratoNomeCriar = string.Empty;
+        private TipoContratoDAO _contratoTipoCriarSelecionado;
+        private ModalidadeContratoDAO _contratoModalidadeCriarSelecionada;
+        private ObjetoContratoDAO _contratoObjetoCriarSelecionado;
+        private ClienteDAO _contratoProprietarioCriarSelecionado;
+        private ImovelDAO _contratoImovelCriarSelecionado;
+        private ClienteDAO _contratoContratante1CriarSelecionado;
+        private ClienteDAO _contratoContratante2CriarSelecionado;
+        private ClienteDAO _contratoContratante3CriarSelecionado;
+        private ClienteDAO _contratoContratante4CriarSelecionado;
+        private ClienteDAO _contratoFiadorCriarSelecionado;
+        private ClienteDAO _contratoFiador2CriarSelecionado;
+        private DateTime? _contratoDataInicioCriar;
+        private string _contratoPrazoMesesCriar = string.Empty;
+        private string _contratoValorCriar = string.Empty;
+        private string _contratoVencimentoCriar = string.Empty;
+        private string _contratoPropostaSegFiancaCriar = string.Empty;
+        private string _contratoApoliceSegFiancaCriar = string.Empty;
+
+        private string _contratoNomeVisualizar = string.Empty;
+        private TipoContratoDAO _contratoTipoVisualizarSelecionado;
+        private ModalidadeContratoDAO _contratoModalidadeVisualizarSelecionada;
+        private ObjetoContratoDAO _contratoObjetoVisualizarSelecionado;
+        private ClienteDAO _contratoProprietarioVisualizarSelecionado;
+        private ImovelDAO _contratoImovelVisualizarSelecionado;
+        private ClienteDAO _contratoContratante1VisualizarSelecionado;
+        private ClienteDAO _contratoContratante2VisualizarSelecionado;
+        private ClienteDAO _contratoContratante3VisualizarSelecionado;
+        private ClienteDAO _contratoContratante4VisualizarSelecionado;
+        private ClienteDAO _contratoFiadorVisualizarSelecionado;
+        private ClienteDAO _contratoFiador2VisualizarSelecionado;
+        private DateTime? _contratoDataInicioVisualizar;
+        private string _contratoPrazoMesesVisualizar = string.Empty;
+        private string _contratoValorVisualizar = string.Empty;
+        private string _contratoVencimentoVisualizar = string.Empty;
+        private string _contratoPropostaSegFiancaVisualizar = string.Empty;
+        private string _contratoApoliceSegFiancaVisualizar = string.Empty;
+
         private ICollectionView _proprietariosView;
         private ICollectionView _locatariosView;
         private ICollectionView _fiadoresView;
@@ -142,14 +221,8 @@ namespace Imob.ViewModels
 
         public Action<string> ShowErrorAction { get; set; }
         public Action<string> ShowInfoAction { get; set; }
+        public Func<string, bool> ShowConfirmAction { get; set; }
         public int UsuarioLogadoId { get; set; }
-
-
-        public Action SalvarContratoCriarRequested { get; set; }
-
-        public Action SalvarContratoVisualizarRequested { get; set; }
-
-
 
 
 
@@ -235,7 +308,7 @@ namespace Imob.ViewModels
             VisualizarLocatarioCommand = new RelayCommandWithParameter(VisualizarLocatario);
             VisualizarFiadorCommand = new RelayCommandWithParameter(VisualizarFiador);
             VisualizarImovelCommand = new RelayCommandWithParameter(VisualizarImovel);
-            VisualizarContratoCommand = new RelayCommandWithParameter(VisualizarContrato);
+            VisualizarContratoCommand = new AsyncRelayCommandWithParameter(VisualizarContratoAsync, onException: ex => NotificarErro($"Erro ao abrir contrato: {ex.Message}"));
             RemoverFotoCommand = new RelayCommandWithParameter(RemoverFoto);
             AbrirImovelCriarCommand = new AsyncRelayCommand(AbrirImovelCriarAsync, onException: ex => NotificarErro($"Erro ao abrir imóvel: {ex.Message}"));
             FecharImovelCriarCommand = new RelayCommand(FecharImovelCriar);
@@ -263,12 +336,12 @@ namespace Imob.ViewModels
             SalvarFiadorCriarCommand = new AsyncRelayCommand(SalvarFiadorCriarAsync, onException: ex => NotificarErro($"Erro ao cadastrar fiador: {ex.Message}"));
             FecharFiadorEditarCommand = new RelayCommand(FecharFiadorEditar);
             SalvarFiadorEditarCommand = new AsyncRelayCommand(SalvarFiadorEditarAsync, onException: ex => NotificarErro($"Erro ao atualizar fiador: {ex.Message}"));
-            AbrirContratoCriarCommand = new RelayCommand(AbrirContratoCriar);
+            AbrirContratoCriarCommand = new AsyncRelayCommand(AbrirContratoCriarAsync, onException: ex => NotificarErro($"Erro ao abrir contrato: {ex.Message}"));
             FecharContratoCriarCommand = new RelayCommand(FecharContratoCriar);
-            SalvarContratoCriarCommand = new RelayCommand(() => SalvarContratoCriarRequested?.Invoke());
+            SalvarContratoCriarCommand = new AsyncRelayCommand(SalvarContratoCriarAsync, onException: ex => NotificarErro($"Erro ao cadastrar contrato: {ex.Message}"));
             GerarContratoVisualizarCommand = new RelayCommand(GerarContratoVisualizar);
             FecharContratoVisualizarCommand = new RelayCommand(FecharContratoVisualizar);
-            SalvarContratoVisualizarCommand = new RelayCommand(() => SalvarContratoVisualizarRequested?.Invoke());
+            SalvarContratoVisualizarCommand = new AsyncRelayCommand(SalvarContratoVisualizarAsync, onException: ex => NotificarErro($"Erro ao atualizar contrato: {ex.Message}"));
 
             AtualizarProprietariosView();
             AtualizarLocatariosView();
@@ -351,6 +424,142 @@ namespace Imob.ViewModels
         public string ImovelForoCriar { get => _imovelForoCriar; set { _imovelForoCriar = value ?? string.Empty; OnPropertyChanged(); } }
         public string ImovelObservacoesCriar { get => _imovelObservacoesCriar; set { _imovelObservacoesCriar = value ?? string.Empty; OnPropertyChanged(); } }
         public string ImovelDescricaoCriar { get => _imovelDescricaoCriar; set { _imovelDescricaoCriar = value ?? string.Empty; OnPropertyChanged(); } }
+
+        public ObservableCollection<string> ImovelProprietariosEditar { get => _imovelProprietariosEditar; private set { _imovelProprietariosEditar = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> ImovelIntencoesEditar { get => _imovelIntencoesEditar; private set { _imovelIntencoesEditar = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> ImovelTiposEditar { get => _imovelTiposEditar; private set { _imovelTiposEditar = value; OnPropertyChanged(); } }
+        public ObservableCollection<string> ImovelFinalidadesEditar { get => _imovelFinalidadesEditar; private set { _imovelFinalidadesEditar = value; OnPropertyChanged(); } }
+        public string ImovelProprietarioEditarSelecionado { get => _imovelProprietarioEditarSelecionado; set { _imovelProprietarioEditarSelecionado = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelIntencaoEditarSelecionada { get => _imovelIntencaoEditarSelecionada; set { _imovelIntencaoEditarSelecionada = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelTipoEditarSelecionado { get => _imovelTipoEditarSelecionado; set { _imovelTipoEditarSelecionado = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelFinalidadeEditarSelecionada { get => _imovelFinalidadeEditarSelecionada; set { _imovelFinalidadeEditarSelecionada = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelCepEditar { get => _imovelCepEditar; set { _imovelCepEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelLogradouroEditar { get => _imovelLogradouroEditar; set { _imovelLogradouroEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelNumeroEditar { get => _imovelNumeroEditar; set { _imovelNumeroEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelPaisEditar { get => _imovelPaisEditar; set { _imovelPaisEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelEstadoEditar { get => _imovelEstadoEditar; set { _imovelEstadoEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelCidadeEditar { get => _imovelCidadeEditar; set { _imovelCidadeEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelBairroEditar { get => _imovelBairroEditar; set { _imovelBairroEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelMetragemEditar { get => _imovelMetragemEditar; set { _imovelMetragemEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelComplementoEditar { get => _imovelComplementoEditar; set { _imovelComplementoEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelInscricaoIptuEditar { get => _imovelInscricaoIptuEditar; set { _imovelInscricaoIptuEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelNumeroCbmerjEditar { get => _imovelNumeroCbmerjEditar; set { _imovelNumeroCbmerjEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelValorVendaEditar { get => _imovelValorVendaEditar; set { _imovelValorVendaEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelValorLocacaoEditar { get => _imovelValorLocacaoEditar; set { _imovelValorLocacaoEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelCondominioEditar { get => _imovelCondominioEditar; set { _imovelCondominioEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelTaxaIncendioEditar { get => _imovelTaxaIncendioEditar; set { _imovelTaxaIncendioEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelIptuEditar { get => _imovelIptuEditar; set { _imovelIptuEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelForoEditar { get => _imovelForoEditar; set { _imovelForoEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelObservacoesEditar { get => _imovelObservacoesEditar; set { _imovelObservacoesEditar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ImovelDescricaoEditar { get => _imovelDescricaoEditar; set { _imovelDescricaoEditar = value ?? string.Empty; OnPropertyChanged(); } }
+
+        public ObservableCollection<TipoContratoDAO> TiposContrato
+        {
+            get => _tiposContrato;
+            private set
+            {
+                _tiposContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ModalidadeContratoDAO> ModalidadesContrato
+        {
+            get => _modalidadesContrato;
+            private set
+            {
+                _modalidadesContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ObjetoContratoDAO> ObjetosContrato
+        {
+            get => _objetosContrato;
+            private set
+            {
+                _objetosContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ClienteDAO> ProprietariosContrato
+        {
+            get => _proprietariosContrato;
+            private set
+            {
+                _proprietariosContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ImovelDAO> ImoveisContrato
+        {
+            get => _imoveisContrato;
+            private set
+            {
+                _imoveisContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ClienteDAO> LocatariosContrato
+        {
+            get => _locatariosContrato;
+            private set
+            {
+                _locatariosContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<ClienteDAO> FiadoresContrato
+        {
+            get => _fiadoresContrato;
+            private set
+            {
+                _fiadoresContrato = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string ContratoNomeCriar { get => _contratoNomeCriar; set { _contratoNomeCriar = value ?? string.Empty; OnPropertyChanged(); } }
+        public TipoContratoDAO ContratoTipoCriarSelecionado { get => _contratoTipoCriarSelecionado; set { _contratoTipoCriarSelecionado = value; OnPropertyChanged(); } }
+        public ModalidadeContratoDAO ContratoModalidadeCriarSelecionada { get => _contratoModalidadeCriarSelecionada; set { _contratoModalidadeCriarSelecionada = value; OnPropertyChanged(); } }
+        public ObjetoContratoDAO ContratoObjetoCriarSelecionado { get => _contratoObjetoCriarSelecionado; set { _contratoObjetoCriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoProprietarioCriarSelecionado { get => _contratoProprietarioCriarSelecionado; set { _contratoProprietarioCriarSelecionado = value; OnPropertyChanged(); } }
+        public ImovelDAO ContratoImovelCriarSelecionado { get => _contratoImovelCriarSelecionado; set { _contratoImovelCriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante1CriarSelecionado { get => _contratoContratante1CriarSelecionado; set { _contratoContratante1CriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante2CriarSelecionado { get => _contratoContratante2CriarSelecionado; set { _contratoContratante2CriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante3CriarSelecionado { get => _contratoContratante3CriarSelecionado; set { _contratoContratante3CriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante4CriarSelecionado { get => _contratoContratante4CriarSelecionado; set { _contratoContratante4CriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoFiadorCriarSelecionado { get => _contratoFiadorCriarSelecionado; set { _contratoFiadorCriarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoFiador2CriarSelecionado { get => _contratoFiador2CriarSelecionado; set { _contratoFiador2CriarSelecionado = value; OnPropertyChanged(); } }
+        public DateTime? ContratoDataInicioCriar { get => _contratoDataInicioCriar; set { _contratoDataInicioCriar = value; OnPropertyChanged(); } }
+        public string ContratoPrazoMesesCriar { get => _contratoPrazoMesesCriar; set { _contratoPrazoMesesCriar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoValorCriar { get => _contratoValorCriar; set { _contratoValorCriar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoVencimentoCriar { get => _contratoVencimentoCriar; set { _contratoVencimentoCriar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoPropostaSegFiancaCriar { get => _contratoPropostaSegFiancaCriar; set { _contratoPropostaSegFiancaCriar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoApoliceSegFiancaCriar { get => _contratoApoliceSegFiancaCriar; set { _contratoApoliceSegFiancaCriar = value ?? string.Empty; OnPropertyChanged(); } }
+
+        public string ContratoNomeVisualizar { get => _contratoNomeVisualizar; set { _contratoNomeVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
+        public TipoContratoDAO ContratoTipoVisualizarSelecionado { get => _contratoTipoVisualizarSelecionado; set { _contratoTipoVisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ModalidadeContratoDAO ContratoModalidadeVisualizarSelecionada { get => _contratoModalidadeVisualizarSelecionada; set { _contratoModalidadeVisualizarSelecionada = value; OnPropertyChanged(); } }
+        public ObjetoContratoDAO ContratoObjetoVisualizarSelecionado { get => _contratoObjetoVisualizarSelecionado; set { _contratoObjetoVisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoProprietarioVisualizarSelecionado { get => _contratoProprietarioVisualizarSelecionado; set { _contratoProprietarioVisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ImovelDAO ContratoImovelVisualizarSelecionado { get => _contratoImovelVisualizarSelecionado; set { _contratoImovelVisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante1VisualizarSelecionado { get => _contratoContratante1VisualizarSelecionado; set { _contratoContratante1VisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante2VisualizarSelecionado { get => _contratoContratante2VisualizarSelecionado; set { _contratoContratante2VisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante3VisualizarSelecionado { get => _contratoContratante3VisualizarSelecionado; set { _contratoContratante3VisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoContratante4VisualizarSelecionado { get => _contratoContratante4VisualizarSelecionado; set { _contratoContratante4VisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoFiadorVisualizarSelecionado { get => _contratoFiadorVisualizarSelecionado; set { _contratoFiadorVisualizarSelecionado = value; OnPropertyChanged(); } }
+        public ClienteDAO ContratoFiador2VisualizarSelecionado { get => _contratoFiador2VisualizarSelecionado; set { _contratoFiador2VisualizarSelecionado = value; OnPropertyChanged(); } }
+        public DateTime? ContratoDataInicioVisualizar { get => _contratoDataInicioVisualizar; set { _contratoDataInicioVisualizar = value; OnPropertyChanged(); } }
+        public string ContratoPrazoMesesVisualizar { get => _contratoPrazoMesesVisualizar; set { _contratoPrazoMesesVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoValorVisualizar { get => _contratoValorVisualizar; set { _contratoValorVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoVencimentoVisualizar { get => _contratoVencimentoVisualizar; set { _contratoVencimentoVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoPropostaSegFiancaVisualizar { get => _contratoPropostaSegFiancaVisualizar; set { _contratoPropostaSegFiancaVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
+        public string ContratoApoliceSegFiancaVisualizar { get => _contratoApoliceSegFiancaVisualizar; set { _contratoApoliceSegFiancaVisualizar = value ?? string.Empty; OnPropertyChanged(); } }
 
         public ImovelDAO ImovelSelecionado
         {
@@ -848,6 +1057,13 @@ namespace Imob.ViewModels
             ContratoModalCriarVisibility = Visibility.Visible;
         }
 
+        private async Task AbrirContratoCriarAsync()
+        {
+            await CarregarCombosContratoAsync();
+            LimparFormularioContratoCriar();
+            AbrirContratoCriar();
+        }
+
         private void FecharContratoCriar()
         {
             ContratoModalCriarVisibility = Visibility.Hidden;
@@ -856,6 +1072,27 @@ namespace Imob.ViewModels
         private void FecharContratoVisualizar()
         {
             ContratoModalVisualizarVisibility = Visibility.Hidden;
+        }
+
+        private async Task CarregarCombosContratoAsync()
+        {
+            var tiposTask = _listagemService.ObterTiposContratoAsync();
+            var modalidadesTask = _listagemService.ObterModalidadesContratoAsync();
+            var objetosTask = _listagemService.ObterObjetosContratoAsync();
+            var proprietariosTask = _listagemService.ObterProprietariosAsync();
+            var imoveisTask = _listagemService.ObterImoveisAsync();
+            var locatariosTask = _listagemService.ObterLocatariosAsync();
+            var fiadoresTask = _listagemService.ObterFiadoresAsync();
+
+            await Task.WhenAll(tiposTask, modalidadesTask, objetosTask, proprietariosTask, imoveisTask, locatariosTask, fiadoresTask);
+
+            TiposContrato = new ObservableCollection<TipoContratoDAO>((await tiposTask).Where(x => x != null));
+            ModalidadesContrato = new ObservableCollection<ModalidadeContratoDAO>((await modalidadesTask).Where(x => x != null));
+            ObjetosContrato = new ObservableCollection<ObjetoContratoDAO>((await objetosTask).Where(x => x != null));
+            ProprietariosContrato = new ObservableCollection<ClienteDAO>((await proprietariosTask).Where(x => x != null));
+            ImoveisContrato = new ObservableCollection<ImovelDAO>((await imoveisTask).Where(x => x != null));
+            LocatariosContrato = new ObservableCollection<ClienteDAO>((await locatariosTask).Where(x => x != null));
+            FiadoresContrato = new ObservableCollection<ClienteDAO>((await fiadoresTask).Where(x => x != null));
         }
 
         private void GerarContratoVisualizar()
@@ -899,10 +1136,76 @@ namespace Imob.ViewModels
 
             await Task.WhenAll(proprietariosTask, intencoesTask, tiposTask, finalidadesTask);
 
-            ImovelProprietariosCriar = new ObservableCollection<string>((await proprietariosTask).Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
-            ImovelIntencoesCriar = new ObservableCollection<string>((await intencoesTask).Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
-            ImovelTiposCriar = new ObservableCollection<string>((await tiposTask).Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
-            ImovelFinalidadesCriar = new ObservableCollection<string>((await finalidadesTask).Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            _catalogoProprietariosImovel = await proprietariosTask;
+            _catalogoIntencoesImovel = await intencoesTask;
+            _catalogoTiposImovel = await tiposTask;
+            _catalogoFinalidadesImovel = await finalidadesTask;
+
+            ImovelProprietariosCriar = new ObservableCollection<string>(_catalogoProprietariosImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelIntencoesCriar = new ObservableCollection<string>(_catalogoIntencoesImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelTiposCriar = new ObservableCollection<string>(_catalogoTiposImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelFinalidadesCriar = new ObservableCollection<string>(_catalogoFinalidadesImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+        }
+
+        private async Task CarregarCombosImovelEditarAsync()
+        {
+            var proprietariosTask = _listagemService.ObterProprietariosAsync();
+            var intencoesTask = _listagemService.ObterIntencoesAsync();
+            var tiposTask = _listagemService.ObterTiposImovelAsync();
+            var finalidadesTask = _listagemService.ObterFinalidadesAsync();
+
+            await Task.WhenAll(proprietariosTask, intencoesTask, tiposTask, finalidadesTask);
+
+            _catalogoProprietariosImovel = await proprietariosTask;
+            _catalogoIntencoesImovel = await intencoesTask;
+            _catalogoTiposImovel = await tiposTask;
+            _catalogoFinalidadesImovel = await finalidadesTask;
+
+            ImovelProprietariosEditar = new ObservableCollection<string>(_catalogoProprietariosImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelIntencoesEditar = new ObservableCollection<string>(_catalogoIntencoesImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelTiposEditar = new ObservableCollection<string>(_catalogoTiposImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+            ImovelFinalidadesEditar = new ObservableCollection<string>(_catalogoFinalidadesImovel.Where(x => x != null).Select(x => x.Nome ?? string.Empty).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToList());
+        }
+
+        private void PreencherFormularioImovelEditar(ImovelDAO imovel)
+        {
+            ImovelProprietarioEditarSelecionado = SelecionarNomePorIdOuNome(_catalogoProprietariosImovel, imovel.Proprietario?.Id ?? 0, imovel.Proprietario?.Nome);
+            ImovelIntencaoEditarSelecionada = SelecionarNomePorIdOuNome(_catalogoIntencoesImovel, imovel.Intencao?.Id ?? 0, imovel.Intencao?.Nome);
+            ImovelTipoEditarSelecionado = SelecionarNomePorIdOuNome(_catalogoTiposImovel, imovel.TipoImovel?.Id ?? 0, imovel.TipoImovel?.Nome);
+            var finalidadeId = imovel.Finalidade?.Id ?? 0;
+            var finalidadeNome = imovel.Finalidade?.Nome;
+            if (finalidadeId <= 0 || string.IsNullOrWhiteSpace(finalidadeNome))
+            {
+                finalidadeId = ObterIdFinalidadeDoImovel(imovel);
+                finalidadeNome = null;
+            }
+            ImovelFinalidadeEditarSelecionada = SelecionarNomePorIdOuNome(_catalogoFinalidadesImovel, finalidadeId, finalidadeNome);
+            ImovelCepEditar = imovel.Cep ?? string.Empty;
+            ImovelLogradouroEditar = imovel.Logradouro ?? string.Empty;
+            ImovelNumeroEditar = imovel.Numero.ToString(CultureInfo.InvariantCulture);
+            ImovelPaisEditar = imovel.Pais ?? string.Empty;
+            ImovelEstadoEditar = imovel.Estado ?? string.Empty;
+            ImovelCidadeEditar = imovel.Cidade ?? string.Empty;
+            ImovelBairroEditar = imovel.Bairro ?? string.Empty;
+            ImovelMetragemEditar = imovel.Metragem.ToString(CultureInfo.CurrentCulture);
+            ImovelComplementoEditar = imovel.Complemento ?? string.Empty;
+            ImovelInscricaoIptuEditar = imovel.InscricaoIptu ?? string.Empty;
+            ImovelNumeroCbmerjEditar = imovel.NumeroCbmerj ?? string.Empty;
+            ImovelValorVendaEditar = (imovel.ValorVenda ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelValorLocacaoEditar = (imovel.ValorLocacao ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelCondominioEditar = (imovel.Condominio ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelTaxaIncendioEditar = (imovel.TaxaIncendio ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelIptuEditar = (imovel.Iptu ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelForoEditar = (imovel.Foro ?? 0m).ToString(CultureInfo.CurrentCulture);
+            ImovelObservacoesEditar = imovel.Observacao ?? string.Empty;
+            ImovelDescricaoEditar = imovel.Descricao ?? string.Empty;
+        }
+
+        private int ObterIdFinalidadeDoImovel(ImovelDAO imovel)
+        {
+            var finalidade = _catalogoFinalidadesImovel.FirstOrDefault(x =>
+                x != null && string.Equals(x.Nome?.Trim(), imovel.NomeFinalidade?.Trim(), StringComparison.OrdinalIgnoreCase));
+            return finalidade?.Id ?? 0;
         }
 
         private void FecharImovelCriar()
@@ -1021,6 +1324,11 @@ namespace Imob.ViewModels
                 return;
             }
 
+            if (ShowConfirmAction != null && !ShowConfirmAction("Tem certeza que deseja inativar este proprietário?"))
+            {
+                return;
+            }
+
             await _crudService.InativarClienteAsync(id);
             await CarregarProprietariosAsync();
             NotificarInfo("Proprietário inativado com sucesso.");
@@ -1029,6 +1337,11 @@ namespace Imob.ViewModels
         private async Task InativarLocatarioAsync(object parameter)
         {
             if (!TryGetId(parameter, out var id))
+            {
+                return;
+            }
+
+            if (ShowConfirmAction != null && !ShowConfirmAction("Tem certeza que deseja inativar este locatário?"))
             {
                 return;
             }
@@ -1045,6 +1358,11 @@ namespace Imob.ViewModels
                 return;
             }
 
+            if (ShowConfirmAction != null && !ShowConfirmAction("Tem certeza que deseja inativar este fiador?"))
+            {
+                return;
+            }
+
             await _crudService.InativarClienteAsync(id);
             await CarregarFiadoresAsync();
             NotificarInfo("Fiador inativado com sucesso.");
@@ -1057,6 +1375,11 @@ namespace Imob.ViewModels
                 return;
             }
 
+            if (ShowConfirmAction != null && !ShowConfirmAction("Tem certeza que deseja inativar este contrato?"))
+            {
+                return;
+            }
+
             await _crudService.InativarContratoAsync(id);
             await CarregarContratosAsync();
             NotificarInfo("Contrato inativado com sucesso.");
@@ -1065,6 +1388,11 @@ namespace Imob.ViewModels
         private async Task InativarImovelAsync(object parameter)
         {
             if (!TryGetId(parameter, out var id))
+            {
+                return;
+            }
+
+            if (ShowConfirmAction != null && !ShowConfirmAction("Tem certeza que deseja inativar este imóvel?"))
             {
                 return;
             }
@@ -1238,7 +1566,7 @@ namespace Imob.ViewModels
             FiadorModalEditarVisibility = Visibility.Visible;
         }
 
-        private void VisualizarImovel(object parameter)
+        private async void VisualizarImovel(object parameter)
         {
             if (!TryGetId(parameter, out var id))
             {
@@ -1253,11 +1581,39 @@ namespace Imob.ViewModels
                 return;
             }
 
+            var detalhes = await ImovelDAO.GetImovelPorId(id, Sistema.HttpClientFixo);
+            if (detalhes != null)
+            {
+                if (detalhes.Proprietario == null || detalhes.Proprietario.Id <= 0)
+                {
+                    detalhes.Proprietario = imovel.Proprietario;
+                }
+
+                if (detalhes.Intencao == null || detalhes.Intencao.Id <= 0)
+                {
+                    detalhes.Intencao = imovel.Intencao;
+                }
+
+                if (detalhes.TipoImovel == null || detalhes.TipoImovel.Id <= 0)
+                {
+                    detalhes.TipoImovel = imovel.TipoImovel;
+                }
+
+                if (detalhes.Finalidade == null || detalhes.Finalidade.Id <= 0)
+                {
+                    detalhes.Finalidade = imovel.Finalidade;
+                }
+
+                imovel = detalhes;
+            }
+
             ImovelSelecionado = imovel;
+            await CarregarCombosImovelEditarAsync();
+            PreencherFormularioImovelEditar(imovel);
             ImovelModalEditarVisibility = Visibility.Visible;
         }
 
-        private void VisualizarContrato(object parameter)
+        private async Task VisualizarContratoAsync(object parameter)
         {
             if (!TryGetId(parameter, out var id))
             {
@@ -1272,7 +1628,15 @@ namespace Imob.ViewModels
                 return;
             }
 
+            var detalhes = await ContratoDAO.GetContratoPorId(id, Sistema.HttpClientFixo);
+            if (detalhes != null)
+            {
+                contrato = detalhes;
+            }
+
             ContratoSelecionado = contrato;
+            await CarregarCombosContratoAsync();
+            PreencherFormularioContratoVisualizar(contrato);
             ContratoModalVisualizarVisibility = Visibility.Visible;
         }
 
@@ -1411,10 +1775,10 @@ namespace Imob.ViewModels
 
             var dto = new ImovelDTO
             {
-                Proprietario = ClienteDAO.GetIdPorNome(ImovelProprietarioCriarSelecionado, Sistema.HttpClientFixo),
-                TipoImovel = TipoImovelDAO.GetIdPorNome(ImovelTipoCriarSelecionado, Sistema.HttpClientFixo),
-                Intencao = IntencaoDAO.GetIdPorNome(ImovelIntencaoCriarSelecionada, Sistema.HttpClientFixo),
-                Finalidade = Imob.Models.DAOs.FinalidadeDAO.GetIdPorNome(ImovelFinalidadeCriarSelecionada, Sistema.HttpClientFixo),
+                Proprietario = ObterIdCatalogoPorNome(_catalogoProprietariosImovel, ImovelProprietarioCriarSelecionado),
+                TipoImovel = ObterIdCatalogoPorNome(_catalogoTiposImovel, ImovelTipoCriarSelecionado),
+                Intencao = ObterIdCatalogoPorNome(_catalogoIntencoesImovel, ImovelIntencaoCriarSelecionada),
+                Finalidade = ObterIdCatalogoPorNome(_catalogoFinalidadesImovel, ImovelFinalidadeCriarSelecionada),
                 Cep = ImovelCepCriar,
                 Logradouro = ImovelLogradouroCriar,
                 Numero = numero,
@@ -1455,14 +1819,14 @@ namespace Imob.ViewModels
                 return;
             }
 
-            if (!int.TryParse(ImovelSelecionado.Numero.ToString(CultureInfo.InvariantCulture), out var numero) ||
-                !decimal.TryParse(ImovelSelecionado.Metragem.ToString(CultureInfo.InvariantCulture), NumberStyles.Number, CultureInfo.InvariantCulture, out var metragem) ||
-                !TryParseDecimal(ImovelSelecionado.ValorVenda?.ToString(CultureInfo.InvariantCulture), out var valorVenda) ||
-                !TryParseDecimal(ImovelSelecionado.ValorLocacao?.ToString(CultureInfo.InvariantCulture), out var valorLocacao) ||
-                !TryParseDecimal(ImovelSelecionado.Condominio?.ToString(CultureInfo.InvariantCulture), out var condominio) ||
-                !TryParseDecimal(ImovelSelecionado.Iptu?.ToString(CultureInfo.InvariantCulture), out var iptu) ||
-                !TryParseDecimal(ImovelSelecionado.TaxaIncendio?.ToString(CultureInfo.InvariantCulture), out var taxaIncendio) ||
-                !TryParseDecimal(ImovelSelecionado.Foro?.ToString(CultureInfo.InvariantCulture), out var foro))
+            if (!int.TryParse(ImovelNumeroEditar, out var numero) ||
+                !decimal.TryParse(ImovelMetragemEditar, NumberStyles.Number, CultureInfo.CurrentCulture, out var metragem) ||
+                !TryParseDecimal(ImovelValorVendaEditar, out var valorVenda) ||
+                !TryParseDecimal(ImovelValorLocacaoEditar, out var valorLocacao) ||
+                !TryParseDecimal(ImovelCondominioEditar, out var condominio) ||
+                !TryParseDecimal(ImovelIptuEditar, out var iptu) ||
+                !TryParseDecimal(ImovelTaxaIncendioEditar, out var taxaIncendio) ||
+                !TryParseDecimal(ImovelForoEditar, out var foro))
             {
                 NotificarErro("Existem valores inválidos no imóvel selecionado.");
                 return;
@@ -1476,23 +1840,23 @@ namespace Imob.ViewModels
                 ValorVenda = valorVenda,
                 ValorLocacao = valorLocacao,
                 Metragem = metragem,
-                Descricao = ImovelSelecionado.Descricao,
-                Observacao = ImovelSelecionado.Observacao,
+                Descricao = ImovelDescricaoEditar,
+                Observacao = ImovelObservacoesEditar,
                 Condominio = condominio,
-                Complemento = ImovelSelecionado.Complemento,
-                Bairro = ImovelSelecionado.Bairro,
-                Cidade = ImovelSelecionado.Cidade,
-                Estado = ImovelSelecionado.Estado,
-                Pais = ImovelSelecionado.Pais,
+                Complemento = ImovelComplementoEditar,
+                Bairro = ImovelBairroEditar,
+                Cidade = ImovelCidadeEditar,
+                Estado = ImovelEstadoEditar,
+                Pais = ImovelPaisEditar,
                 Numero = numero,
-                Logradouro = ImovelSelecionado.Logradouro,
-                Cep = ImovelSelecionado.Cep,
-                InscricaoIptu = ImovelSelecionado.InscricaoIptu,
-                NumeroCbmerj = ImovelSelecionado.NumeroCbmerj,
-                Intencao = imovelSelecionado.Intencao?.Id ?? 0,
-                TipoImovel = imovelSelecionado.TipoImovel?.Id ?? 0,
-                Finalidade = imovelSelecionado.Finalidade?.Id ?? 0,
-                Proprietario = imovelSelecionado.Proprietario?.Id ?? 0
+                Logradouro = ImovelLogradouroEditar,
+                Cep = ImovelCepEditar,
+                InscricaoIptu = ImovelInscricaoIptuEditar,
+                NumeroCbmerj = ImovelNumeroCbmerjEditar,
+                Intencao = ObterIdCatalogoPorNome(_catalogoIntencoesImovel, ImovelIntencaoEditarSelecionada),
+                TipoImovel = ObterIdCatalogoPorNome(_catalogoTiposImovel, ImovelTipoEditarSelecionado),
+                Finalidade = ObterIdCatalogoPorNome(_catalogoFinalidadesImovel, ImovelFinalidadeEditarSelecionada),
+                Proprietario = ObterIdCatalogoPorNome(_catalogoProprietariosImovel, ImovelProprietarioEditarSelecionado)
             };
 
             await _crudService.AtualizarImovelAsync(imovelSelecionado.Id, dto);
@@ -1500,6 +1864,169 @@ namespace Imob.ViewModels
             NotificarInfo("Imóvel atualizado com sucesso!");
             ImovelModalEditarVisibility = Visibility.Hidden;
             await CarregarImoveisAsync();
+        }
+
+        private async Task SalvarContratoCriarAsync()
+        {
+            if (!int.TryParse(ContratoPrazoMesesCriar, out var prazo))
+            {
+                NotificarErro("Prazo inválido. Utilize apenas números.");
+                return;
+            }
+
+            if (!int.TryParse(ContratoVencimentoCriar, out var vencimento) || vencimento < 1 || vencimento > 31)
+            {
+                NotificarErro("Vencimento inválido. Utilize apenas números de 1 a 31.");
+                return;
+            }
+
+            if (!decimal.TryParse(ContratoValorCriar, NumberStyles.Number, CultureInfo.CurrentCulture, out var valorContrato))
+            {
+                NotificarErro("Valor do contrato inválido. Utilize apenas números.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ContratoNomeCriar)
+                || ContratoTipoCriarSelecionado == null
+                || ContratoModalidadeCriarSelecionada == null
+                || ContratoObjetoCriarSelecionado == null
+                || ContratoProprietarioCriarSelecionado == null
+                || ContratoImovelCriarSelecionado == null
+                || ContratoContratante1CriarSelecionado == null
+                || !ContratoDataInicioCriar.HasValue)
+            {
+                NotificarErro("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            if (PossuiContratantesRepetidos(ContratoContratante1CriarSelecionado, ContratoContratante2CriarSelecionado, ContratoContratante3CriarSelecionado, ContratoContratante4CriarSelecionado))
+            {
+                NotificarErro("Não é permitido repetir contratantes.");
+                return;
+            }
+
+            var modalidadeEhSeguroFianca = ModalidadeEhSeguroFianca(ContratoModalidadeCriarSelecionada);
+            var modalidadeEhFiador = ModalidadeEhFiador(ContratoModalidadeCriarSelecionada);
+
+            var proposta = modalidadeEhSeguroFianca ? TratarTextoOpcional(ContratoPropostaSegFiancaCriar) : null;
+            var apolice = modalidadeEhSeguroFianca ? TratarTextoOpcional(ContratoApoliceSegFiancaCriar) : null;
+            var fiador = modalidadeEhFiador ? ContratoFiadorCriarSelecionado : null;
+            var fiador2 = modalidadeEhFiador ? ContratoFiador2CriarSelecionado : null;
+
+            var contrato = new ContratoDTO
+            {
+                Nome = ContratoNomeCriar,
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogadoId },
+                TipoContrato = new TipoContratoDAO { Id = ContratoTipoCriarSelecionado.Id },
+                ModalidadeContrato = new ModalidadeContratoDAO { Id = ContratoModalidadeCriarSelecionada.Id },
+                ObjetoContrato = new ObjetoContratoDAO { Id = ContratoObjetoCriarSelecionado.Id },
+                Proprietario = new ClienteDAO { Id = ContratoProprietarioCriarSelecionado.Id },
+                Imovel = new ImovelDAO { Id = ContratoImovelCriarSelecionado.Id },
+                Contratante1 = new ClienteDAO { Id = ContratoContratante1CriarSelecionado.Id },
+                Contratante2 = ContratoContratante2CriarSelecionado != null ? new ClienteDAO { Id = ContratoContratante2CriarSelecionado.Id } : null,
+                Contratante3 = ContratoContratante3CriarSelecionado != null ? new ClienteDAO { Id = ContratoContratante3CriarSelecionado.Id } : null,
+                Contratante4 = ContratoContratante4CriarSelecionado != null ? new ClienteDAO { Id = ContratoContratante4CriarSelecionado.Id } : null,
+                Fiador = fiador != null ? new ClienteDAO { Id = fiador.Id } : null,
+                Fiador2 = fiador2 != null ? new ClienteDAO { Id = fiador2.Id } : null,
+                ValorContrato = valorContrato,
+                DataInicioVigencia = ContratoDataInicioCriar.Value,
+                PrazoMeses = prazo,
+                Vencimento = vencimento,
+                PropostaSegFianca = proposta,
+                ApoliceSegFianca = apolice
+            };
+
+            await _crudService.CadastrarContratoAsync(contrato);
+            NotificarInfo("Contrato cadastrado com sucesso!");
+
+            ContratoModalCriarVisibility = Visibility.Hidden;
+            LimparFormularioContratoCriar();
+            await CarregarContratosAsync();
+        }
+
+        private async Task SalvarContratoVisualizarAsync()
+        {
+            var contratoSelecionado = ContratoSelecionado;
+            if (contratoSelecionado == null || contratoSelecionado.Id <= 0)
+            {
+                NotificarErro("Nenhum contrato selecionado.");
+                return;
+            }
+
+            if (!int.TryParse(ContratoPrazoMesesVisualizar, out var prazo))
+            {
+                NotificarErro("Prazo inválido. Utilize apenas números.");
+                return;
+            }
+
+            if (!int.TryParse(ContratoVencimentoVisualizar, out var vencimento) || vencimento < 1 || vencimento > 31)
+            {
+                NotificarErro("Vencimento inválido. Utilize apenas números de 1 a 31.");
+                return;
+            }
+
+            if (!decimal.TryParse(ContratoValorVisualizar, NumberStyles.Number, CultureInfo.CurrentCulture, out var valorContrato))
+            {
+                NotificarErro("Valor do contrato inválido. Utilize apenas números.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ContratoNomeVisualizar)
+                || ContratoTipoVisualizarSelecionado == null
+                || ContratoModalidadeVisualizarSelecionada == null
+                || ContratoObjetoVisualizarSelecionado == null
+                || ContratoProprietarioVisualizarSelecionado == null
+                || ContratoImovelVisualizarSelecionado == null
+                || ContratoContratante1VisualizarSelecionado == null
+                || !ContratoDataInicioVisualizar.HasValue)
+            {
+                NotificarErro("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            if (PossuiContratantesRepetidos(ContratoContratante1VisualizarSelecionado, ContratoContratante2VisualizarSelecionado, ContratoContratante3VisualizarSelecionado, ContratoContratante4VisualizarSelecionado))
+            {
+                NotificarErro("Não é permitido repetir contratantes.");
+                return;
+            }
+
+            var modalidadeEhSeguroFianca = ModalidadeEhSeguroFianca(ContratoModalidadeVisualizarSelecionada);
+            var modalidadeEhFiador = ModalidadeEhFiador(ContratoModalidadeVisualizarSelecionada);
+
+            var proposta = modalidadeEhSeguroFianca ? TratarTextoOpcional(ContratoPropostaSegFiancaVisualizar) : null;
+            var apolice = modalidadeEhSeguroFianca ? TratarTextoOpcional(ContratoApoliceSegFiancaVisualizar) : null;
+            var fiador = modalidadeEhFiador ? ContratoFiadorVisualizarSelecionado : null;
+            var fiador2 = modalidadeEhFiador ? ContratoFiador2VisualizarSelecionado : null;
+
+            var contratoAtualizado = new ContratoDTO
+            {
+                Id = contratoSelecionado.Id,
+                Nome = ContratoNomeVisualizar,
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogadoId },
+                TipoContrato = new TipoContratoDAO { Id = ContratoTipoVisualizarSelecionado.Id },
+                ModalidadeContrato = new ModalidadeContratoDAO { Id = ContratoModalidadeVisualizarSelecionada.Id },
+                ObjetoContrato = new ObjetoContratoDAO { Id = ContratoObjetoVisualizarSelecionado.Id },
+                Proprietario = new ClienteDAO { Id = ContratoProprietarioVisualizarSelecionado.Id },
+                Imovel = new ImovelDAO { Id = ContratoImovelVisualizarSelecionado.Id },
+                Contratante1 = new ClienteDAO { Id = ContratoContratante1VisualizarSelecionado.Id },
+                Contratante2 = ContratoContratante2VisualizarSelecionado != null ? new ClienteDAO { Id = ContratoContratante2VisualizarSelecionado.Id } : null,
+                Contratante3 = ContratoContratante3VisualizarSelecionado != null ? new ClienteDAO { Id = ContratoContratante3VisualizarSelecionado.Id } : null,
+                Contratante4 = ContratoContratante4VisualizarSelecionado != null ? new ClienteDAO { Id = ContratoContratante4VisualizarSelecionado.Id } : null,
+                Fiador = fiador != null ? new ClienteDAO { Id = fiador.Id } : null,
+                Fiador2 = fiador2 != null ? new ClienteDAO { Id = fiador2.Id } : null,
+                ValorContrato = valorContrato,
+                DataInicioVigencia = ContratoDataInicioVisualizar.Value,
+                PrazoMeses = prazo,
+                Vencimento = vencimento,
+                PropostaSegFianca = proposta,
+                ApoliceSegFianca = apolice
+            };
+
+            await _crudService.AtualizarContratoAsync(contratoSelecionado.Id, contratoAtualizado);
+            NotificarInfo("Contrato atualizado com sucesso!");
+
+            ContratoModalVisualizarVisibility = Visibility.Hidden;
+            await CarregarContratosAsync();
         }
 
         private async Task SalvarFotosImovelEditarAsync()
@@ -1621,6 +2148,97 @@ namespace Imob.ViewModels
             await CarregarFiadoresAsync();
         }
 
+        private static bool ModalidadeEhFiador(ModalidadeContratoDAO modalidade)
+        {
+            var nome = Normalizar(modalidade?.Nome);
+            return nome.Contains("fiador");
+        }
+
+        private static bool ModalidadeEhSeguroFianca(ModalidadeContratoDAO modalidade)
+        {
+            var nome = Normalizar(modalidade?.Nome);
+            return nome.Contains("seguro fianca") || nome.Contains("segurofianca");
+        }
+
+        private static bool PossuiContratantesRepetidos(params ClienteDAO[] contratantes)
+        {
+            var ids = contratantes
+                .Where(c => c != null && c.Id > 0)
+                .Select(c => c.Id)
+                .ToList();
+
+            return ids.Count != ids.Distinct().Count();
+        }
+
+        private static string TratarTextoOpcional(string texto)
+        {
+            return string.IsNullOrWhiteSpace(texto) ? null : texto.Trim();
+        }
+
+        private void LimparFormularioContratoCriar()
+        {
+            ContratoNomeCriar = string.Empty;
+            ContratoTipoCriarSelecionado = null;
+            ContratoModalidadeCriarSelecionada = null;
+            ContratoObjetoCriarSelecionado = null;
+            ContratoProprietarioCriarSelecionado = null;
+            ContratoImovelCriarSelecionado = null;
+            ContratoContratante1CriarSelecionado = null;
+            ContratoContratante2CriarSelecionado = null;
+            ContratoContratante3CriarSelecionado = null;
+            ContratoContratante4CriarSelecionado = null;
+            ContratoFiadorCriarSelecionado = null;
+            ContratoFiador2CriarSelecionado = null;
+            ContratoDataInicioCriar = null;
+            ContratoPrazoMesesCriar = string.Empty;
+            ContratoValorCriar = string.Empty;
+            ContratoVencimentoCriar = string.Empty;
+            ContratoPropostaSegFiancaCriar = string.Empty;
+            ContratoApoliceSegFiancaCriar = string.Empty;
+        }
+
+        private void PreencherFormularioContratoVisualizar(ContratoDAO contrato)
+        {
+            ContratoNomeVisualizar = contrato.Nome ?? string.Empty;
+            ContratoTipoVisualizarSelecionado = TiposContrato.FirstOrDefault(x => x.Id == ObterIdContrato(contrato.TipoContrato, contrato.TipoContratoId));
+            if (ContratoTipoVisualizarSelecionado == null && contrato.TipoContrato != null)
+            {
+                ContratoTipoVisualizarSelecionado = TiposContrato.FirstOrDefault(x => string.Equals(x.Nome, contrato.TipoContrato.Nome, StringComparison.OrdinalIgnoreCase));
+            }
+            ContratoModalidadeVisualizarSelecionada = ModalidadesContrato.FirstOrDefault(x => x.Id == ObterIdContrato(contrato.ModalidadeContrato, contrato.ModalidadeContratoId));
+            if (ContratoModalidadeVisualizarSelecionada == null && contrato.ModalidadeContrato != null)
+            {
+                ContratoModalidadeVisualizarSelecionada = ModalidadesContrato.FirstOrDefault(x => string.Equals(x.Nome, contrato.ModalidadeContrato.Nome, StringComparison.OrdinalIgnoreCase));
+            }
+            ContratoObjetoVisualizarSelecionado = ObjetosContrato.FirstOrDefault(x => x.Id == ObterIdContrato(contrato.ObjetoContrato, contrato.ObjetoContratoId));
+            if (ContratoObjetoVisualizarSelecionado == null && contrato.ObjetoContrato != null)
+            {
+                ContratoObjetoVisualizarSelecionado = ObjetosContrato.FirstOrDefault(x => string.Equals(x.Nome, contrato.ObjetoContrato.Nome, StringComparison.OrdinalIgnoreCase));
+            }
+            ContratoProprietarioVisualizarSelecionado = SelecionarPorIdOuNome(
+                ProprietariosContrato,
+                ObterIdContrato(contrato.Proprietario, contrato.ProprietarioId),
+                contrato.Proprietario?.Nome ?? contrato.NomeProprietario);
+            ContratoImovelVisualizarSelecionado = SelecionarPorIdOuNome(
+                ImoveisContrato,
+                ObterIdContrato(contrato.Imovel, contrato.ImovelId),
+                contrato.Imovel?.Nome ?? contrato.NomeImovel,
+                x => x?.Logradouro);
+            ContratoContratante1VisualizarSelecionado = SelecionarPorIdOuNome(LocatariosContrato, ObterIdContrato(contrato.Contratante1, contrato.Contratante1Id), contrato.Contratante1?.Nome ?? contrato.NomeContratante1);
+            ContratoContratante2VisualizarSelecionado = SelecionarPorIdOuNome(LocatariosContrato, ObterIdContrato(contrato.Contratante2, contrato.Contratante2Id), contrato.Contratante2?.Nome ?? contrato.NomeContratante2);
+            ContratoContratante3VisualizarSelecionado = SelecionarPorIdOuNome(LocatariosContrato, ObterIdContrato(contrato.Contratante3, contrato.Contratante3Id), contrato.Contratante3?.Nome ?? contrato.NomeContratante3);
+            ContratoContratante4VisualizarSelecionado = SelecionarPorIdOuNome(LocatariosContrato, ObterIdContrato(contrato.Contratante4, contrato.Contratante4Id), contrato.Contratante4?.Nome ?? contrato.NomeContratante4);
+            ContratoFiadorVisualizarSelecionado = SelecionarPorIdOuNome(FiadoresContrato, ObterIdContrato(contrato.Fiador, contrato.FiadorId), contrato.Fiador?.Nome ?? contrato.NomeFiador);
+            ContratoFiador2VisualizarSelecionado = SelecionarPorIdOuNome(FiadoresContrato, ObterIdContrato(contrato.Fiador2, contrato.Fiador2Id), contrato.Fiador2?.Nome ?? contrato.NomeFiador2);
+
+            ContratoDataInicioVisualizar = contrato.DataInicioVigencia;
+            ContratoPrazoMesesVisualizar = contrato.PrazoMeses.ToString(CultureInfo.InvariantCulture);
+            ContratoValorVisualizar = contrato.ValorContrato.ToString(CultureInfo.CurrentCulture);
+            ContratoVencimentoVisualizar = contrato.Vencimento.ToString(CultureInfo.InvariantCulture);
+            ContratoPropostaSegFiancaVisualizar = contrato.PropostaSegFianca ?? string.Empty;
+            ContratoApoliceSegFiancaVisualizar = contrato.ApoliceSegFianca ?? string.Empty;
+        }
+
         private static ClienteDAO ObterClientePorId(IEnumerable<ClienteDAO> origem, int id)
         {
             if (origem == null)
@@ -1637,6 +2255,151 @@ namespace Imob.ViewModels
             }
 
             return null;
+        }
+
+        private static int ObterIdContrato(object entidadeRelacionada, int? idFallback)
+        {
+            if (entidadeRelacionada != null)
+            {
+                var propriedadeId = entidadeRelacionada.GetType().GetProperty("Id");
+                if (propriedadeId != null)
+                {
+                    var valor = propriedadeId.GetValue(entidadeRelacionada);
+                    switch (valor)
+                    {
+                        case int idInt when idInt > 0:
+                            return idInt;
+                        case long idLong when idLong > 0:
+                            return (int)idLong;
+                    }
+                }
+            }
+
+            return idFallback.GetValueOrDefault();
+        }
+
+        private static T SelecionarPorIdOuNome<T>(IEnumerable<T> origem, int id, string nome, Func<T, string> nomeAlternativo = null)
+            where T : class
+        {
+            if (origem == null)
+            {
+                return null;
+            }
+
+            var lista = origem.Where(x => x != null).ToList();
+
+            if (id > 0)
+            {
+                var porId = lista.FirstOrDefault(x =>
+                {
+                    var prop = x.GetType().GetProperty("Id");
+                    if (prop == null)
+                    {
+                        return false;
+                    }
+
+                    var valor = prop.GetValue(x);
+                    return valor is int idInt && idInt == id;
+                });
+
+                if (porId != null)
+                {
+                    return porId;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                return null;
+            }
+
+            var comparador = nome.Trim();
+            return lista.FirstOrDefault(x =>
+            {
+                var propNome = x.GetType().GetProperty("Nome");
+                var nomePrincipal = propNome?.GetValue(x) as string;
+                if (string.Equals(nomePrincipal, comparador, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+
+                if (nomeAlternativo != null)
+                {
+                    var alt = nomeAlternativo(x);
+                    return string.Equals(alt, comparador, StringComparison.OrdinalIgnoreCase);
+                }
+
+                return false;
+            });
+        }
+
+        private int ObterIdCatalogoPorNome<T>(IEnumerable<T> origem, string nome)
+            where T : class
+        {
+            if (origem == null || string.IsNullOrWhiteSpace(nome))
+            {
+                return 0;
+            }
+
+            var item = origem.FirstOrDefault(x =>
+            {
+                var propNome = x?.GetType().GetProperty("Nome");
+                var valorNome = propNome?.GetValue(x) as string;
+                return string.Equals(valorNome?.Trim(), nome.Trim(), StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (item == null)
+            {
+                return 0;
+            }
+
+            var propId = item.GetType().GetProperty("Id");
+            var valor = propId?.GetValue(item);
+            return valor is int id ? id : 0;
+        }
+
+        private static string SelecionarNomePorIdOuNome<T>(IEnumerable<T> origem, int id, string nome)
+            where T : class
+        {
+            if (origem != null && id > 0)
+            {
+                var porId = origem.FirstOrDefault(x =>
+                {
+                    var propId = x?.GetType().GetProperty("Id");
+                    var valor = propId?.GetValue(x);
+                    return valor is int idInt && idInt == id;
+                });
+
+                if (porId != null)
+                {
+                    var propNome = porId.GetType().GetProperty("Nome");
+                    var nomeId = propNome?.GetValue(porId) as string;
+                    if (!string.IsNullOrWhiteSpace(nomeId))
+                    {
+                        return nomeId;
+                    }
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(nome) || origem == null)
+            {
+                return nome ?? string.Empty;
+            }
+
+            var porNome = origem.FirstOrDefault(x =>
+            {
+                var propNome = x?.GetType().GetProperty("Nome");
+                var valorNome = propNome?.GetValue(x) as string;
+                return string.Equals(valorNome?.Trim(), nome.Trim(), StringComparison.OrdinalIgnoreCase);
+            });
+
+            if (porNome == null)
+            {
+                return nome;
+            }
+
+            var propNomeFinal = porNome.GetType().GetProperty("Nome");
+            return propNomeFinal?.GetValue(porNome) as string ?? nome;
         }
 
         private ClienteDTO CriarClienteDtoCriar(int tipoClienteId)
