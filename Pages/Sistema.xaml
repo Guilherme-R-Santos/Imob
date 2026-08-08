@@ -359,7 +359,6 @@
             </TreeViewItem>
         </TreeView>
 
-
         <Border x:Name="ProprietariosPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -1616,7 +1615,7 @@
                 </Grid>
             </Border>
         </Grid>
-        <!--AQUI-->
+
         <Grid x:Name="ImovelFotosModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
             <Border Width="1000" Height="680" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
                 <Grid>

@@ -214,7 +214,7 @@ namespace Imob
             }
         }
 
-        public async Task AdcionarItensGridProprietarios()
+        public async Task AdicionarItensGridProprietarios()
         {
             try
             {
@@ -1039,7 +1039,7 @@ namespace Imob
         {
             FecharPanelsAtivos();
 
-            await AdcionarItensGridProprietarios();
+            await AdicionarItensGridProprietarios();
 
             ProprietariosPanel.Visibility = Visibility.Visible;
         }
@@ -1279,7 +1279,7 @@ namespace Imob
 
         private async void BtnAtualizarProprietarios_Click(object sender, RoutedEventArgs e)
         {
-            await AdcionarItensGridProprietarios();
+            await AdicionarItensGridProprietarios();
         }
 
         private async void BtnAtualizarLocatarios_Click(object sender, RoutedEventArgs e)
@@ -1596,7 +1596,6 @@ namespace Imob
                 MessageBox.Show("Erro ao carregar dados do contrato para visualização: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
         private void BtnFecharModalContratosVisualizar_Click(object sender, RoutedEventArgs e)
         {
             ContratoModalOverlayVisualizar.Visibility = Visibility.Hidden;
@@ -1771,10 +1770,10 @@ namespace Imob
             imovelAtualizado.Cep = TxtBoxCepEditar.Text;
             imovelAtualizado.InscricaoIptu = TxtBoxInscricaoIptuEditar.Text;
             imovelAtualizado.NumeroCbmerj = TxtBoxNumeroCbmerjEditar.Text;
-            imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.SelectedItem as string, HttpClientFixo);
-            imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.SelectedItem as string, HttpClientFixo);
-            imovelAtualizado.Finalidade = Imob.Models.DAOs.FinalidadeDAO.GetIdPorNome(ComboFinalidadeEditar.SelectedItem as string, HttpClientFixo);
-            imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.SelectedItem as string, HttpClientFixo);
+            imovelAtualizado.Intencao = IntencaoDAO.GetIdPorNome(ComboIntencaoEditar.Text, HttpClientFixo);
+            imovelAtualizado.TipoImovel = TipoImovelDAO.GetIdPorNome(ComboTipoImovelEditar.Text, HttpClientFixo);
+            imovelAtualizado.Finalidade = Imob.Models.DAOs.FinalidadeDAO.GetIdPorNome(ComboFinalidadeEditar.Text, HttpClientFixo);
+            imovelAtualizado.Proprietario = ClienteDAO.GetIdPorNome(ComboProprietariosEditar.Text, HttpClientFixo);
 
 
             try
@@ -2432,7 +2431,7 @@ namespace Imob
                 var clienteDto = new ClienteDTO();
                 await clienteDto.InativarCliente(id, HttpClientFixo);
                 MessageBox.Show("Proprietário inativado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-                await AdcionarItensGridProprietarios();
+                await AdicionarItensGridProprietarios();
             }
             catch (Exception ex)
             {
@@ -2836,7 +2835,7 @@ namespace Imob
                 TxtClienteTelefoneCriar.Clear();
                 DpClienteNascimentoCriar.Text = "";
 
-                await AdcionarItensGridProprietarios();
+                await AdicionarItensGridProprietarios();
             }
             catch (Exception ex)
             {
@@ -2940,7 +2939,7 @@ namespace Imob
                 MessageBox.Show("Proprietário atualizado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ProprietarioModalOverlayEditar.Visibility = Visibility.Hidden;
-                await AdcionarItensGridProprietarios();
+                await AdicionarItensGridProprietarios();
             }
             catch (Exception ex)
             {
