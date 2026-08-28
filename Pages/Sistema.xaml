@@ -1685,6 +1685,9 @@
                                                     <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
                                                         <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
                                                     </Border>
+                                                    <Border Background="#66000000" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="8,0,8,0">
+                                                        <Button Content="&#8595;" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnBaixarFoto_Click" CommandParameter="{Binding}"/>
+                                                    </Border>
                                                 </Grid>
                                             </Border>
                                         </Grid>
@@ -1772,6 +1775,9 @@
                                                     <Image Source="{Binding}" Stretch="UniformToFill" ClipToBounds="True"/>
                                                     <Border Background="#66000000" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="0,8,0,8">
                                                         <Button Content="×" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnRemoverFoto_Click" CommandParameter="{Binding}"/>
+                                                    </Border>
+                                                    <Border Background="#66000000" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="8,0,8,0">
+                                                        <Button Content="&#8595;" Width="28" Height="28" FontSize="14" Background="Transparent" Foreground="White" BorderThickness="0" Cursor="Hand" Click="BtnBaixarFoto_Click" CommandParameter="{Binding}"/>
                                                     </Border>
                                                 </Grid>
                                             </Border>

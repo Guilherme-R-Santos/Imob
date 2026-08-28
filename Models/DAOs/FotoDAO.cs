@@ -41,5 +41,27 @@ namespace Imob.Models
                 throw new Exception("Erro ao conectar com o servidor.");
             }
         }
+
+        public static async Task<FotoDAO> GetFotoPorId(int id, HttpClient httpClient)
+        {
+            try
+            {
+                var response = await httpClient.GetAsync($"Foto/ObterPorId/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<FotoDAO>(json);
+                }
+                else
+                {
+                    throw new Exception("Erro ao obter foto.");
+                }
+            }
+            catch
+            {
+                throw new Exception("Erro ao conectar com o servidor.");
+            }
+        }
     }
 }

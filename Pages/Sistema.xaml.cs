@@ -34,6 +34,10 @@ namespace Imob
     {
         private const int TokenSafetyMarginMinutes = 5;
 
+        private const int LarguraPadraoFoto = 1920;
+        private const int AlturaPadraoFoto = 1080;
+        private const long TamanhoMaximoFotoBytes = 2 * 1024 * 1024;
+
         public static HttpClient HttpClientFixo { get; } = CriarHttpClient();
 
         public UsuarioDAO UsuarioLogado { get; set; }
@@ -2439,44 +2443,112 @@ namespace Imob
             }
         }
 
-        private void BtnAdicionarFotos_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
-            openFileDlg.Multiselect = true;
-            Nullable<bool> result = openFileDlg.ShowDialog();
+		private void BtnAdicionarFotos_Click(object sender, RoutedEventArgs e)
+		{
+			Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
+			openFileDlg.Multiselect = true;
+			Nullable<bool> result = openFileDlg.ShowDialog();
 
-            if (result == true)
-            {
-                foreach (string fileName in openFileDlg.FileNames)
-                {
-                    if (fileName == null) continue;
-                    if (!File.Exists(fileName)) continue;
-                    if (!fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) &&
-                        !fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) &&
-                        !fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) &&
-                        !fileName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) &&
-                        !fileName.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
-                    {
-                        MessageBox.Show($"Arquivo '{fileName}' não é um formato de imagem suportado.", "Formato Não Suportado", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        continue;
-                    }
-                    string filePath = fileName;
-                    byte[] binFoto = File.ReadAllBytes(filePath);
-                    _fotosSelecionadasBinario.Add(binFoto);
+			if (result == true)
+			{
+				foreach (string fileName in openFileDlg.FileNames)
+				{
+					if (fileName == null) continue;
+					if (!File.Exists(fileName)) continue;
+					if (!fileName.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) &&
+						!fileName.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) &&
+						!fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase) &&
+						!fileName.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) &&
+						!fileName.EndsWith(".bmp", StringComparison.OrdinalIgnoreCase))
+					{
+						MessageBox.Show($"Arquivo '{fileName}' não é um formato de imagem suportado.", "Formato Não Suportado", MessageBoxButton.OK, MessageBoxImage.Warning);
+						continue;
+					}
+					string filePath = fileName;
+					byte[] binFotoOriginal = File.ReadAllBytes(filePath);
+					byte[] binFoto;
+					try
+					{
+						binFoto = RedimensionarImagem(binFotoOriginal, LarguraPadraoFoto, AlturaPadraoFoto, TamanhoMaximoFotoBytes);
+					}
+					catch (Exception ex)
+					{
+						MessageBox.Show($"Erro ao processar imagem '{fileName}': {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+						continue;
+					}
+					_fotosSelecionadasBinario.Add(binFoto);
 					_fotoIdsPreview.Add(null);
-                    var bitmap = new BitmapImage();
-                    using (var stream = new MemoryStream(binFoto))
-                    {
-                        bitmap.BeginInit();
-                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                        bitmap.StreamSource = stream;
-                        bitmap.EndInit();
-                        bitmap.Freeze();
-                    }
-                    _fotosSelecionadasPreview.Add(bitmap);
-                }
-            }
-        }
+					var bitmap = new BitmapImage();
+					using (var stream = new MemoryStream(binFoto))
+					{
+						bitmap.BeginInit();
+						bitmap.CacheOption = BitmapCacheOption.OnLoad;
+						bitmap.StreamSource = stream;
+						bitmap.EndInit();
+						bitmap.Freeze();
+					}
+					_fotosSelecionadasPreview.Add(bitmap);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Redimensiona e recomprime uma imagem para respeitar um tamanho máximo em pixels (sem ultrapassar,
+		/// sem ampliar imagens menores) e um tamanho máximo em bytes, reduzindo a qualidade JPEG progressivamente
+		/// se necessário. Retorna sempre a imagem codificada em JPEG.
+		/// </summary>
+		private static byte[] RedimensionarImagem(byte[] imagemOriginal, int larguraMaxima, int alturaMaxima, long tamanhoMaximoBytes)
+		{
+			if (imagemOriginal == null || imagemOriginal.Length == 0)
+			{
+				throw new ArgumentException("Imagem inválida.", nameof(imagemOriginal));
+			}
+
+			BitmapFrame frame;
+			using (var streamOriginal = new MemoryStream(imagemOriginal))
+			{
+				var decoder = BitmapDecoder.Create(streamOriginal, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+				frame = decoder.Frames[0];
+
+				var larguraOriginal = frame.PixelWidth;
+				var alturaOriginal = frame.PixelHeight;
+
+				var escala = Math.Min(1.0, Math.Min((double)larguraMaxima / larguraOriginal, (double)alturaMaxima / alturaOriginal));
+
+				if (escala < 1.0)
+				{
+					var transformado = new TransformedBitmap(frame, new ScaleTransform(escala, escala));
+					var novoFrame = BitmapFrame.Create(transformado);
+					novoFrame.Freeze();
+					frame = novoFrame;
+				}
+				else
+				{
+					frame.Freeze();
+				}
+			}
+
+			byte[] resultado = CodificarJpeg(frame, 90);
+
+			var qualidade = 80;
+			while (resultado.Length > tamanhoMaximoBytes && qualidade >= 30)
+			{
+				resultado = CodificarJpeg(frame, qualidade);
+				qualidade -= 10;
+			}
+
+			return resultado;
+		}
+
+		private static byte[] CodificarJpeg(BitmapFrame frame, int qualidade)
+		{
+			var encoder = new JpegBitmapEncoder { QualityLevel = qualidade };
+			encoder.Frames.Add(frame);
+
+			using var streamSaida = new MemoryStream();
+			encoder.Save(streamSaida);
+			return streamSaida.ToArray();
+		}
 
         private void UploadDropArea_DragEnter(object sender, DragEventArgs e)
         {
@@ -2508,7 +2580,8 @@ namespace Imob
                         var ext = System.IO.Path.GetExtension(filePath)?.ToLowerInvariant();
                         if (ext == ".jpg" || ext == ".jpeg" || ext == ".png" || ext == ".webp" || ext == ".bmp")
                         {
-                            byte[] binFoto = File.ReadAllBytes(filePath);
+                            byte[] binFotoOriginal = File.ReadAllBytes(filePath);
+                            byte[] binFoto = RedimensionarImagem(binFotoOriginal, LarguraPadraoFoto, AlturaPadraoFoto, TamanhoMaximoFotoBytes);
                             _fotosSelecionadasBinario.Add(binFoto);
 							_fotoIdsPreview.Add(null);
                             var bitmap = new BitmapImage();
@@ -2553,10 +2626,63 @@ namespace Imob
 						}
 					}
 				}
-            }
-        }
+			}
+		}
 
-        private void BtnFecharModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
+		private async void BtnBaixarFoto_Click(object sender, RoutedEventArgs e)
+		{
+			if (sender is not Button btn || btn.CommandParameter is not ImageSource img)
+			{
+				return;
+			}
+
+			int index = _fotosSelecionadasPreview.IndexOf(img);
+			if (index < 0)
+			{
+				return;
+			}
+
+			btn.IsEnabled = false;
+			try
+			{
+				byte[] binFoto = null;
+				var fotoId = index < _fotoIdsPreview.Count ? _fotoIdsPreview[index] : null;
+
+				if (fotoId.HasValue)
+				{
+					var foto = await FotoDAO.GetFotoPorId(fotoId.Value, HttpClientFixo);
+					binFoto = foto?.Bin;
+				}
+				else if (index < _fotosSelecionadasBinario.Count)
+				{
+					binFoto = _fotosSelecionadasBinario[index];
+				}
+
+				if (binFoto == null || binFoto.Length == 0)
+				{
+					MessageBox.Show("Não foi possível obter a foto para download.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+					return;
+				}
+
+				var pastaDownloads = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+				Directory.CreateDirectory(pastaDownloads);
+
+				var nomeArquivo = $"Foto_Imovel_{_idImovelCadastrado}_{DateTime.Now:yyyyMMddHHmmssfff}.jpg";
+				var caminhoCompleto = System.IO.Path.Combine(pastaDownloads, nomeArquivo);
+
+				File.WriteAllBytes(caminhoCompleto, binFoto);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Erro ao baixar foto: {ex.Message}", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+			finally
+			{
+				btn.IsEnabled = true;
+			}
+		}
+
+		private void BtnFecharModalImovelFotoCriar_Click(object sender, RoutedEventArgs e)
         {
 			ImovelFotosModalOverlayCriar.Visibility = Visibility.Hidden;
 			ImovelFotosModalOverlayEditar.Visibility = Visibility.Hidden;
