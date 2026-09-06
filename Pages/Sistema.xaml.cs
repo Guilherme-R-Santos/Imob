@@ -2868,38 +2868,38 @@ namespace Imob
         private void BtnFecharModalProprietarioCriar_Click(object sender, RoutedEventArgs e)
         {
             ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
-            TxtClienteNomeCriar.Clear();
-            TxtClienteCpfCnpjCriar.Clear();
-            TxtClienteIdentidadeCriar.Clear();
-            TxtClienteOrgaoExpedidorCriar.Clear();
-            TxtClienteNacionalidadeCriar.Clear();
-            TxtClienteNaturalidadeCriar.Clear();
-            TxtClienteEstadoCivilCriar.Clear();
-            TxtClienteProfissaoCriar.Clear();
-            TxtClienteEnderecoCriar.Clear();
-            TxtClienteBancoCriar.Clear();
-            TxtClienteChavePixCriar.Clear();
-            TxtClienteAgenciaCriar.Clear();
-            TxtClienteContaCriar.Clear();
-            TxtClienteCodBancoCriar.Clear();
-            TxtClienteEmailCriar.Clear();
-            TxtClienteTelefoneCriar.Clear();
-            DpClienteNascimentoCriar.Text = "";
+            TxtProprietarioNomeCriar.Clear();
+            TxtProprietarioCpfCnpjCriar.Clear();
+            TxtProprietarioIdentidadeCriar.Clear();
+            TxtProprietarioOrgaoExpedidorCriar.Clear();
+            TxtProprietarioNacionalidadeCriar.Clear();
+            TxtProprietarioNaturalidadeCriar.Clear();
+            TxtProprietarioEstadoCivilCriar.Clear();
+            TxtProprietarioProfissaoCriar.Clear();
+            TxtProprietarioEnderecoCriar.Clear();
+            TxtProprietarioBancoCriar.Clear();
+            TxtProprietarioChavePixCriar.Clear();
+            TxtProprietarioAgenciaCriar.Clear();
+            TxtProprietarioContaCriar.Clear();
+            TxtProprietarioCodBancoCriar.Clear();
+            TxtProprietarioEmailCriar.Clear();
+            TxtProprietarioTelefoneCriar.Clear();
+            DpProprietarioNascimentoCriar.Text = "";
         }
 
         private async void BtnSalvarProprietarioCriar_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtClienteNomeCriar.Text) ||
-                string.IsNullOrWhiteSpace(TxtClienteCpfCnpjCriar.Text))
+            if (string.IsNullOrWhiteSpace(TxtProprietarioNomeCriar.Text) ||
+                string.IsNullOrWhiteSpace(TxtProprietarioCpfCnpjCriar.Text))
             {
                 MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             DateTime? dataNascimento = null;
-            if (!string.IsNullOrWhiteSpace(DpClienteNascimentoCriar.Text))
+            if (!string.IsNullOrWhiteSpace(DpProprietarioNascimentoCriar.Text))
             {
-                if (!DateTime.TryParse(DpClienteNascimentoCriar.Text, out var data))
+                if (!DateTime.TryParse(DpProprietarioNascimentoCriar.Text, out var data))
                 {
                     MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -2917,22 +2917,22 @@ namespace Imob
 
             ClienteDTO cliente = new ClienteDTO
             {
-                Nome = TxtClienteNomeCriar.Text,
-                CpfCnpj = TxtClienteCpfCnpjCriar.Text,
-                Identidade = TxtClienteIdentidadeCriar.Text,
-                OrgaoExpedidor = TxtClienteOrgaoExpedidorCriar.Text,
-                Nacionalidade = TxtClienteNacionalidadeCriar.Text,
-                Naturalidade = TxtClienteNaturalidadeCriar.Text,
-                EstadoCivil = TxtClienteEstadoCivilCriar.Text,
-                Profissao = TxtClienteProfissaoCriar.Text,
-                Endereco = TxtClienteEnderecoCriar.Text,
-                Banco = TxtClienteBancoCriar.Text,
-                ChavePix = TxtClienteChavePixCriar.Text,
-                Agencia = TxtClienteAgenciaCriar.Text,
-                Conta = TxtClienteContaCriar.Text,
-                CodBanco = TxtClienteCodBancoCriar.Text,
-                Email = TxtClienteEmailCriar.Text,
-                Telefone = TxtClienteTelefoneCriar.Text,
+                Nome = TxtProprietarioNomeCriar.Text,
+                CpfCnpj = TxtProprietarioCpfCnpjCriar.Text,
+                Identidade = TxtProprietarioIdentidadeCriar.Text,
+                OrgaoExpedidor = TxtProprietarioOrgaoExpedidorCriar.Text,
+                Nacionalidade = TxtProprietarioNacionalidadeCriar.Text,
+                Naturalidade = TxtProprietarioNaturalidadeCriar.Text,
+                EstadoCivil = TxtProprietarioEstadoCivilCriar.Text,
+                Profissao = TxtProprietarioProfissaoCriar.Text,
+                Endereco = TxtProprietarioEnderecoCriar.Text,
+                Banco = TxtProprietarioBancoCriar.Text,
+                ChavePix = TxtProprietarioChavePixCriar.Text,
+                Agencia = TxtProprietarioAgenciaCriar.Text,
+                Conta = TxtProprietarioContaCriar.Text,
+                CodBanco = TxtProprietarioCodBancoCriar.Text,
+                Email = TxtProprietarioEmailCriar.Text,
+                Telefone = TxtProprietarioTelefoneCriar.Text,
                 DataNascimento = dataNascimento,
                 TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
                 Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
@@ -2944,22 +2944,22 @@ namespace Imob
                 MessageBox.Show("Proprietário cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
-                TxtClienteNomeCriar.Clear();
-                TxtClienteCpfCnpjCriar.Clear();
-                TxtClienteIdentidadeCriar.Clear();
-                TxtClienteOrgaoExpedidorCriar.Clear();
-                TxtClienteNacionalidadeCriar.Clear();
-                TxtClienteNaturalidadeCriar.Clear();
-                TxtClienteEstadoCivilCriar.Clear();
-                TxtClienteProfissaoCriar.Clear();
-                TxtClienteEnderecoCriar.Clear();
-                TxtClienteBancoCriar.Clear();
-                TxtClienteAgenciaCriar.Clear();
-                TxtClienteContaCriar.Clear();
-                TxtClienteCodBancoCriar.Clear();
-                TxtClienteEmailCriar.Clear();
-                TxtClienteTelefoneCriar.Clear();
-                DpClienteNascimentoCriar.Text = "";
+                TxtProprietarioNomeCriar.Clear();
+                TxtProprietarioCpfCnpjCriar.Clear();
+                TxtProprietarioIdentidadeCriar.Clear();
+                TxtProprietarioOrgaoExpedidorCriar.Clear();
+                TxtProprietarioNacionalidadeCriar.Clear();
+                TxtProprietarioNaturalidadeCriar.Clear();
+                TxtProprietarioEstadoCivilCriar.Clear();
+                TxtProprietarioProfissaoCriar.Clear();
+                TxtProprietarioEnderecoCriar.Clear();
+                TxtProprietarioBancoCriar.Clear();
+                TxtProprietarioAgenciaCriar.Clear();
+                TxtProprietarioContaCriar.Clear();
+                TxtProprietarioCodBancoCriar.Clear();
+                TxtProprietarioEmailCriar.Clear();
+                TxtProprietarioTelefoneCriar.Clear();
+                DpProprietarioNascimentoCriar.Text = "";
 
                 await AdicionarItensGridProprietarios();
             }
@@ -2977,23 +2977,23 @@ namespace Imob
                 return;
             }
 
-            TxtClienteNomeEditar.Text = proprietarioSelecionado.Nome;
-            TxtClienteCpfCnpjEditar.Text = proprietarioSelecionado.CpfCnpj;
-            TxtClienteIdentidadeEditar.Text = proprietarioSelecionado.Identidade;
-            TxtClienteOrgaoExpedidorEditar.Text = proprietarioSelecionado.OrgaoExpedidor;
-            TxtClienteNacionalidadeEditar.Text = proprietarioSelecionado.Nacionalidade;
-            TxtClienteNaturalidadeEditar.Text = proprietarioSelecionado.Naturalidade;
-            TxtClienteEstadoCivilEditar.Text = proprietarioSelecionado.EstadoCivil;
-            TxtClienteProfissaoEditar.Text = proprietarioSelecionado.Profissao;
-            TxtClienteEnderecoEditar.Text = proprietarioSelecionado.Endereco;
-            TxtClienteBancoEditar.Text = proprietarioSelecionado.Banco;
-            TxtClienteAgenciaEditar.Text = proprietarioSelecionado.Agencia;
-            TxtClienteContaEditar.Text = proprietarioSelecionado.Conta;
-            TxtClienteCodBancoEditar.Text = proprietarioSelecionado.CodBanco;
-            TxtClienteChavePixEditar.Text = proprietarioSelecionado.ChavePix;
-            TxtClienteEmailEditar.Text = proprietarioSelecionado.Email;
-            TxtClienteTelefoneEditar.Text = proprietarioSelecionado.Telefone;
-            DpClienteNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;
+            TxtProprietarioNomeEditar.Text = proprietarioSelecionado.Nome;
+            TxtProprietarioCpfCnpjEditar.Text = proprietarioSelecionado.CpfCnpj;
+            TxtProprietarioIdentidadeEditar.Text = proprietarioSelecionado.Identidade;
+            TxtProprietarioOrgaoExpedidorEditar.Text = proprietarioSelecionado.OrgaoExpedidor;
+            TxtProprietarioNacionalidadeEditar.Text = proprietarioSelecionado.Nacionalidade;
+            TxtProprietarioNaturalidadeEditar.Text = proprietarioSelecionado.Naturalidade;
+            TxtProprietarioEstadoCivilEditar.Text = proprietarioSelecionado.EstadoCivil;
+            TxtProprietarioProfissaoEditar.Text = proprietarioSelecionado.Profissao;
+            TxtProprietarioEnderecoEditar.Text = proprietarioSelecionado.Endereco;
+            TxtProprietarioBancoEditar.Text = proprietarioSelecionado.Banco;
+            TxtProprietarioAgenciaEditar.Text = proprietarioSelecionado.Agencia;
+            TxtProprietarioContaEditar.Text = proprietarioSelecionado.Conta;
+            TxtProprietarioCodBancoEditar.Text = proprietarioSelecionado.CodBanco;
+            TxtProprietarioChavePixEditar.Text = proprietarioSelecionado.ChavePix;
+            TxtProprietarioEmailEditar.Text = proprietarioSelecionado.Email;
+            TxtProprietarioTelefoneEditar.Text = proprietarioSelecionado.Telefone;
+            DpProprietarioNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;
 
             ProprietarioModalOverlayEditar.Visibility = Visibility.Visible;
         }
@@ -3011,17 +3011,17 @@ namespace Imob
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(TxtClienteNomeEditar.Text) ||
-                string.IsNullOrWhiteSpace(TxtClienteCpfCnpjEditar.Text))
+            if (string.IsNullOrWhiteSpace(TxtProprietarioNomeEditar.Text) ||
+                string.IsNullOrWhiteSpace(TxtProprietarioCpfCnpjEditar.Text))
             {
                 MessageBox.Show("Por favor, preencha os campos obrigatórios. (*)", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             DateTime? dataNascimento = null;
-            if (!string.IsNullOrWhiteSpace(DpClienteNascimentoEditar.Text))
+            if (!string.IsNullOrWhiteSpace(DpProprietarioNascimentoEditar.Text))
             {
-                if (!DateTime.TryParse(DpClienteNascimentoEditar.Text, out var data))
+                if (!DateTime.TryParse(DpProprietarioNascimentoEditar.Text, out var data))
                 {
                     MessageBox.Show("Data de nascimento inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -3039,22 +3039,22 @@ namespace Imob
 
             var clienteAtualizado = new ClienteDTO
             {
-                Nome = TxtClienteNomeEditar.Text,
-                CpfCnpj = TxtClienteCpfCnpjEditar.Text,
-                Identidade = TxtClienteIdentidadeEditar.Text,
-                OrgaoExpedidor = TxtClienteOrgaoExpedidorEditar.Text,
-                Nacionalidade = TxtClienteNacionalidadeEditar.Text,
-                Naturalidade = TxtClienteNaturalidadeEditar.Text,
-                EstadoCivil = TxtClienteEstadoCivilEditar.Text,
-                Profissao = TxtClienteProfissaoEditar.Text,
-                Endereco = TxtClienteEnderecoEditar.Text,
-                Banco = TxtClienteBancoEditar.Text,
-                ChavePix = TxtClienteChavePixEditar.Text,
-                Agencia = TxtClienteAgenciaEditar.Text,
-                Conta = TxtClienteContaEditar.Text,
-                CodBanco = TxtClienteCodBancoEditar.Text,
-                Email = TxtClienteEmailEditar.Text,
-                Telefone = TxtClienteTelefoneEditar.Text,
+                Nome = TxtProprietarioNomeEditar.Text,
+                CpfCnpj = TxtProprietarioCpfCnpjEditar.Text,
+                Identidade = TxtProprietarioIdentidadeEditar.Text,
+                OrgaoExpedidor = TxtProprietarioOrgaoExpedidorEditar.Text,
+                Nacionalidade = TxtProprietarioNacionalidadeEditar.Text,
+                Naturalidade = TxtProprietarioNaturalidadeEditar.Text,
+                EstadoCivil = TxtProprietarioEstadoCivilEditar.Text,
+                Profissao = TxtProprietarioProfissaoEditar.Text,
+                Endereco = TxtProprietarioEnderecoEditar.Text,
+                Banco = TxtProprietarioBancoEditar.Text,
+                ChavePix = TxtProprietarioChavePixEditar.Text,
+                Agencia = TxtProprietarioAgenciaEditar.Text,
+                Conta = TxtProprietarioContaEditar.Text,
+                CodBanco = TxtProprietarioCodBancoEditar.Text,
+                Email = TxtProprietarioEmailEditar.Text,
+                Telefone = TxtProprietarioTelefoneEditar.Text,
                 DataNascimento = dataNascimento,
                 TipoCliente = new TipoClienteDAO { Id = tipoClienteId }
             };

@@ -970,58 +970,76 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtClienteNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtProprietarioNomeCriar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtClienteCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCpfCnpjCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtProprietarioIdAsaasCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
 
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtProprietarioNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtProprietarioProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtProprietarioEnderecoCriar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,10,48,50" Grid.ColumnSpan="2" Grid.RowSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtClienteChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,3,12,8" Grid.ColumnSpan="2"/>
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioNumeroEnderecoCriar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioComplementoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioBairroCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCepCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioChavePixCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioBancoCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioAgenciaCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpClienteNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioContaCriar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCodBancoCriar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioEmailCriar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioTelefoneCriar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpProprietarioNascimentoCriar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
                         </Grid>
                     </ScrollViewer>
 
@@ -1065,58 +1083,76 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtClienteNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtProprietarioNomeEditar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtClienteCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCpfCnpjEditar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtProprietarioIdAsaasEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
 
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtProprietarioNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBox x:Name="TxtProprietarioEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtProprietarioProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
+                            <TextBox x:Name="TxtProprietarioEnderecoEditar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtClienteChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioNumeroEnderecoEditar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioComplementoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioBairroEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCepEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioChavePixEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
 
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioBancoEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtClienteTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioAgenciaEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
 
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpClienteNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioContaEditar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioCodBancoEditar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioEmailEditar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtProprietarioTelefoneEditar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpProprietarioNascimentoEditar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
                         </Grid>
                     </ScrollViewer>
 
@@ -1165,42 +1201,77 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtLocatarioNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtLocatarioNomeCriar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCpfCnpjCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtLocatarioIdAsaasCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
+
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtLocatarioChavePixCriar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBox x:Name="TxtLocatarioBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpLocatarioNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoCriar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioNumeroEnderecoCriar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioComplementoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioBairroCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCepCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioChavePixCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioBancoCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioAgenciaCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioContaCriar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCodBancoCriar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioEmailCriar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioTelefoneCriar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpLocatarioNascimentoCriar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
+
                         </Grid>
                     </ScrollViewer>
 
@@ -1242,41 +1313,75 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtLocatarioNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtLocatarioNomeEditar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCpfCnpjEditar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtLocatarioIdAsaasEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
+
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtLocatarioProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtLocatarioChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtLocatarioTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpLocatarioNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtLocatarioEnderecoEditar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioNumeroEnderecoEditar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioComplementoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioBairroEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCepEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioChavePixEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioBancoEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioAgenciaEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioContaEditar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioCodBancoEditar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioEmailEditar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtLocatarioTelefoneEditar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpLocatarioNascimentoEditar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
@@ -1324,41 +1429,75 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtFiadorNomeCriar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtFiadorCpfCnpjCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtFiadorNomeCriar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtFiadorCpfCnpjCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtFiadorIdAsaasCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
+
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorIdentidadeCriar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorOrgaoExpedidorCriar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorNacionalidadeCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorNaturalidadeCriar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorEstadoCivilCriar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorProfissaoCriar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,18,1" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtFiadorChavePixCriar" Grid.Row="7" Style="{StaticResource ModernTextBox}" Margin="337,1,12,10" Grid.ColumnSpan="2"/>
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorBancoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorAgenciaCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorContaCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorCodBancoCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEmailCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorTelefoneCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpFiadorNascimentoCriar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorEnderecoCriar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorNumeroEnderecoCriar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorComplementoCriar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorBairroCriar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorCepCriar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorChavePixCriar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorBancoCriar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorAgenciaCriar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorContaCriar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorCodBancoCriar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorEmailCriar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorTelefoneCriar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpFiadorNascimentoCriar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
                         </Grid>
                     </ScrollViewer>
 
@@ -1400,41 +1539,75 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
-                            <TextBox x:Name="TxtFiadorNomeEditar" Style="{StaticResource ModernTextBox}" Margin="0,19,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
-                            <TextBox x:Name="TxtFiadorCpfCnpjEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Nome*" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,0,1,2"/>
+                            <TextBox x:Name="TxtFiadorNomeEditar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="CPF/CNPJ*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtFiadorCpfCnpjEditar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Id Asaas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                            <TextBox x:Name="TxtFiadorIdAsaasEditar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
+
                             <TextBlock Text="Identidade" Grid.Row="2" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorIdentidadeEditar" Grid.Row="3" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Órgão Expedidor" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorOrgaoExpedidorEditar" Grid.Row="3" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Nacionalidade" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorNacionalidadeEditar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Naturalidade" Grid.Row="4" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorNaturalidadeEditar" Grid.Row="5" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Estado Civil" Grid.Row="4" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorEstadoCivilEditar" Grid.Row="5" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
                             <TextBlock Text="Profissão" Grid.Row="4" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
                             <TextBox x:Name="TxtFiadorProfissaoEditar" Grid.Row="5" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
                             <TextBlock Text="Endereço" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="6" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,27,12,10" Grid.RowSpan="2"/>
-                            <TextBlock Grid.Row="6" Style="{StaticResource ModernLabel}" Margin="337,8,48,2" Grid.ColumnSpan="2"><Run Language="pt-br" Text="Chave PIX"/></TextBlock>
-                            <TextBox x:Name="TxtFiadorChavePixEditar" Grid.Row="6" Style="{StaticResource ModernTextBox}" Margin="337,27,12,10" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                            <TextBlock Text="Banco" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorBancoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="Agência" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorAgenciaEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Conta" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorContaEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Código do Banco" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorCodBancoEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                            <TextBlock Text="E-mail" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorEmailEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Telefone" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <TextBox x:Name="TxtFiadorTelefoneEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
-                            <TextBlock Text="Data de Nascimento" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
-                            <DatePicker x:Name="DpFiadorNascimentoEditar" Grid.Row="11" Grid.Column="2" Margin="0,0,0,10"/>
+                            <TextBox x:Name="TxtFiadorEnderecoEditar" Grid.Row="7" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Número" Grid.Row="6" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorNumeroEnderecoEditar" Grid.Row="7" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Complemento" Grid.Row="6" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorComplementoEditar" Grid.Row="7" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Bairro" Grid.Row="8" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorBairroEditar" Grid.Row="9" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Cep" Grid.Row="8" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorCepEditar" Grid.Row="9" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Chave PIX" Grid.Row="8" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorChavePixEditar" Grid.Row="9" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Banco" Grid.Row="10" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorBancoEditar" Grid.Row="11" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Agência" Grid.Row="10" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorAgenciaEditar" Grid.Row="11" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Conta" Grid.Row="10" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorContaEditar" Grid.Row="11" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Código do Banco" Grid.Row="12" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorCodBancoEditar" Grid.Row="13" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="E-mail" Grid.Row="12" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorEmailEditar" Grid.Row="13" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                            <TextBlock Text="Telefone" Grid.Row="12" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtFiadorTelefoneEditar" Grid.Row="13" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Data de Nascimento" Grid.Row="14" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <DatePicker x:Name="DpFiadorNascimentoEditar" Grid.Row="15" Grid.Column="0" Margin="0,0,12,10"/>
                         </Grid>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
