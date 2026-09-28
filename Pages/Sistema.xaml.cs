@@ -270,6 +270,19 @@ namespace Imob
             }
         }
 
+        public async Task AdicionarItensGridCobrancas()
+        {
+            try
+            {
+                var listaCobrancas = await ContratoDAO.GetContratos(HttpClientFixo);
+                CobrancasDataGrid.ItemsSource = listaCobrancas;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar cobranças: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public async Task AdicionarItensComboProprietarios()
         {
             List<ClienteDAO> listaClientes = await ClienteDAO.GetProprietarios(HttpClientFixo);
@@ -1039,6 +1052,14 @@ namespace Imob
             ContratosPanel.Visibility = Visibility.Visible;
         }
 
+        private async void CobrancasTree_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            FecharPanelsAtivos();
+
+            await AdicionarItensGridCobrancas();
+            CobrancasPanel.Visibility = Visibility.Visible;
+        }
+
         private async void ProprietariosTree_MouseDown(object sender, MouseButtonEventArgs e)
         {
             FecharPanelsAtivos();
@@ -1301,6 +1322,16 @@ namespace Imob
             await AdicionarItensGridContratos();
         }
 
+        private async void BtnAtualizarCobrancas_Click(object sender, RoutedEventArgs e)
+        {
+            await AdicionarItensGridCobrancas();
+        }
+
+        private void BtnAdicionarCobranca_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private async void BtnAdicionarContrato_Click(object sender, RoutedEventArgs e)
         {
             await CarregarCombosContratoCriarAsync();
@@ -1518,6 +1549,34 @@ namespace Imob
                                      (contrato.NomeImovel?.ToLower().Contains(texto) ?? false);
 
                     var row = ContratosDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
+                    if (row != null)
+                    {
+                        row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+
+        private void SearchBarCobrancas_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter || CobrancasDataGrid.ItemsSource == null)
+            {
+                return;
+            }
+
+            var texto = SearchBarCobrancas.Text?.ToLower() ?? string.Empty;
+
+            foreach (var it in CobrancasDataGrid.ItemsSource)
+            {
+                if (it is ContratoDAO contrato)
+                {
+                    var corresponde = string.IsNullOrWhiteSpace(texto) ||
+                                     (contrato.Nome?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.NomeTipoContrato?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.NomeProprietario?.ToLower().Contains(texto) ?? false) ||
+                                     (contrato.NomeImovel?.ToLower().Contains(texto) ?? false);
+
+                    var row = CobrancasDataGrid.ItemContainerGenerator.ContainerFromItem(it) as DataGridRow;
                     if (row != null)
                     {
                         row.Visibility = corresponde ? Visibility.Visible : Visibility.Collapsed;
@@ -1921,6 +1980,10 @@ namespace Imob
                 EstadoCivil = TxtFiadorEstadoCivilCriar.Text,
                 Profissao = TxtFiadorProfissaoCriar.Text,
                 Endereco = TxtFiadorEnderecoCriar.Text,
+                NumeroEndereco = TxtFiadorNumeroEnderecoCriar.Text,
+                Complemento = TxtFiadorComplementoCriar.Text,
+                Bairro = TxtFiadorBairroCriar.Text,
+                Cep = TxtFiadorCepCriar.Text,
                 Banco = TxtFiadorBancoCriar.Text,
                 ChavePix = TxtFiadorChavePixCriar.Text,
                 Agencia = TxtFiadorAgenciaCriar.Text,
@@ -2029,6 +2092,10 @@ namespace Imob
                 EstadoCivil = TxtFiadorEstadoCivilEditar.Text,
                 Profissao = TxtFiadorProfissaoEditar.Text,
                 Endereco = TxtFiadorEnderecoEditar.Text,
+                NumeroEndereco = TxtFiadorNumeroEnderecoEditar.Text,
+                Complemento = TxtFiadorComplementoEditar.Text,
+                Bairro = TxtFiadorBairroEditar.Text,
+                Cep = TxtFiadorCepEditar.Text,
                 Banco = TxtFiadorBancoEditar.Text,
                 ChavePix = TxtFiadorChavePixEditar.Text,
                 Agencia = TxtFiadorAgenciaEditar.Text,
@@ -2203,6 +2270,10 @@ namespace Imob
                 EstadoCivil = TxtLocatarioEstadoCivilCriar.Text,
                 Profissao = TxtLocatarioProfissaoCriar.Text,
                 Endereco = TxtLocatarioEnderecoCriar.Text,
+                NumeroEndereco = TxtLocatarioNumeroEnderecoCriar.Text,
+                Complemento = TxtLocatarioComplementoCriar.Text,
+                Bairro = TxtLocatarioBairroCriar.Text,
+                Cep = TxtLocatarioCepCriar.Text,
                 Banco = TxtLocatarioBancoCriar.Text,
                 ChavePix = TxtLocatarioChavePixCriar.Text,
                 Agencia = TxtLocatarioAgenciaCriar.Text,
@@ -2311,6 +2382,10 @@ namespace Imob
                 EstadoCivil = TxtLocatarioEstadoCivilEditar.Text,
                 Profissao = TxtLocatarioProfissaoEditar.Text,
                 Endereco = TxtLocatarioEnderecoEditar.Text,
+                NumeroEndereco = TxtLocatarioNumeroEnderecoEditar.Text,
+                Complemento = TxtLocatarioComplementoEditar.Text,
+                Bairro = TxtLocatarioBairroEditar.Text,
+                Cep = TxtLocatarioCepEditar.Text,
                 Banco = TxtLocatarioBancoEditar.Text,
                 ChavePix = TxtLocatarioChavePixEditar.Text,
                 Agencia = TxtLocatarioAgenciaEditar.Text,
@@ -2870,6 +2945,7 @@ namespace Imob
             ProprietarioModalOverlayCriar.Visibility = Visibility.Hidden;
             TxtProprietarioNomeCriar.Clear();
             TxtProprietarioCpfCnpjCriar.Clear();
+            TxtProprietarioIdAsaasCriar.Clear();
             TxtProprietarioIdentidadeCriar.Clear();
             TxtProprietarioOrgaoExpedidorCriar.Clear();
             TxtProprietarioNacionalidadeCriar.Clear();
@@ -2877,8 +2953,12 @@ namespace Imob
             TxtProprietarioEstadoCivilCriar.Clear();
             TxtProprietarioProfissaoCriar.Clear();
             TxtProprietarioEnderecoCriar.Clear();
-            TxtProprietarioBancoCriar.Clear();
+            TxtProprietarioNumeroEnderecoCriar.Clear();
+            TxtProprietarioComplementoCriar.Clear();
+            TxtProprietarioBairroCriar.Clear();
+            TxtProprietarioCepCriar.Clear();
             TxtProprietarioChavePixCriar.Clear();
+            TxtProprietarioBancoCriar.Clear();
             TxtProprietarioAgenciaCriar.Clear();
             TxtProprietarioContaCriar.Clear();
             TxtProprietarioCodBancoCriar.Clear();
@@ -2926,11 +3006,15 @@ namespace Imob
                 EstadoCivil = TxtProprietarioEstadoCivilCriar.Text,
                 Profissao = TxtProprietarioProfissaoCriar.Text,
                 Endereco = TxtProprietarioEnderecoCriar.Text,
-                Banco = TxtProprietarioBancoCriar.Text,
-                ChavePix = TxtProprietarioChavePixCriar.Text,
+                NumeroEndereco = TxtProprietarioNumeroEnderecoCriar.Text,
+                Complemento = TxtProprietarioComplementoCriar.Text,
+                Bairro = TxtProprietarioBairroCriar.Text,
+                Cep = TxtProprietarioCepCriar.Text,
                 Agencia = TxtProprietarioAgenciaCriar.Text,
                 Conta = TxtProprietarioContaCriar.Text,
+                ChavePix = TxtProprietarioChavePixCriar.Text,
                 CodBanco = TxtProprietarioCodBancoCriar.Text,
+                Banco = TxtProprietarioBancoCriar.Text,
                 Email = TxtProprietarioEmailCriar.Text,
                 Telefone = TxtProprietarioTelefoneCriar.Text,
                 DataNascimento = dataNascimento,
@@ -2979,6 +3063,7 @@ namespace Imob
 
             TxtProprietarioNomeEditar.Text = proprietarioSelecionado.Nome;
             TxtProprietarioCpfCnpjEditar.Text = proprietarioSelecionado.CpfCnpj;
+            TxtProprietarioIdAsaasEditar.Text = proprietarioSelecionado.IdClienteAsaas;
             TxtProprietarioIdentidadeEditar.Text = proprietarioSelecionado.Identidade;
             TxtProprietarioOrgaoExpedidorEditar.Text = proprietarioSelecionado.OrgaoExpedidor;
             TxtProprietarioNacionalidadeEditar.Text = proprietarioSelecionado.Nacionalidade;
@@ -2986,14 +3071,18 @@ namespace Imob
             TxtProprietarioEstadoCivilEditar.Text = proprietarioSelecionado.EstadoCivil;
             TxtProprietarioProfissaoEditar.Text = proprietarioSelecionado.Profissao;
             TxtProprietarioEnderecoEditar.Text = proprietarioSelecionado.Endereco;
+            TxtProprietarioNumeroEnderecoEditar.Text = proprietarioSelecionado.NumeroEndereco;
+            TxtProprietarioComplementoEditar.Text = proprietarioSelecionado.Complemento;
+            TxtProprietarioBairroEditar.Text = proprietarioSelecionado.Bairro;
+            TxtProprietarioCepEditar.Text = proprietarioSelecionado.Cep;
+            TxtProprietarioChavePixEditar.Text = proprietarioSelecionado.ChavePix;
             TxtProprietarioBancoEditar.Text = proprietarioSelecionado.Banco;
             TxtProprietarioAgenciaEditar.Text = proprietarioSelecionado.Agencia;
             TxtProprietarioContaEditar.Text = proprietarioSelecionado.Conta;
             TxtProprietarioCodBancoEditar.Text = proprietarioSelecionado.CodBanco;
-            TxtProprietarioChavePixEditar.Text = proprietarioSelecionado.ChavePix;
-            TxtProprietarioEmailEditar.Text = proprietarioSelecionado.Email;
+            TxtProprietarioEmailEditar.Text = proprietarioSelecionado.Email;    
             TxtProprietarioTelefoneEditar.Text = proprietarioSelecionado.Telefone;
-            DpProprietarioNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;
+            DpProprietarioNascimentoEditar.SelectedDate = proprietarioSelecionado.DataNascimento;        
 
             ProprietarioModalOverlayEditar.Visibility = Visibility.Visible;
         }
@@ -3048,6 +3137,10 @@ namespace Imob
                 EstadoCivil = TxtProprietarioEstadoCivilEditar.Text,
                 Profissao = TxtProprietarioProfissaoEditar.Text,
                 Endereco = TxtProprietarioEnderecoEditar.Text,
+                NumeroEndereco = TxtProprietarioNumeroEnderecoEditar.Text,
+                Complemento = TxtProprietarioComplementoEditar.Text,
+                Bairro = TxtProprietarioBairroEditar.Text,
+                Cep = TxtProprietarioCepEditar.Text,
                 Banco = TxtProprietarioBancoEditar.Text,
                 ChavePix = TxtProprietarioChavePixEditar.Text,
                 Agencia = TxtProprietarioAgenciaEditar.Text,
@@ -3056,7 +3149,8 @@ namespace Imob
                 Email = TxtProprietarioEmailEditar.Text,
                 Telefone = TxtProprietarioTelefoneEditar.Text,
                 DataNascimento = dataNascimento,
-                TipoCliente = new TipoClienteDAO { Id = tipoClienteId }
+                TipoCliente = new TipoClienteDAO { Id = tipoClienteId },
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id }
             };
 
             try

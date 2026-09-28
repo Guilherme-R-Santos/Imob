@@ -355,6 +355,7 @@
                 <TreeViewItem x:Name="LocatariosTree" Header="Locatários" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="LocatariosTree_MouseDown" MouseDoubleClick="LocatariosTree_MouseDown"/>
                 <TreeViewItem x:Name="FiadoresTree" Header="Fiadores" FontSize="22" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="FiadoresTree_MouseDown" MouseDoubleClick="FiadoresTree_MouseDown"/>
             </TreeViewItem>
+            <TreeViewItem x:Name="CobrancasTree" Header="Cobranças" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" MouseDown="CobrancasTree_MouseDown" MouseDoubleClick="CobrancasTree_MouseDown"/>
             <TreeViewItem x:Name="VistoriaTree" Header="Vistoria" IsExpanded="False" FontSize="24" FontFamily="Segoe UI Variable Text Semibold" BorderBrush="Black" Foreground="#FFF27F1D" Cursor="Hand" Visibility="Hidden" MouseDoubleClick="VistoriaTreeListar_MouseDown">
             </TreeViewItem>
         </TreeView>
@@ -594,6 +595,57 @@
                 </Grid>
 
                 <DataGrid x:Name="ContratosDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoContrato}" Width="*"/>
+                        <DataGridTextColumn Header="Proprietário" Binding="{Binding NomeProprietario}" Width="*"/>
+                        <DataGridTextColumn Header="Imóvel" Binding="{Binding NomeImovel}" Width="2*"/>
+                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridTemplateColumn Header="Ações" Width="160">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button x:Name="BtnVisualizarContrato" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarContrato_Click"/>
+                                        <Button x:Name="BtnInativarContrato" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarContrato_Click"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border x:Name="CobrancasPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Visible">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="393*"/>
+                    <ColumnDefinition Width="1247*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
+                        <TextBlock Text="Cobranças" FontSize="26" FontWeight="SemiBold" Foreground="#FFF27F1D" />
+                        <TextBlock Text="Listagem de cobranças" Style="{StaticResource ModernLabel}"/>
+                    </StackPanel>
+                    <TextBox x:Name="SearchBarCobrancas" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarCobrancas_KeyDown"/>
+                    <Button x:Name="BtnAtualizarCobrancas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarCobrancas_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <Button x:Name="BtnAdicionarCobranca" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarCobranca_Click">Nova Cobrança</Button>
+                </Grid>
+
+                <DataGrid x:Name="CobrancasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>

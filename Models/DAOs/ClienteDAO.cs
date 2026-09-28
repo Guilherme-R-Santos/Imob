@@ -11,6 +11,7 @@ namespace Imob.Models
     public class ClienteDAO
     {
         public int Id { get; set; }
+        public string IdClienteAsaas { get; set; }
         public TipoClienteDAO TipoCliente { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
         public string Nome { get; set; }
@@ -22,6 +23,10 @@ namespace Imob.Models
         public string EstadoCivil { get; set; }
         public string Profissao { get; set; }
         public string Endereco { get; set; }
+        public string NumeroEndereco { get; set; }
+        public string Complemento { get; set; }
+        public string Bairro { get; set; }
+        public string Cep { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }
         public string ChavePix { get; set; }

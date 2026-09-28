@@ -13,6 +13,7 @@ namespace Imob.Models
     public class ClienteDTO
     {
         public int Id { get; set; }
+        public string IdClienteAsaas { get; set; }
         public TipoClienteDAO TipoCliente { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
         public string Nome { get; set; }
@@ -24,6 +25,10 @@ namespace Imob.Models
         public string EstadoCivil { get; set; }
         public string Profissao { get; set; }
         public string Endereco { get; set; }
+        public string NumeroEndereco { get; set; }
+        public string Complemento { get; set; }
+        public string Bairro { get; set; }
+        public string Cep { get; set; }
         public string Agencia { get; set; }
         public string Conta { get; set; }
         public string ChavePix { get; set; }
@@ -50,6 +55,10 @@ namespace Imob.Models
                 EstadoCivil = this.EstadoCivil,
                 Profissao = this.Profissao,
                 Endereco = this.Endereco,
+                NumeroEndereco = this.NumeroEndereco,
+                Complemento = this.Complemento,
+                Bairro = this.Bairro,
+                Cep = this.Cep,
                 Agencia = this.Agencia,
                 Conta = this.Conta,
                 ChavePix = this.ChavePix,
@@ -110,6 +119,10 @@ namespace Imob.Models
                 EstadoCivil = this.EstadoCivil,
                 Profissao = this.Profissao,
                 Endereco = this.Endereco,
+                NumeroEndereco = this.NumeroEndereco,
+                Complemento = this.Complemento,
+                Bairro = this.Bairro,
+                Cep = this.Cep,
                 Agencia = this.Agencia,
                 Conta = this.Conta,
                 ChavePix = this.ChavePix,
