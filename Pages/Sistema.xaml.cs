@@ -203,6 +203,8 @@ namespace Imob
             if (ContratosPanel.Visibility == Visibility.Visible) ContratosPanel.Visibility = Visibility.Hidden;
             
             if (VistoriasPanel.Visibility == Visibility.Visible) VistoriasPanel.Visibility = Visibility.Hidden;
+
+            if (CobrancasPanel.Visibility == Visibility.Visible) CobrancasPanel.Visibility = Visibility.Hidden;
         }
 
         public async Task AdicionarItensGridImoveis()
@@ -274,7 +276,7 @@ namespace Imob
         {
             try
             {
-                var listaCobrancas = await ContratoDAO.GetContratos(HttpClientFixo);
+                var listaCobrancas = await CobrancaDAO.GetCobrancas(HttpClientFixo);
                 CobrancasDataGrid.ItemsSource = listaCobrancas;
             }
             catch (Exception ex)
@@ -1327,9 +1329,346 @@ namespace Imob
             await AdicionarItensGridCobrancas();
         }
 
-        private void BtnAdicionarCobranca_Click(object sender, RoutedEventArgs e)
+        private async void BtnAdicionarCobranca_Click(object sender, RoutedEventArgs e)
         {
+            await CarregarCombosCobrancaCriarAsync();
+            CobrancaModalOverlayCriar.Visibility = Visibility.Visible;
+        }
 
+        private async Task CarregarCombosCobrancaCriarAsync()
+        {
+            try
+            {
+                var contratosTask = ContratoDAO.GetContratos(HttpClientFixo);
+                var tiposCobrancaTask = TipoCobrancaDAO.GetTiposCobranca(HttpClientFixo);
+
+                await Task.WhenAll(contratosTask, tiposCobrancaTask);
+
+                ComboCobrancaContratoCriar.DisplayMemberPath = "Nome";
+                ComboCobrancaContratoCriar.SelectedValuePath = "Id";
+                ComboCobrancaContratoCriar.ItemsSource = contratosTask.Result;
+
+                ComboTipoCobrancaCriar.DisplayMemberPath = "Nome";
+                ComboTipoCobrancaCriar.SelectedValuePath = "Id";
+                ComboTipoCobrancaCriar.ItemsSource = tiposCobrancaTask.Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados da cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task CarregarCombosCobrancaVisualizarAsync()
+        {
+            try
+            {
+                var contratosTask = ContratoDAO.GetContratos(HttpClientFixo);
+                var tiposCobrancaTask = TipoCobrancaDAO.GetTiposCobranca(HttpClientFixo);
+
+                await Task.WhenAll(contratosTask, tiposCobrancaTask);
+
+                ComboCobrancaContratoVisualizar.DisplayMemberPath = "Nome";
+                ComboCobrancaContratoVisualizar.SelectedValuePath = "Id";
+                ComboCobrancaContratoVisualizar.ItemsSource = contratosTask.Result;
+
+                ComboTipoCobrancaVisualizar.DisplayMemberPath = "Nome";
+                ComboTipoCobrancaVisualizar.SelectedValuePath = "Id";
+                ComboTipoCobrancaVisualizar.ItemsSource = tiposCobrancaTask.Result;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar dados da cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LimparCamposCobrancaCriar()
+        {
+            TxtCobrancaNomeCriar.Clear();
+            ComboCobrancaContratoCriar.SelectedItem = null;
+            ComboTipoCobrancaCriar.SelectedItem = null;
+            TxtCobrancaValorCriar.Clear();
+            DpCobrancaVencimentoCriar.SelectedDate = null;
+            TxtCobrancaContaPartilhaCriar.Clear();
+            ChkCobrancaPartilhaAutomaticaCriar.IsChecked = false;
+            ChkCobrancaComprovanteEnviadoCriar.IsChecked = false;
+        }
+
+        private void BtnFecharModalCobrancaCriar_Click(object sender, RoutedEventArgs e)
+        {
+            LimparCamposCobrancaCriar();
+            CobrancaModalOverlayCriar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnSalvarCobrancaCriar_Click(object sender, RoutedEventArgs e)
+        {
+            string nomeCobranca = TxtCobrancaNomeCriar.Text;
+            ContratoDAO contratoSelecionado = ComboCobrancaContratoCriar.SelectedItem as ContratoDAO;
+            TipoCobrancaDAO tipoCobrancaSelecionado = ComboTipoCobrancaCriar.SelectedItem as TipoCobrancaDAO;
+            DateTime? vencimento = DpCobrancaVencimentoCriar.SelectedDate;
+            var valorTexto = TxtCobrancaValorCriar.Text;
+            var contaPartilhaTexto = TxtCobrancaContaPartilhaCriar.Text;
+
+            if (string.IsNullOrEmpty(nomeCobranca) ||
+                contratoSelecionado == null ||
+                tipoCobrancaSelecionado == null ||
+                vencimento == null)
+            {
+                MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(valorTexto, NumberStyles.Number, CultureInfo.CurrentCulture, out var valor))
+            {
+                MessageBox.Show("Valor da cobrança inválido. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            int contaPartilha = 0;
+            if (!string.IsNullOrWhiteSpace(contaPartilhaTexto) && !int.TryParse(contaPartilhaTexto, out contaPartilha))
+            {
+                MessageBox.Show("Conta partilha inválida. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            CobrancaDTO cobranca = new CobrancaDTO
+            {
+                Nome = nomeCobranca,
+                Cadastrador = new UsuarioDAO { Id = UsuarioLogado.Id },
+                Contrato = contratoSelecionado,
+                TipoCobranca = tipoCobrancaSelecionado,
+                Valor = valor,
+                Vencimento = vencimento,
+                PartilhaAutomatica = ChkCobrancaPartilhaAutomaticaCriar.IsChecked == true,
+                ContaPartilha = contaPartilha,
+                ComprovanteEnviado = ChkCobrancaComprovanteEnviadoCriar.IsChecked == true
+            };
+
+            try
+            {
+                await cobranca.CadastrarCobranca(HttpClientFixo);
+
+                MessageBox.Show("Cobrança cadastrada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                LimparCamposCobrancaCriar();
+                CobrancaModalOverlayCriar.Visibility = Visibility.Hidden;
+
+                await AdicionarItensGridCobrancas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnVisualizarCobranca_Click(object sender, RoutedEventArgs e)
+        {
+            if (CobrancasDataGrid.SelectedItem is not CobrancaDAO cobrancaSelecionadaGrid)
+            {
+                MessageBox.Show("Selecione uma cobrança para visualizar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var cobrancaSelecionada = await CobrancaDAO.GetCobrancaPorId(cobrancaSelecionadaGrid.Id, HttpClientFixo);
+                if (cobrancaSelecionada == null)
+                {
+                    MessageBox.Show("Cobrança não encontrada.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                await CarregarCombosCobrancaVisualizarAsync();
+
+                // O endpoint "ObterPorId" pode não trazer os objetos Contrato/TipoCobranca
+                // completamente preenchidos, então usamos como fallback os dados já
+                // carregados na grid (obtidos via "ObterTodos"), que já vêm preenchidos.
+                var contratoCobranca = cobrancaSelecionada.Contrato ?? cobrancaSelecionadaGrid.Contrato;
+                var tipoCobranca = cobrancaSelecionada.TipoCobranca ?? cobrancaSelecionadaGrid.TipoCobranca;
+
+                TxtCobrancaNomeVisualizar.Text = cobrancaSelecionada.Nome;
+                ComboCobrancaContratoVisualizar.SelectedValue = contratoCobranca?.Id;
+                ComboTipoCobrancaVisualizar.SelectedValue = tipoCobranca?.Id;
+                if (ComboCobrancaContratoVisualizar.SelectedItem == null) ComboCobrancaContratoVisualizar.Text = contratoCobranca?.Nome;
+                if (ComboTipoCobrancaVisualizar.SelectedItem == null) ComboTipoCobrancaVisualizar.Text = tipoCobranca?.Nome;
+
+                TxtCobrancaValorVisualizar.Text = cobrancaSelecionada.Valor.ToString(CultureInfo.CurrentCulture);
+                DpCobrancaVencimentoVisualizar.SelectedDate = cobrancaSelecionada.Vencimento;
+                TxtCobrancaContaPartilhaVisualizar.Text = cobrancaSelecionada.ContaPartilha.ToString();
+                ChkCobrancaPartilhaAutomaticaVisualizar.IsChecked = cobrancaSelecionada.PartilhaAutomatica;
+                ChkCobrancaComprovanteEnviadoVisualizar.IsChecked = cobrancaSelecionada.ComprovanteEnviado;
+
+                TxtCobrancaStatusVisualizar.Text = cobrancaSelecionada.Status;
+                TxtCobrancaNossoNumeroVisualizar.Text = cobrancaSelecionada.NossoNumero;
+                TxtCobrancaValorLiquidoVisualizar.Text = cobrancaSelecionada.valorLiquido.ToString(CultureInfo.CurrentCulture);
+                TxtCobrancaLinkBoletoVisualizar.Text = cobrancaSelecionada.LinkBoleto;
+
+                if (!cobrancaSelecionada.SincronizadoAsaas)
+                {
+                    TxtCobrancaErroAsaasVisualizar.Text = "Falha na sincronização com o Asaas: " + cobrancaSelecionada.ErroSincronizacaoAsaas;
+                    TxtCobrancaErroAsaasVisualizar.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    TxtCobrancaErroAsaasVisualizar.Visibility = Visibility.Collapsed;
+                }
+
+                CobrancaModalOverlayVisualizar.Tag = cobrancaSelecionada.Id;
+                CobrancaModalOverlayVisualizar.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void BtnFecharModalCobrancaVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            CobrancaModalOverlayVisualizar.Visibility = Visibility.Hidden;
+        }
+
+        private async void BtnSalvarCobrancaVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            if (CobrancaModalOverlayVisualizar.Tag is not int id)
+            {
+                MessageBox.Show("Nenhuma cobrança selecionada.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string nomeCobranca = TxtCobrancaNomeVisualizar.Text;
+            ContratoDAO contratoSelecionado = ComboCobrancaContratoVisualizar.SelectedItem as ContratoDAO;
+            TipoCobrancaDAO tipoCobrancaSelecionado = ComboTipoCobrancaVisualizar.SelectedItem as TipoCobrancaDAO;
+            DateTime? vencimento = DpCobrancaVencimentoVisualizar.SelectedDate;
+            var valorTexto = TxtCobrancaValorVisualizar.Text;
+            var contaPartilhaTexto = TxtCobrancaContaPartilhaVisualizar.Text;
+
+            if (string.IsNullOrEmpty(nomeCobranca) ||
+                contratoSelecionado == null ||
+                tipoCobrancaSelecionado == null ||
+                vencimento == null)
+            {
+                MessageBox.Show("Por favor, preencha todos os campos obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!double.TryParse(valorTexto, NumberStyles.Number, CultureInfo.CurrentCulture, out var valor))
+            {
+                MessageBox.Show("Valor da cobrança inválido. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            int contaPartilha = 0;
+            if (!string.IsNullOrWhiteSpace(contaPartilhaTexto) && !int.TryParse(contaPartilhaTexto, out contaPartilha))
+            {
+                MessageBox.Show("Conta partilha inválida. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            CobrancaDTO cobranca = new CobrancaDTO
+            {
+                Id = id,
+                Nome = nomeCobranca,
+                Contrato = contratoSelecionado,
+                TipoCobranca = tipoCobrancaSelecionado,
+                Valor = valor,
+                Vencimento = vencimento,
+                PartilhaAutomatica = ChkCobrancaPartilhaAutomaticaVisualizar.IsChecked == true,
+                ContaPartilha = contaPartilha,
+                ComprovanteEnviado = ChkCobrancaComprovanteEnviadoVisualizar.IsChecked == true
+            };
+
+            try
+            {
+                await cobranca.AtualizarCobranca(id, HttpClientFixo);
+
+                MessageBox.Show("Cobrança atualizada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                CobrancaModalOverlayVisualizar.Visibility = Visibility.Hidden;
+
+                await AdicionarItensGridCobrancas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao atualizar cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnRetentarSincronizacaoCobranca_Click(object sender, RoutedEventArgs e)
+        {
+            if (CobrancaModalOverlayVisualizar.Tag is not int id)
+            {
+                MessageBox.Show("Nenhuma cobrança selecionada.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                var cobrancaDto = new CobrancaDTO();
+                await cobrancaDto.RetentarSincronizacaoAsaas(id, HttpClientFixo);
+
+                MessageBox.Show("Sincronização com o Asaas realizada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                var cobrancaAtualizada = await CobrancaDAO.GetCobrancaPorId(id, HttpClientFixo);
+                if (cobrancaAtualizada != null)
+                {
+                    TxtCobrancaStatusVisualizar.Text = cobrancaAtualizada.Status;
+                    TxtCobrancaNossoNumeroVisualizar.Text = cobrancaAtualizada.NossoNumero;
+                    TxtCobrancaValorLiquidoVisualizar.Text = cobrancaAtualizada.valorLiquido.ToString(CultureInfo.CurrentCulture);
+                    TxtCobrancaLinkBoletoVisualizar.Text = cobrancaAtualizada.LinkBoleto;
+
+                    if (!cobrancaAtualizada.SincronizadoAsaas)
+                    {
+                        TxtCobrancaErroAsaasVisualizar.Text = "Falha na sincronização com o Asaas: " + cobrancaAtualizada.ErroSincronizacaoAsaas;
+                        TxtCobrancaErroAsaasVisualizar.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        TxtCobrancaErroAsaasVisualizar.Visibility = Visibility.Collapsed;
+                    }
+                }
+
+                await AdicionarItensGridCobrancas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao retentar sincronização: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnInativarCobranca_Click(object sender, RoutedEventArgs e)
+        {
+            var confirm = MessageBox.Show("Tem certeza que deseja inativar?", "Inativar", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (confirm != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            var id = 0;
+            if (sender is Button button && button.CommandParameter is int idParam)
+            {
+                id = idParam;
+            }
+            else if (CobrancasDataGrid.SelectedItem is CobrancaDAO cobranca)
+            {
+                id = cobranca.Id;
+            }
+
+            if (id == 0)
+            {
+                MessageBox.Show("Selecione uma cobrança para inativar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var cobrancaDto = new CobrancaDTO();
+                await cobrancaDto.InativarCobranca(id, HttpClientFixo);
+                MessageBox.Show("Cobrança inativada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                await AdicionarItensGridCobrancas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar cobrança: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async void BtnAdicionarContrato_Click(object sender, RoutedEventArgs e)
@@ -2023,6 +2362,7 @@ namespace Imob
 
             TxtFiadorNomeEditar.Text = fiadorCompleto.Nome;
             TxtFiadorCpfCnpjEditar.Text = fiadorCompleto.CpfCnpj;
+            TxtFiadorIdAsaasEditar.Text = fiadorCompleto.IdClienteAsaas;
             TxtFiadorIdentidadeEditar.Text = fiadorCompleto.Identidade;
             TxtFiadorOrgaoExpedidorEditar.Text = fiadorCompleto.OrgaoExpedidor;
             TxtFiadorNacionalidadeEditar.Text = fiadorCompleto.Nacionalidade;
@@ -2030,6 +2370,10 @@ namespace Imob
             TxtFiadorEstadoCivilEditar.Text = fiadorCompleto.EstadoCivil;
             TxtFiadorProfissaoEditar.Text = fiadorCompleto.Profissao;
             TxtFiadorEnderecoEditar.Text = fiadorCompleto.Endereco;
+            TxtFiadorNumeroEnderecoEditar.Text = fiadorCompleto.NumeroEndereco;
+            TxtFiadorComplementoEditar.Text = fiadorCompleto.Complemento;
+            TxtFiadorBairroEditar.Text = fiadorCompleto.Bairro;
+            TxtFiadorCepEditar.Text = fiadorCompleto.Cep;
             TxtFiadorBancoEditar.Text = fiadorCompleto.Banco;
             TxtFiadorChavePixEditar.Text = fiadorCompleto.ChavePix;
             TxtFiadorAgenciaEditar.Text = fiadorCompleto.Agencia;
@@ -2313,6 +2657,7 @@ namespace Imob
 
             TxtLocatarioNomeEditar.Text = locatarioCompleto.Nome;
             TxtLocatarioCpfCnpjEditar.Text = locatarioCompleto.CpfCnpj;
+            TxtLocatarioIdAsaasEditar.Text = locatarioCompleto.IdClienteAsaas;
             TxtLocatarioIdentidadeEditar.Text = locatarioCompleto.Identidade;
             TxtLocatarioOrgaoExpedidorEditar.Text = locatarioCompleto.OrgaoExpedidor;
             TxtLocatarioNacionalidadeEditar.Text = locatarioCompleto.Nacionalidade;
@@ -2320,6 +2665,10 @@ namespace Imob
             TxtLocatarioEstadoCivilEditar.Text = locatarioCompleto.EstadoCivil;
             TxtLocatarioProfissaoEditar.Text = locatarioCompleto.Profissao;
             TxtLocatarioEnderecoEditar.Text = locatarioCompleto.Endereco;
+            TxtLocatarioNumeroEnderecoEditar.Text = locatarioCompleto.NumeroEndereco;
+            TxtLocatarioComplementoEditar.Text = locatarioCompleto.Complemento;
+            TxtLocatarioBairroEditar.Text = locatarioCompleto.Bairro;
+            TxtLocatarioCepEditar.Text = locatarioCompleto.Cep;
             TxtLocatarioBancoEditar.Text = locatarioCompleto.Banco;
             TxtLocatarioAgenciaEditar.Text = locatarioCompleto.Agencia;
             TxtLocatarioContaEditar.Text = locatarioCompleto.Conta;

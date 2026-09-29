@@ -618,7 +618,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="CobrancasPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Visible">
+        <Border x:Name="CobrancasPanel" Grid.Column="1" Margin="0,76,16,16" Background="White" CornerRadius="10" Panel.ZIndex="1" Padding="12" Visibility="Hidden">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="393*"/>
@@ -649,17 +649,17 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
                         <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
-                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoContrato}" Width="*"/>
-                        <DataGridTextColumn Header="Proprietário" Binding="{Binding NomeProprietario}" Width="*"/>
-                        <DataGridTextColumn Header="Imóvel" Binding="{Binding NomeImovel}" Width="2*"/>
-                        <DataGridTextColumn Header="Início" Binding="{Binding DataInicioVigencia, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Contrato" Binding="{Binding NomeContrato}" Width="2*"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoCobranca}" Width="*"/>
+                        <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat=C}" Width="120"/>
                         <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
                         <DataGridTemplateColumn Header="Ações" Width="160">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <Button x:Name="BtnVisualizarContrato" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarContrato_Click"/>
-                                        <Button x:Name="BtnInativarContrato" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarContrato_Click"/>
+                                        <Button x:Name="BtnVisualizarCobranca" Content="Abrir" Style="{StaticResource ModernButton}" Width="60" Height="34" Margin="5" FontSize="9" CommandParameter="{Binding Id}" Click="BtnVisualizarCobranca_Click"/>
+                                        <Button x:Name="BtnInativarCobranca" Content="X" Style="{StaticResource ModernButton}" Background="Red" Width="60" Height="34" Margin="5" FontSize="14" CommandParameter="{Binding Id}" Click="BtnInativarCobranca_Click"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -845,6 +845,170 @@
                         <Button x:Name="BtnFecharModalContratosCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalContratosCriar_Click"/>
                         <Button x:Name="BtnSalvarContratoCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarContratoCriar_Click"/>
                     </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="CobrancaModalOverlayCriar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="560" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Cadastrar Cobrança" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
+
+                    <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <TextBox x:Name="TxtCobrancaNomeCriar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <ComboBox x:Name="ComboCobrancaContratoCriar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Tipo de Cobrança*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                        <ComboBox x:Name="ComboTipoCobrancaCriar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <TextBlock Text="Valor*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <TextBox x:Name="TxtCobrancaValorCriar" Grid.Row="3" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Vencimento*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <DatePicker x:Name="DpCobrancaVencimentoCriar" Grid.Row="3" Grid.Column="1" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Conta Partilha" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <TextBox x:Name="TxtCobrancaContaPartilhaCriar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,8,12,10">
+                            <CheckBox x:Name="ChkCobrancaPartilhaAutomaticaCriar" Content="Partilha Automática" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,8,12,10">
+                            <CheckBox x:Name="ChkCobrancaComprovanteEnviadoCriar" Content="Comprovante Enviado" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnFecharModalCobrancaCriar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalCobrancaCriar_Click"/>
+                        <Button x:Name="BtnSalvarCobrancaCriar" Content="Cadastrar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarCobrancaCriar_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid x:Name="CobrancaModalOverlayVisualizar" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,66,0,0" Panel.ZIndex="3" Background="#80000000">
+            <Border Width="1000" Height="640" Background="White" CornerRadius="10" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="18">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.4*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="48"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="60"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Visualização da Cobrança" FontSize="28" FontWeight="SemiBold" Foreground="#FFF27F1D" VerticalAlignment="Center" Grid.ColumnSpan="3"/>
+
+                    <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="0,12,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.4*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Nome*" Grid.Row="0" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <TextBox x:Name="TxtCobrancaNomeVisualizar" Grid.Row="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Contrato*" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,0,12,2"/>
+                        <ComboBox x:Name="ComboCobrancaContratoVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernComboBox}" Margin="0,0,12,10" Height="36"/>
+
+                        <TextBlock Text="Tipo de Cobrança*" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,0,0,2"/>
+                        <ComboBox x:Name="ComboTipoCobrancaVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10" Height="36"/>
+
+                        <TextBlock Text="Valor*" Grid.Row="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <TextBox x:Name="TxtCobrancaValorVisualizar" Grid.Row="3" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Vencimento*" Grid.Row="2" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                        <DatePicker x:Name="DpCobrancaVencimentoVisualizar" Grid.Row="3" Grid.Column="1" Margin="0,0,12,10"/>
+
+                        <TextBlock Text="Conta Partilha" Grid.Row="2" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                        <TextBox x:Name="TxtCobrancaContaPartilhaVisualizar" Grid.Row="3" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,8,12,10">
+                            <CheckBox x:Name="ChkCobrancaPartilhaAutomaticaVisualizar" Content="Partilha Automática" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,8,12,10">
+                            <CheckBox x:Name="ChkCobrancaComprovanteEnviadoVisualizar" Content="Comprovante Enviado" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <Grid Grid.Row="5" Grid.ColumnSpan="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Status" Grid.Row="0" Grid.Column="0" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtCobrancaStatusVisualizar" Grid.Row="1" Grid.Column="0" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" IsReadOnly="True"/>
+
+                            <TextBlock Text="Nosso Número" Grid.Row="0" Grid.Column="1" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtCobrancaNossoNumeroVisualizar" Grid.Row="1" Grid.Column="1" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" IsReadOnly="True"/>
+
+                            <TextBlock Text="Valor Líquido" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernLabel}" Margin="0,8,12,2"/>
+                            <TextBox x:Name="TxtCobrancaValorLiquidoVisualizar" Grid.Row="1" Grid.Column="2" Style="{StaticResource ModernTextBox}" Margin="0,0,12,10" IsReadOnly="True"/>
+
+                            <TextBlock Text="Link Boleto" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernLabel}" Margin="0,8,0,2"/>
+                            <TextBox x:Name="TxtCobrancaLinkBoletoVisualizar" Grid.Row="1" Grid.Column="3" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10" IsReadOnly="True"/>
+                        </Grid>
+
+                        <TextBlock x:Name="TxtCobrancaErroAsaasVisualizar" Grid.Row="6" Grid.ColumnSpan="3" Foreground="Red" TextWrapping="Wrap" Margin="0,4,0,4" Visibility="Collapsed"/>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Grid.ColumnSpan="3">
+                        <Button x:Name="BtnRetentarSincronizacaoCobranca" Content="Retentar sincronização Asaas" Style="{StaticResource ModernButton}" Width="220" Height="36" FontSize="11" HorizontalAlignment="Left" Click="BtnRetentarSincronizacaoCobranca_Click"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="BtnFecharModalCobrancaVisualizar" Content="Fechar" Style="{StaticResource ModernButton}" Width="120" Height="36" FontSize="10" Margin="0,0,12,0" Click="BtnFecharModalCobrancaVisualizar_Click"/>
+                            <Button x:Name="BtnSalvarCobrancaVisualizar" Content="Confirmar" Style="{StaticResource ModernButton}" Width="140" Height="36" FontSize="12" Click="BtnSalvarCobrancaVisualizar_Click"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
