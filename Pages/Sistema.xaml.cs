@@ -1479,9 +1479,6 @@ namespace Imob
 
                 await CarregarCombosCobrancaVisualizarAsync();
 
-                // O endpoint "ObterPorId" pode não trazer os objetos Contrato/TipoCobranca
-                // completamente preenchidos, então usamos como fallback os dados já
-                // carregados na grid (obtidos via "ObterTodos"), que já vêm preenchidos.
                 var contratoCobranca = cobrancaSelecionada.Contrato ?? cobrancaSelecionadaGrid.Contrato;
                 var tipoCobranca = cobrancaSelecionada.TipoCobranca ?? cobrancaSelecionadaGrid.TipoCobranca;
 
