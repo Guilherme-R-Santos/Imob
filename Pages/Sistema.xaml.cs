@@ -88,6 +88,42 @@ namespace Imob
         private bool _atualizandoCombosContratoCriar;
         private bool _atualizandoCombosContratoVisualizar;
 
+        private async void TxtBoxCep_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            await PreencherEnderecoPorCepAsync(TxtBoxCep, TxtBoxLogradouro, TxtBoxBairro, TxtBoxCidade, TxtBoxEstado, TxtBoxPais);
+        }
+
+        private async void TxtBoxCepEditar_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            await PreencherEnderecoPorCepAsync(TxtBoxCepEditar, TxtBoxLogradouroEditar, TxtBoxBairroEditar, TxtBoxCidadeEditar, TxtBoxEstadoEditar, TxtBoxPaisEditar);
+        }
+
+        private static async Task PreencherEnderecoPorCepAsync(TextBox cepBox, TextBox logradouro, TextBox bairro, TextBox cidade, TextBox estado, TextBox pais)
+        {
+            if (!cepBox.IsKeyboardFocusWithin) return;
+
+            var cep = Imob.Services.CepService.SomenteDigitos(cepBox.Text);
+            if (cep.Length != 8) return;
+
+            try
+            {
+                var endereco = await Imob.Services.CepService.ConsultarAsync(cep);
+
+                // Ignora
+                if (endereco == null || Imob.Services.CepService.SomenteDigitos(cepBox.Text) != cep) return;
+
+                logradouro.Text = endereco.Endereco;
+                bairro.Text = endereco.Bairro;
+                cidade.Text = endereco.Cidade;
+                estado.Text = endereco.Uf;
+                pais.Text = "Brasil";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Não foi possível consultar o CEP: {ex.Message}", "Consulta de CEP", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
         private static HttpClient CriarHttpClient()
         {
             var client = new HttpClient();
@@ -1128,6 +1164,17 @@ namespace Imob
             TxtBoxIptu.Clear();
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
+            TxtBoxQuartos.Clear();
+            TxtBoxBanheiros.Clear();
+            TxtBoxVagas.Clear();
+            TxtBoxAndar.Clear();
+            TxtBoxAndares.Clear();
+        }
+
+        private static bool TryParseInteiroOpcional(string texto, out int valor)
+        {
+            valor = 0;
+            return string.IsNullOrWhiteSpace(texto) || int.TryParse(texto, out valor);
         }
 
         private async void CadastrarImovelBanco(object sender, RoutedEventArgs e)
@@ -1161,6 +1208,36 @@ namespace Imob
             if (!int.TryParse(TxtBoxMetragem.Text, out int metragem))
             {
                 MessageBox.Show("Metragem inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxQuartos.Text, out int quartos))
+            {
+                MessageBox.Show("Quartos inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxBanheiros.Text, out int banheiros))
+            {
+                MessageBox.Show("Banheiros inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxVagas.Text, out int vagas))
+            {
+                MessageBox.Show("Vagas inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxAndar.Text, out int andar))
+            {
+                MessageBox.Show("Andar inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxAndares.Text, out int andares))
+            {
+                MessageBox.Show("Andares inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -1252,6 +1329,11 @@ namespace Imob
             imovel.Estado = TxtBoxEstado.Text;
             imovel.Pais = TxtBoxPais.Text;
             imovel.Metragem = metragem;
+            imovel.Quartos = quartos;
+            imovel.Banheiros = banheiros;
+            imovel.Vagas = vagas;
+            imovel.Andar = andar;
+            imovel.Andares = andares;
             imovel.ValorVenda = (decimal)valorVenda;
             imovel.ValorLocacao = (decimal)valorLocacao;
             imovel.Condominio = (decimal)condominio;
@@ -1291,6 +1373,11 @@ namespace Imob
             TxtBoxIptu.Clear();
             TxtBoxTaxaIncendio.Clear();
             TxtBoxForo.Clear();
+            TxtBoxQuartos.Clear();
+            TxtBoxBanheiros.Clear();
+            TxtBoxVagas.Clear();
+            TxtBoxAndar.Clear();
+            TxtBoxAndares.Clear();
 
             ImovelModalOverlayCriar.Visibility = Visibility.Hidden;
             await AdicionarItensGridImoveis();
@@ -2082,6 +2169,11 @@ namespace Imob
             TxtBoxCidadeEditar.Text = imovelSelecionado.Cidade;
             TxtBoxBairroEditar.Text = imovelSelecionado.Bairro;
             TxtBoxMetragemEditar.Text = imovelSelecionado.Metragem.ToString();
+            TxtBoxQuartosEditar.Text = imovelSelecionado.Quartos.ToString();
+            TxtBoxBanheirosEditar.Text = imovelSelecionado.Banheiros.ToString();
+            TxtBoxVagasEditar.Text = imovelSelecionado.Vagas.ToString();
+            TxtBoxAndarEditar.Text = imovelSelecionado.Andar.ToString();
+            TxtBoxAndaresEditar.Text = imovelSelecionado.Andares.ToString();
             TxtBoxComplementoEditar.Text = imovelSelecionado.Complemento;
             TxtBoxValorVendaEditar.Text = imovelSelecionado.ValorVenda.ToString();
             TxtBoxValorLocacaoEditar.Text = imovelSelecionado.ValorLocacao.ToString();
@@ -2105,6 +2197,36 @@ namespace Imob
             if (!double.TryParse(TxtBoxMetragemEditar.Text, out double metragem))
             {
                 MessageBox.Show("Metragem inválida.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxQuartosEditar.Text, out int quartos))
+            {
+                MessageBox.Show("Quartos inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxBanheirosEditar.Text, out int banheiros))
+            {
+                MessageBox.Show("Banheiros inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxVagasEditar.Text, out int vagas))
+            {
+                MessageBox.Show("Vagas inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxAndarEditar.Text, out int andar))
+            {
+                MessageBox.Show("Andar inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (!TryParseInteiroOpcional(TxtBoxAndaresEditar.Text, out int andares))
+            {
+                MessageBox.Show("Andares inválido.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -2156,6 +2278,11 @@ namespace Imob
             imovelAtualizado.ValorVenda = Convert.ToDecimal(TxtBoxValorVendaEditar.Text);
             imovelAtualizado.ValorLocacao = Convert.ToDecimal(TxtBoxValorLocacaoEditar.Text);
             imovelAtualizado.Metragem = Convert.ToDecimal(TxtBoxMetragemEditar.Text);
+            imovelAtualizado.Quartos = quartos;
+            imovelAtualizado.Banheiros = banheiros;
+            imovelAtualizado.Vagas = vagas;
+            imovelAtualizado.Andar = andar;
+            imovelAtualizado.Andares = andares;
             imovelAtualizado.Descricao = TxtBoxDescricaoEditar.Text;
             imovelAtualizado.Observacao = TxtBoxObservacoesEditar.Text;
             imovelAtualizado.Condominio = Convert.ToDecimal(TxtBoxCondominioEditar.Text);
@@ -2521,6 +2648,11 @@ namespace Imob
             TxtBoxIptuEditar.Clear();
             TxtBoxTaxaIncendioEditar.Clear();
             TxtBoxForoEditar.Clear();
+            TxtBoxQuartosEditar.Clear();
+            TxtBoxBanheirosEditar.Clear();
+            TxtBoxVagasEditar.Clear();
+            TxtBoxAndarEditar.Clear();
+            TxtBoxAndaresEditar.Clear();
         }
 
         private async void BtnExcluir_Click(object sender, RoutedEventArgs e)

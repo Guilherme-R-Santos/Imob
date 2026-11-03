@@ -25,6 +25,11 @@ namespace Imob.Models
         public string Cidade { get; set; }
         public string Estado { get; set; }
         public string Pais { get; set; }
+        public int Quartos { get; set; }
+        public int Banheiros { get; set; }
+        public int Vagas { get; set; }
+        public int Andar { get; set; }
+        public int Andares { get; set; }
         public string Complemento { get; set; }
         public string InscricaoIptu { get; set; }
         public string NumeroCbmerj { get; set; }
@@ -54,6 +59,11 @@ namespace Imob.Models
                 Cidade = this.Cidade,
                 Estado = this.Estado,
                 Pais = this.Pais,
+                Quartos = this.Quartos,
+                Banheiros = this.Banheiros,
+                Vagas = this.Vagas,
+                Andar = this.Andar,
+                Andares = this.Andares,
                 Complemento = this.Complemento,
                 Metragem = this.Metragem,
                 ValorLocacao = this.ValorLocacao,
@@ -118,6 +128,11 @@ namespace Imob.Models
                 Cidade = this.Cidade,
                 Estado = this.Estado,
                 Pais = this.Pais,
+                Quartos = this.Quartos,
+                Banheiros = this.Banheiros,
+                Vagas = this.Vagas,
+                Andar = this.Andar,
+                Andares = this.Andares,
                 Complemento = this.Complemento,
                 Metragem = this.Metragem,
                 ValorLocacao = this.ValorLocacao,
