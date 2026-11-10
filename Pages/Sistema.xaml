@@ -1860,7 +1860,8 @@
                     <ComboBox x:Name="ComboIntencao" Width="250" Height="36" Style="{StaticResource ModernComboBox}" Margin="172,40,20,540" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
                     <ComboBox x:Name="ComboTipoImovel" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,458" Grid.Row="1" HorizontalAlignment="Left"/>
                     <ComboBox x:Name="ComboFinalidade" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,458" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxCep" TextChanged="TxtBoxCep_TextChanged" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="450,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
+                    <!-- Integração CEP desativada: adicionar TextChanged="TxtBoxCep_TextChanged" para reativar -->
+                    <TextBox x:Name="TxtBoxCep" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="450,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="TxtBoxLogradouro" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="102,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="320" Grid.ColumnSpan="2" Grid.Column="1"/>
                     <TextBox x:Name="TxtBoxNumero" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxPais" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
@@ -1968,7 +1969,8 @@
                     <ComboBox x:Name="ComboIntencaoEditar" Height="36" Style="{StaticResource ModernComboBox}" Margin="156,40,20,540" Grid.Row="1" Grid.Column="1"/>
                     <ComboBox x:Name="ComboTipoImovelEditar" Width="220" Height="36" Style="{StaticResource ModernComboBox}" Margin="10,122,0,458" Grid.Row="1" HorizontalAlignment="Left"/>
                     <ComboBox x:Name="ComboFinalidadeEditar" Width="190" Height="36" Style="{StaticResource ModernComboBox}" Margin="240,122,0,458" Grid.Row="1" HorizontalAlignment="Left" Grid.ColumnSpan="2"/>
-                    <TextBox x:Name="TxtBoxCepEditar" TextChanged="TxtBoxCepEditar_TextChanged" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="440,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
+                    <!-- Integração CEP desativada: adicionar TextChanged="TxtBoxCepEditar_TextChanged" para reativar -->
+                    <TextBox x:Name="TxtBoxCepEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="440,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="160" Grid.ColumnSpan="2"/>
                     <TextBox x:Name="TxtBoxLogradouroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="92,117,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="340" Grid.Column="1"/>
                     <TextBox x:Name="TxtBoxNumeroEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="10,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
                     <TextBox x:Name="TxtBoxPaisEditar" Style="{StaticResource ModernTextBox}" HorizontalAlignment="Left" Margin="163,197,0,0" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Width="137"/>
