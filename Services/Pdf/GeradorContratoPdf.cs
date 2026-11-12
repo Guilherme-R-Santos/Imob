@@ -32,6 +32,21 @@ namespace Imob.Services.Pdf
 
         public void CriarContratoLocacao(ContratoDAO contrato)
         {
+            using var document = GerarDocumento(contrato);
+            var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
+            PdfFileUtility.SaveAndShowDocument(document, filename);
+        }
+
+        public byte[] GerarContratoLocacao(ContratoDAO contrato)
+        {
+            using var document = GerarDocumento(contrato);
+            using var stream = new System.IO.MemoryStream();
+            document.Save(stream, false);
+            return stream.ToArray();
+        }
+
+        private static PdfDocument GerarDocumento(ContratoDAO contrato)
+        {
             ArgumentNullException.ThrowIfNull(contrato);
 
             var model = ContratoLocacaoPdfModel.FromContrato(contrato);
@@ -49,9 +64,7 @@ namespace Imob.Services.Pdf
             }
 
             RenderizarRodape(contexto);
-
-            var filename = IOUtility.GetTempFullFileName("Contrato", "pdf");
-            PdfFileUtility.SaveAndShowDocument(document, filename);
+            return document;
         }
 
         private static RenderContext CriarContexto(PdfDocument document)
@@ -203,66 +216,6 @@ namespace Imob.Services.Pdf
             var alturaLogo = logo.PointHeight * escala;
             contexto.Graphics.DrawImage(logo, origemX, origemY, larguraLogo, alturaLogo);
 
-            /* Desenho original da marca, mantido comentado para referência.
-            var dourado = XColor.FromArgb(201, 176, 106);
-            var douradoClaro = XColor.FromArgb(214, 191, 126);
-
-            var brushDourado = new XSolidBrush(dourado);
-            var brushDouradoClaro = new XSolidBrush(douradoClaro);
-            const double yBasePredios = 69;
-
-            const double larguraBlocoLateral = 16;
-            const double larguraBlocoCentral = 22;
-            const double espacoEntreBlocos = 1;
-
-            const double xEsquerda = 35;
-            var xCentro = xEsquerda + larguraBlocoLateral + espacoEntreBlocos;
-            var xDireita = xCentro + larguraBlocoCentral + espacoEntreBlocos;
-
-            // Bloco central inclinado
-            var blocoCentro = new[]
-            {
-                new XPoint(origemX + xCentro, origemY + 16),
-                new XPoint(origemX + xCentro + larguraBlocoCentral, origemY + 8),
-                new XPoint(origemX + xCentro + larguraBlocoCentral, origemY + yBasePredios),
-                new XPoint(origemX + xCentro, origemY + yBasePredios)
-            };
-            contexto.Graphics.DrawPolygon(brushDouradoClaro, blocoCentro, XFillMode.Winding);
-
-            // Bloco esquerdo
-            var blocoEsquerdo = new[]
-            {
-                new XPoint(origemX + xEsquerda, origemY + 32),
-                new XPoint(origemX + xEsquerda + larguraBlocoLateral, origemY + 22),
-                new XPoint(origemX + xEsquerda + larguraBlocoLateral, origemY + yBasePredios),
-                new XPoint(origemX + xEsquerda, origemY + yBasePredios)
-            };
-            contexto.Graphics.DrawPolygon(brushDourado, blocoEsquerdo, XFillMode.Winding);
-
-            // Bloco direito
-            var blocoDireito = new[]
-            {
-                new XPoint(origemX + xDireita, origemY + 22),
-                new XPoint(origemX + xDireita + larguraBlocoLateral, origemY + 28),
-                new XPoint(origemX + xDireita + larguraBlocoLateral, origemY + yBasePredios),
-                new XPoint(origemX + xDireita, origemY + yBasePredios)
-            };
-            contexto.Graphics.DrawPolygon(brushDourado, blocoDireito, XFillMode.Winding);
-
-            // Faixa/base curva simplificada
-            var baseFaixa = new[]
-            {
-                new XPoint(origemX + 8, origemY + 72),
-                new XPoint(origemX + 30, origemY + yBasePredios),
-                new XPoint(origemX + 100, origemY + yBasePredios),
-                new XPoint(origemX + 120, origemY + 72)
-
-            };
-            contexto.Graphics.DrawPolygon(brushDourado, baseFaixa, XFillMode.Winding);
-
-            contexto.Graphics.DrawString("Rosimeri Ribeiro", FonteMarca, brushDourado,
-                new XRect(origemX + 20, origemY + 74, 90, 10), XStringFormats.TopCenter);
-            */
         }
 
         private static List<string> QuebrarTexto(XGraphics graphics, string texto, XFont fonte, double larguraMaxima)

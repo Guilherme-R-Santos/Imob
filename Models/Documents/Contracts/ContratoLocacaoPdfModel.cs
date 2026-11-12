@@ -128,8 +128,15 @@ namespace Imob.Models.Documentos.Contratos
             {
                 blocos.Add(ContratoPdfBlocoModel.CriarParagrafo($"LOCATÁRIO {indice + 1}:___________________________________________________________"));
             }
+            if ((contrato.ModalidadeContrato?.Id ?? contrato.ModalidadeContratoId) == 3)
+            {
+                if (contrato.Fiador != null) blocos.Add(ContratoPdfBlocoModel.CriarParagrafo("FIADOR 1:_______________________________________________________________"));
+                if (contrato.Fiador2 != null) blocos.Add(ContratoPdfBlocoModel.CriarParagrafo("FIADOR 2:_______________________________________________________________"));
+            }
             blocos.Add(ContratoPdfBlocoModel.CriarParagrafo("TESTEMUNHA 1:___________________________________________________________"));
             blocos.Add(ContratoPdfBlocoModel.CriarParagrafo("TESTEMUNHA 2:___________________________________________________________"));
+            if (!string.IsNullOrWhiteSpace(contrato.Testemunha3))
+                blocos.Add(ContratoPdfBlocoModel.CriarParagrafo("TESTEMUNHA 3:___________________________________________________________"));
 
             return new ContratoLocacaoPdfModel
             {
@@ -183,6 +190,8 @@ namespace Imob.Models.Documentos.Contratos
             {
                 yield return ContratoPdfBlocoModel.CriarTitulo("CLÁUSULA 6 - DA GARANTIA FIDEJUSSÓRIA (FIADOR):");
                 yield return ContratoPdfBlocoModel.CriarParagrafo(FormatarCaputFiador(contrato.Fiador));
+                if (contrato.Fiador2 != null)
+                    yield return ContratoPdfBlocoModel.CriarParagrafo(FormatarCaputFiador(contrato.Fiador2));
                 yield return ContratoPdfBlocoModel.CriarParagrafo("Parágrafo Primeiro – A responsabilidade do(s) FIADOR(ES) permanecerá válida até a efetiva entrega das chaves, desocupação do imóvel e quitação integral de todos os débitos decorrentes da locação, ainda que haja prorrogação do contrato por prazo indeterminado, renunciando expressamente aos benefícios previstos nos artigos 827, 835, 837 e 838 do Código Civil.");
                 yield return ContratoPdfBlocoModel.CriarParagrafo("Parágrafo Segundo – O(s) FIADOR(ES) declara(m) possuir plena capacidade civil e idoneidade financeira para assumir as obrigações decorrentes desta fiança, obrigando-se solidariamente ao cumprimento integral do presente contrato.");
                 yield return ContratoPdfBlocoModel.CriarParagrafo("Parágrafo Terceiro – Em caso de falecimento, insolvência, incapacidade civil, exoneração, venda do imóvel do fiador ou qualquer hipótese que comprometa a garantia prestada, o LOCATÁRIO obriga-se a apresentar novo fiador idôneo ou outra garantia aceita pelo LOCADOR no prazo máximo de 15 (quinze) dias, sob pena de infração contratual e possibilidade de rescisão da locação.");

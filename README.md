@@ -75,13 +75,29 @@ O `Imob` é um cliente desktop que centraliza rotinas comuns de imobiliária:
   - fiador (quando aplicável)
   - dados de vigência e vencimento
   - dados de seguro-fiança (quando aplicável)
+  - até três e-mails de testemunhas para assinatura digital
+  - configuração de repasse para até dois destinatários, disponível a administradores
 - Regras de interface para habilitar/desabilitar campos conforme modalidade.
-- Edição de contrato existente.
+- Edição de contrato existente; a API recria as cobranças ativas não pagas ao atualizar o contrato.
 - Inativação de contrato.
 
-### 🧾 PDF
+### 💸 Repasses Pix e TED
+- A API autoriza a configuração e as operações de repasse somente para administradores. O cliente também verifica a permissão e mostra erros de acesso negado; se a verificação estiver indisponível, reabra o formulário antes de salvar.
+- Em contratos e cobranças, **Configurar repasses** permite até dois destinatários `PIX_CHAVE`, `PIX_CONTA` ou `TED`. O primeiro pode ser pré-preenchido com dados cadastrados do proprietário; complete e revise os campos, inclusive tipo da chave, dígito e tipo da conta. A configuração do contrato é copiada para as cobranças geradas.
+- Valores `FIXO` são em reais (50 = R$ 50,00; até duas casas decimais). `PERCENTUAL` usa o valor líquido (50 = 50%; até quatro casas); a soma dos percentuais não pode exceder 100%. A API arredonda os percentuais para centavos e não permite que o total fixo e percentual ultrapasse o líquido.
+- O repasse automático requer a opção habilitada e pelo menos um destinatário válido; é iniciado após o processamento do webhook `PAYMENT_RECEIVED` com valor líquido. O manual exige cobrança ativa e recebida no Asaas e webhook processado; permite revisar até dois destinatários antes da confirmação. Há uma solicitação por cobrança Asaas. O retorno 202 significa apenas registro para processamento, não conclusão.
+- **Acompanhar repasses** consulta registros locais por cobrança. Cada destinatário é processado separadamente; somente `DONE` indica conclusão. `INCERTO` ou `ENVIANDO` interrompido requer investigação no Asaas e conciliação com o ID da transferência. `BLOQUEADO` local só pode ser retomado após confirmar que não houve envio e corrigir a causa. Estornos, contestações ou problemas em repasse anterior podem impedir o envio. Nunca reenvie automaticamente após falha ou timeout.
+- Nesta fase, os repasses operam somente em sandbox e dependem de webhook configurado, migrações aplicadas e `Asaas:RepassesHabilitados=true` na API. Respostas 503 indicam indisponibilidade, inclusive ambiente não sandbox ou funcionalidade desabilitada. Credenciais Asaas permanecem exclusivamente no backend; consulte o README da ImobAPI para os requisitos de implantação.
+
+### 🧾 PDF e assinatura
 - Geração inicial de contrato em PDF via `PDFsharp`.
 - Configuração de fontes Windows para renderização correta (`WindowsFontResolver`).
+- Na visualização do contrato, **Enviar para assinatura** gera o PDF a partir dos dados salvos e envia à rota `Autentique/CriarDocumento`. Salve alterações antes de enviar.
+- Proprietário, contratantes e fiadores do contrato são convidados por e-mail. As até três testemunhas cadastradas são incluídas automaticamente pela API; seus e-mails devem ser válidos e distintos dos demais signatários.
+- A API limita o PDF a 20 MiB; o limite da Autentique depende do plano (5 MB no gratuito e 20 MB no profissional). O sandbox e a chave são configurados exclusivamente na API.
+- A consulta de registros mostra dados salvos na API, não o status atual na Autentique; não há webhook de atualização em tempo real.
+- A migração da integração deve ser aplicada no banco da ImobAPI antes do uso. Após isso, é necessário validar o fluxo em sandbox real.
+- Em caso de falha ou tempo limite, verifique o painel da Autentique e os logs da API antes de reenviar: o documento pode ter sido criado e o contrato pode estar bloqueado para conciliação.
 
 ---
 
@@ -139,6 +155,8 @@ Exemplos de rotas utilizadas:
 - `Imovel/*`
 - `Contrato/*`
 - `Foto/*`
+- `Autentique/CriarDocumento`
+- `Autentique/DocumentosDoContrato/{contratoId}`
 
 ---
 

@@ -13,6 +13,16 @@ namespace Imob.Models
         public string Nome { get; set; }
         public bool Ativo { get; set; }
         public decimal ValorContrato { get; set; }
+        public bool RepasseAutomatico { get; set; }
+        public ContaRepasse ContaRepasse1 { get; set; }
+        public ContaRepasse ContaRepasse2 { get; set; }
+        public string Testemunha1 { get; set; }
+        public string Testemunha2 { get; set; }
+        public string Testemunha3 { get; set; }
+        [JsonProperty]
+        public string IdDocumentoAutentique { get; private set; }
+        [JsonProperty]
+        public bool EnvioAutentiqueEmAndamento { get; private set; }
         public int? TipoContratoId { get; set; }
         public int? ProprietarioId { get; set; }
         public int? Contratante1Id { get; set; }

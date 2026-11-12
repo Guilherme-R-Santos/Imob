@@ -76,6 +76,22 @@ namespace Imob
 		private List<int> _fotosRemovidas = new List<int>();
 
         private int _idImovelCadastrado;
+        private int? _idContratoVisualizado;
+        private int? _proprietarioContratoVisualizado;
+        private bool _administradorRepasse;
+        private bool _permissaoRepasseVerificada;
+        private ConfiguracaoRepasseTela _repasseContratoCriar = new();
+        private ConfiguracaoRepasseTela _repasseContratoVisualizar = new();
+        private ConfiguracaoRepasseTela _repasseCobrancaCriar = new();
+        private ConfiguracaoRepasseTela _repasseCobrancaVisualizar = new();
+
+        private sealed class ConfiguracaoRepasseTela
+        {
+            public bool Automatico { get; set; }
+            public ContaRepasse Conta1 { get; set; }
+            public ContaRepasse Conta2 { get; set; }
+            public int? ProprietarioRevisadoId { get; set; }
+        }
 
         private List<ClienteDAO> _proprietariosContratoCriar = new List<ClienteDAO>();
         private List<ImovelDAO> _imoveisContratoCriar = new List<ImovelDAO>();
@@ -1467,8 +1483,193 @@ namespace Imob
             await AdicionarItensGridCobrancas();
         }
 
+        private async Task AtualizarPermissaoRepasseAsync()
+        {
+            _administradorRepasse = false;
+            _permissaoRepasseVerificada = false;
+            try
+            {
+                using var resposta = await HttpClientFixo.GetAsync("Repasse/PorCobranca/0");
+                if (resposta.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    _administradorRepasse = true;
+                    _permissaoRepasseVerificada = true;
+                }
+                else if (resposta.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                    _permissaoRepasseVerificada = true;
+                else
+                    MessageBox.Show($"Não foi possível verificar a permissão de repasse (HTTP {(int)resposta.StatusCode}). Salvar permanecerá indisponível para evitar perda de configurações.", "Repasses", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException)
+            {
+                MessageBox.Show("Não foi possível verificar a permissão de repasse: " + ex.Message, "Repasses", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            var visibilidade = _administradorRepasse ? Visibility.Visible : Visibility.Collapsed;
+            BtnRepasseContratoCriar.Visibility = visibilidade;
+            BtnRepasseContratoVisualizar.Visibility = visibilidade;
+            BtnRepasseCobrancaCriar.Visibility = visibilidade;
+            BtnRepasseCobrancaVisualizar.Visibility = visibilidade;
+            BtnAcompanharRepasses.Visibility = visibilidade;
+        }
+
+        private async Task<bool> ExigirAdministradorRepasseAsync()
+        {
+            if (!_administradorRepasse)
+            {
+                MessageBox.Show("Somente administradores podem configurar ou solicitar repasses.", "Acesso negado", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            try
+            {
+                await new Imob.Services.RepasseService(HttpClientFixo).VerificarAdministradorAsync();
+                return true;
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
+            {
+                _administradorRepasse = false;
+                _permissaoRepasseVerificada = false;
+                MessageBox.Show("Não foi possível confirmar a permissão de administrador: " + ex.Message, "Repasses", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+        }
+
+        private bool PodeSalvarRepasse(ConfiguracaoRepasseTela configuracao)
+        {
+            if (!_permissaoRepasseVerificada)
+            {
+                MessageBox.Show("A permissão de repasse não foi verificada. Feche e reabra o formulário para tentar novamente, evitando perda das configurações.", "Repasses", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (!_administradorRepasse && (configuracao.Automatico || configuracao.Conta1 != null || configuracao.Conta2 != null))
+            {
+                MessageBox.Show("Esta operação envolve configurações de repasse e exige um administrador.", "Acesso negado", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
+        }
+
+        private static bool ConfirmarProprietarioRepasse(ConfiguracaoRepasseTela configuracao, int? proprietarioId)
+        {
+            return configuracao.Conta1 == null || !configuracao.ProprietarioRevisadoId.HasValue || configuracao.ProprietarioRevisadoId == proprietarioId ||
+                MessageBox.Show("O proprietário mudou, mas o primeiro destinatário de repasse foi mantido. Revise os dados em Configurar repasses. Deseja salvar mesmo assim?", "Revisar destinatário", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+        }
+
+        private async Task<ContaRepasse> ObterDadosRepasseAsync(HttpClient client, int id, bool contrato)
+        {
+            try
+            {
+                return await new Imob.Services.RepasseService(client).DadosProprietarioAsync(id, contrato);
+            }
+            catch (Imob.Services.RepasseApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Unauthorized || ex.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw;
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
+            {
+                MessageBox.Show("Não foi possível consultar os dados do proprietário: " + ex.Message + "\nPreencha os dados manualmente.", "Repasses", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return null;
+            }
+        }
+
+        private async Task<bool> ConfigurarRepasseAsync(ConfiguracaoRepasseTela configuracao, int? id, bool contrato)
+        {
+            if (!await ExigirAdministradorRepasseAsync()) return false;
+            try
+            {
+                ContaRepasse dados = null;
+                if (configuracao.Conta1 == null && id.HasValue)
+                    dados = await ObterDadosRepasseAsync(HttpClientFixo, id.Value, contrato);
+                var janela = new Imob.Views.Modals.ConfiguracaoRepasseWindow(false, configuracao.Automatico, configuracao.Conta1, configuracao.Conta2, dados) { Owner = this };
+                if (janela.ShowDialog() == true)
+                {
+                    configuracao.Automatico = janela.Automatico;
+                    configuracao.Conta1 = janela.Conta1;
+                    configuracao.Conta2 = janela.Conta2;
+                    return true;
+                }
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is OperationCanceledException || ex is InvalidOperationException)
+            {
+                MessageBox.Show("Não foi possível configurar o repasse: " + ex.Message, "Repasses", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return false;
+        }
+
+        private async void BtnRepasseContratoCriar_Click(object sender, RoutedEventArgs e)
+        {
+            if (ComboContratoProprietarioCriar.SelectedItem is not ClienteDAO proprietario)
+            {
+                MessageBox.Show("Selecione o proprietário antes de configurar o repasse.", "Repasses", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (await ConfigurarRepasseAsync(_repasseContratoCriar, proprietario.Id, false))
+                _repasseContratoCriar.ProprietarioRevisadoId = proprietario.Id;
+        }
+
+        private async void BtnRepasseContratoVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_idContratoVisualizado.HasValue) return;
+            var proprietario = ComboContratoProprietarioVisualizar.SelectedItem as ClienteDAO;
+            var mesmoProprietario = proprietario?.Id == _proprietarioContratoVisualizado;
+            if (await ConfigurarRepasseAsync(_repasseContratoVisualizar, mesmoProprietario ? _idContratoVisualizado : proprietario?.Id, mesmoProprietario))
+                _repasseContratoVisualizar.ProprietarioRevisadoId = proprietario?.Id;
+        }
+
+        private async void BtnRepasseCobrancaCriar_Click(object sender, RoutedEventArgs e)
+        {
+            var contrato = ComboCobrancaContratoCriar.SelectedItem as ContratoDAO;
+            await ConfigurarRepasseAsync(_repasseCobrancaCriar, contrato?.Id, true);
+        }
+
+        private async void BtnRepasseCobrancaVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            var contrato = ComboCobrancaContratoVisualizar.SelectedItem as ContratoDAO;
+            await ConfigurarRepasseAsync(_repasseCobrancaVisualizar, contrato?.Id, true);
+        }
+
+        private async void BtnAcompanharRepasses_Click(object sender, RoutedEventArgs e)
+        {
+            if (!await ExigirAdministradorRepasseAsync()) return;
+            if (CobrancaModalOverlayVisualizar.Tag is not int id) return;
+            try
+            {
+                var cobranca = await CobrancaDAO.GetCobrancaPorId(id, HttpClientFixo);
+                if (cobranca == null) throw new InvalidOperationException("Cobrança não encontrada.");
+                if (cobranca.Contrato == null && CobrancasDataGrid.SelectedItem is CobrancaDAO selecionada && selecionada.Id == id)
+                    cobranca.Contrato = selecionada.Contrato;
+                new Imob.Views.Modals.RepasseWindow(cobranca, HttpClientFixo, true, SolicitarRepasseManualAsync) { Owner = this }.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao acompanhar repasses: " + ex.Message, "Repasses", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task SolicitarRepasseManualAsync(CobrancaDAO cobranca, HttpClient client)
+        {
+            if (!await ExigirAdministradorRepasseAsync()) return;
+            ContaRepasse dados = null;
+            if (cobranca.ContaRepasse1 == null && cobranca.Contrato?.Id > 0)
+                dados = await ObterDadosRepasseAsync(client, cobranca.Contrato.Id, true);
+            var editor = new Imob.Views.Modals.ConfiguracaoRepasseWindow(true, false, cobranca.ContaRepasse1, cobranca.ContaRepasse2, dados) { Owner = this };
+            if (editor.ShowDialog() != true) return;
+            static string Descrever(ContaRepasse conta, int numero)
+            {
+                if (conta == null) return $"Destinatário {numero}: não informado";
+                var destino = conta.Modalidade == "PIX_CHAVE" ? $"{conta.TipoChavePix}: {conta.ChavePix}" : $"{conta.NomeTitular}, CPF/CNPJ {conta.CpfCnpjTitular}, nascimento {conta.DataNascimentoTitular?.ToString("dd/MM/yyyy") ?? "não informado"}, banco {conta.CodigoBanco}, agência {conta.Agencia}, conta {conta.Conta}-{conta.DigitoConta} ({conta.TipoConta})";
+                var valor = conta.TipoValor == "FIXO" ? $"R$ {conta.Valor:N2}" : $"{conta.Valor:N4}% do líquido";
+                return $"Destinatário {numero}: {conta.Modalidade}, {destino}, {valor}";
+            }
+            var detalhes = Descrever(editor.Conta1, 1) + "\n" + Descrever(editor.Conta2, 2);
+            if (MessageBox.Show($"Revise os dados antes de solicitar o repasse:\n\n{detalhes}\n\nO aceite não significa transferência concluída. A API exige webhook de recebimento processado e valor líquido disponível. Confirmar?", "Confirmar repasse manual", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+            await new Imob.Services.RepasseService(client).ManualAsync(cobranca.Id, editor.Conta1, editor.Conta2);
+            MessageBox.Show("Pedido registrado para processamento (202). Isso não significa que a transferência foi concluída; acompanhe cada destinatário.", "Repasses", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         private async void BtnAdicionarCobranca_Click(object sender, RoutedEventArgs e)
         {
+            await AtualizarPermissaoRepasseAsync();
             await CarregarCombosCobrancaCriarAsync();
             CobrancaModalOverlayCriar.Visibility = Visibility.Visible;
         }
@@ -1526,8 +1727,7 @@ namespace Imob
             ComboTipoCobrancaCriar.SelectedItem = null;
             TxtCobrancaValorCriar.Clear();
             DpCobrancaVencimentoCriar.SelectedDate = null;
-            TxtCobrancaContaPartilhaCriar.Clear();
-            ChkCobrancaPartilhaAutomaticaCriar.IsChecked = false;
+            _repasseCobrancaCriar = new ConfiguracaoRepasseTela();
             ChkCobrancaComprovanteEnviadoCriar.IsChecked = false;
         }
 
@@ -1539,12 +1739,12 @@ namespace Imob
 
         private async void BtnSalvarCobrancaCriar_Click(object sender, RoutedEventArgs e)
         {
+            if (!PodeSalvarRepasse(_repasseCobrancaCriar)) return;
             string nomeCobranca = TxtCobrancaNomeCriar.Text;
             ContratoDAO contratoSelecionado = ComboCobrancaContratoCriar.SelectedItem as ContratoDAO;
             TipoCobrancaDAO tipoCobrancaSelecionado = ComboTipoCobrancaCriar.SelectedItem as TipoCobrancaDAO;
             DateTime? vencimento = DpCobrancaVencimentoCriar.SelectedDate;
             var valorTexto = TxtCobrancaValorCriar.Text;
-            var contaPartilhaTexto = TxtCobrancaContaPartilhaCriar.Text;
 
             if (string.IsNullOrEmpty(nomeCobranca) ||
                 contratoSelecionado == null ||
@@ -1561,13 +1761,6 @@ namespace Imob
                 return;
             }
 
-            int contaPartilha = 0;
-            if (!string.IsNullOrWhiteSpace(contaPartilhaTexto) && !int.TryParse(contaPartilhaTexto, out contaPartilha))
-            {
-                MessageBox.Show("Conta partilha inválida. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             CobrancaDTO cobranca = new CobrancaDTO
             {
                 Nome = nomeCobranca,
@@ -1576,8 +1769,9 @@ namespace Imob
                 TipoCobranca = tipoCobrancaSelecionado,
                 Valor = valor,
                 Vencimento = vencimento,
-                PartilhaAutomatica = ChkCobrancaPartilhaAutomaticaCriar.IsChecked == true,
-                ContaPartilha = contaPartilha,
+                RepasseAutomatico = _administradorRepasse && _repasseCobrancaCriar.Automatico,
+                ContaRepasse1 = _administradorRepasse ? _repasseCobrancaCriar.Conta1 : null,
+                ContaRepasse2 = _administradorRepasse ? _repasseCobrancaCriar.Conta2 : null,
                 ComprovanteEnviado = ChkCobrancaComprovanteEnviadoCriar.IsChecked == true
             };
 
@@ -1608,6 +1802,7 @@ namespace Imob
 
             try
             {
+                await AtualizarPermissaoRepasseAsync();
                 var cobrancaSelecionada = await CobrancaDAO.GetCobrancaPorId(cobrancaSelecionadaGrid.Id, HttpClientFixo);
                 if (cobrancaSelecionada == null)
                 {
@@ -1628,8 +1823,7 @@ namespace Imob
 
                 TxtCobrancaValorVisualizar.Text = cobrancaSelecionada.Valor.ToString(CultureInfo.CurrentCulture);
                 DpCobrancaVencimentoVisualizar.SelectedDate = cobrancaSelecionada.Vencimento;
-                TxtCobrancaContaPartilhaVisualizar.Text = cobrancaSelecionada.ContaPartilha.ToString();
-                ChkCobrancaPartilhaAutomaticaVisualizar.IsChecked = cobrancaSelecionada.PartilhaAutomatica;
+                _repasseCobrancaVisualizar = new ConfiguracaoRepasseTela { Automatico = cobrancaSelecionada.RepasseAutomatico, Conta1 = cobrancaSelecionada.ContaRepasse1, Conta2 = cobrancaSelecionada.ContaRepasse2 };
                 ChkCobrancaComprovanteEnviadoVisualizar.IsChecked = cobrancaSelecionada.ComprovanteEnviado;
 
                 TxtCobrancaStatusVisualizar.Text = cobrancaSelecionada.Status;
@@ -1663,6 +1857,7 @@ namespace Imob
 
         private async void BtnSalvarCobrancaVisualizar_Click(object sender, RoutedEventArgs e)
         {
+            if (!PodeSalvarRepasse(_repasseCobrancaVisualizar)) return;
             if (CobrancaModalOverlayVisualizar.Tag is not int id)
             {
                 MessageBox.Show("Nenhuma cobrança selecionada.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -1674,7 +1869,6 @@ namespace Imob
             TipoCobrancaDAO tipoCobrancaSelecionado = ComboTipoCobrancaVisualizar.SelectedItem as TipoCobrancaDAO;
             DateTime? vencimento = DpCobrancaVencimentoVisualizar.SelectedDate;
             var valorTexto = TxtCobrancaValorVisualizar.Text;
-            var contaPartilhaTexto = TxtCobrancaContaPartilhaVisualizar.Text;
 
             if (string.IsNullOrEmpty(nomeCobranca) ||
                 contratoSelecionado == null ||
@@ -1691,13 +1885,6 @@ namespace Imob
                 return;
             }
 
-            int contaPartilha = 0;
-            if (!string.IsNullOrWhiteSpace(contaPartilhaTexto) && !int.TryParse(contaPartilhaTexto, out contaPartilha))
-            {
-                MessageBox.Show("Conta partilha inválida. Utilize apenas números.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
             CobrancaDTO cobranca = new CobrancaDTO
             {
                 Id = id,
@@ -1706,8 +1893,9 @@ namespace Imob
                 TipoCobranca = tipoCobrancaSelecionado,
                 Valor = valor,
                 Vencimento = vencimento,
-                PartilhaAutomatica = ChkCobrancaPartilhaAutomaticaVisualizar.IsChecked == true,
-                ContaPartilha = contaPartilha,
+                RepasseAutomatico = _administradorRepasse && _repasseCobrancaVisualizar.Automatico,
+                ContaRepasse1 = _administradorRepasse ? _repasseCobrancaVisualizar.Conta1 : null,
+                ContaRepasse2 = _administradorRepasse ? _repasseCobrancaVisualizar.Conta2 : null,
                 ComprovanteEnviado = ChkCobrancaComprovanteEnviadoVisualizar.IsChecked == true
             };
 
@@ -1889,6 +2077,7 @@ namespace Imob
 
         private async void BtnAdicionarContrato_Click(object sender, RoutedEventArgs e)
         {
+            await AtualizarPermissaoRepasseAsync();
             await CarregarCombosContratoCriarAsync();
             ContratoModalOverlayCriar.Visibility = Visibility.Visible;
         }
@@ -2061,6 +2250,7 @@ namespace Imob
         private void BtnFecharModalContratosCriar_Click(object sender, RoutedEventArgs e)
         {
             ContratoModalOverlayCriar.Visibility = Visibility.Hidden;
+            _repasseContratoCriar = new ConfiguracaoRepasseTela();
 
             TxtContratoNomeCriar.Clear();
             TxtContratoPrazoMesesCriar.Clear();
@@ -3781,8 +3971,36 @@ namespace Imob
             }
         }
 
+        private static bool ValidarTestemunhas(out string[] testemunhas, params TextBox[] campos)
+        {
+            testemunhas = campos.Select(campo => string.IsNullOrWhiteSpace(campo.Text) ? null : campo.Text.Trim()).ToArray();
+            var emails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < testemunhas.Length; i++)
+            {
+                var email = testemunhas[i];
+                if (email == null) continue;
+                if (email.Length > 255 || email.Any(char.IsWhiteSpace) ||
+                    !System.Net.Mail.MailAddress.TryCreate(email, out var endereco) ||
+                    !string.Equals(endereco.Address, email, StringComparison.OrdinalIgnoreCase) ||
+                    !string.IsNullOrEmpty(endereco.DisplayName))
+                {
+                    MessageBox.Show($"Informe um e-mail válido de até 255 caracteres para a testemunha {i + 1}.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    campos[i].Focus();
+                    return false;
+                }
+                if (!emails.Add(email))
+                {
+                    MessageBox.Show("Os e-mails das testemunhas devem ser distintos.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    campos[i].Focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
         private async void BtnSalvarContratoCriar_Click(object sender, RoutedEventArgs e)
         {
+            if (!PodeSalvarRepasse(_repasseContratoCriar)) return;
             string nomeContrato = TxtContratoNomeCriar.Text;
             TipoContratoDAO tipoContratoSelecionado = ComboTipoContratoCriar.SelectedItem as TipoContratoDAO;
             ModalidadeContratoDAO modalidadeSelecionada = ComboModalidadeContratoCriar.SelectedItem as ModalidadeContratoDAO;
@@ -3799,7 +4017,7 @@ namespace Imob
             string proposta = TxtContratoPropostaSegFiancaCriar.Text;
             string apolice = TxtContratoApoliceSegFiancaCriar.Text;
             var valorContratoTexto = TxtContratoValorCriar.Text;
-
+            if (!ValidarTestemunhas(out var testemunhas, TxtContratoTestemunha1Criar, TxtContratoTestemunha2Criar, TxtContratoTestemunha3Criar)) return;
 
             if (!int.TryParse(TxtContratoPrazoMesesCriar.Text, out int prazo))
             {
@@ -3837,6 +4055,7 @@ namespace Imob
                 return;
             }
 
+            if (!ConfirmarProprietarioRepasse(_repasseContratoCriar, proprietarioSelecionado.Id)) return;
             ContratoDTO contrato = new ContratoDTO
             {
                 Nome = nomeContrato,
@@ -3853,15 +4072,29 @@ namespace Imob
                 Fiador = fiadorSelecionado,
                 Fiador2 = fiador2Selecionado,
                 ValorContrato = valorContrato,
+                RepasseAutomatico = _administradorRepasse && _repasseContratoCriar.Automatico,
+                ContaRepasse1 = _administradorRepasse ? _repasseContratoCriar.Conta1 : null,
+                ContaRepasse2 = _administradorRepasse ? _repasseContratoCriar.Conta2 : null,
                 DataInicioVigencia = inicio.Value,
                 PrazoMeses = prazo,
                 Vencimento = vencimento,
                 PropostaSegFianca = proposta,
-                ApoliceSegFianca = apolice
+                ApoliceSegFianca = apolice,
+                Testemunha1 = testemunhas[0],
+                Testemunha2 = testemunhas[1],
+                Testemunha3 = testemunhas[2]
 
             };
 
-            await contrato.CadastrarContrato(HttpClientFixo);
+            try
+            {
+                await contrato.CadastrarContrato(HttpClientFixo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao cadastrar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
 
             MessageBox.Show("Contrato cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
@@ -3882,6 +4115,10 @@ namespace Imob
             DpContratoVencimentoCriar.Clear();
             TxtContratoPropostaSegFiancaCriar.Clear();
             TxtContratoApoliceSegFiancaCriar.Clear();
+            TxtContratoTestemunha1Criar.Clear();
+            TxtContratoTestemunha2Criar.Clear();
+            TxtContratoTestemunha3Criar.Clear();
+            _repasseContratoCriar = new ConfiguracaoRepasseTela();
 
             AtualizarPermissoesModalidadeCriar();
             AtualizarFiltroProprietarioImovelCriar(true);
@@ -3894,6 +4131,7 @@ namespace Imob
 
         private async void BtnSalvarContratoVisualizar_Click(object sender, RoutedEventArgs e)
         {
+            if (!PodeSalvarRepasse(_repasseContratoVisualizar)) return;
             if (ContratosDataGrid.SelectedItem is not ContratoDAO contratoSelecionado)
             {
                 MessageBox.Show("Nenhum contrato selecionado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -3935,6 +4173,7 @@ namespace Imob
             string proposta = TxtContratoPropostaSegFiancaVisualizar.Text;
             string apolice = TxtContratoApoliceSegFiancaVisualizar.Text;
             var valorContratoTexto = TxtContratoValorVisualizar.Text;
+            if (!ValidarTestemunhas(out var testemunhas, TxtContratoTestemunha1Visualizar, TxtContratoTestemunha2Visualizar, TxtContratoTestemunha3Visualizar)) return;
 
             if (!ModalidadeEhFiador(modalidadeSelecionada))
             {
@@ -3984,6 +4223,7 @@ namespace Imob
                 return;
             }
 
+            if (!ConfirmarProprietarioRepasse(_repasseContratoVisualizar, proprietarioId)) return;
             try
             {
                 ContratoDTO contratoAtualizado = new ContratoDTO
@@ -4003,11 +4243,17 @@ namespace Imob
                     Fiador = fiadorId.HasValue ? new ClienteDAO { Id = fiadorId.Value } : null,
                     Fiador2 = fiador2Id.HasValue ? new ClienteDAO { Id = fiador2Id.Value } : null,
                     ValorContrato = valorContrato,
+                    RepasseAutomatico = _administradorRepasse && _repasseContratoVisualizar.Automatico,
+                    ContaRepasse1 = _administradorRepasse ? _repasseContratoVisualizar.Conta1 : null,
+                    ContaRepasse2 = _administradorRepasse ? _repasseContratoVisualizar.Conta2 : null,
                     DataInicioVigencia = inicio.Value,
                     PrazoMeses = prazo,
                     Vencimento = vencimento,
                     PropostaSegFianca = proposta,
-                    ApoliceSegFianca = apolice
+                    ApoliceSegFianca = apolice,
+                    Testemunha1 = testemunhas[0],
+                    Testemunha2 = testemunhas[1],
+                    Testemunha3 = testemunhas[2]
                 };
 
                 await contratoAtualizado.AtualizarContrato(contratoSelecionado.Id, HttpClientFixo);
@@ -4034,6 +4280,7 @@ namespace Imob
 
             try
             {
+                await AtualizarPermissaoRepasseAsync();
                 var contratoSelecionado = await ContratoDAO.GetContratoPorId(contratoSelecionadoGrid.Id, HttpClientFixo);
                 if (contratoSelecionado == null)
                 {
@@ -4079,16 +4326,140 @@ namespace Imob
                 TxtContratoVencimentoVisualizar.Text = contratoSelecionado.Vencimento.ToString();
                 TxtContratoPropostaSegFiancaVisualizar.Text = contratoSelecionado.PropostaSegFianca;
                 TxtContratoApoliceSegFiancaVisualizar.Text = contratoSelecionado.ApoliceSegFianca;
+                TxtContratoTestemunha1Visualizar.Text = contratoSelecionado.Testemunha1;
+                TxtContratoTestemunha2Visualizar.Text = contratoSelecionado.Testemunha2;
+                TxtContratoTestemunha3Visualizar.Text = contratoSelecionado.Testemunha3;
+                _proprietarioContratoVisualizado = contratoSelecionado.Proprietario?.Id ?? contratoSelecionado.ProprietarioId;
+                _repasseContratoVisualizar = new ConfiguracaoRepasseTela { Automatico = contratoSelecionado.RepasseAutomatico, Conta1 = contratoSelecionado.ContaRepasse1, Conta2 = contratoSelecionado.ContaRepasse2, ProprietarioRevisadoId = _proprietarioContratoVisualizado };
 
                 AtualizarFiltroProprietarioImovelVisualizar(true);
                 AtualizarFiltroContratantesVisualizar();
                 AtualizarPermissoesModalidadeVisualizar();
 
+                _idContratoVisualizado = contratoSelecionado.Id;
+                AtualizarEstadoAutentique(contratoSelecionado);
                 ContratoModalOverlayVisualizar.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar contrato: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void AtualizarEstadoAutentique(ContratoDAO contrato)
+        {
+            var estado = contrato.EnvioAutentiqueEmAndamento
+                ? "Envio em andamento ou pendente de conciliação"
+                : string.IsNullOrWhiteSpace(contrato.IdDocumentoAutentique) ? "Ainda não enviado" : "Documento vinculado";
+            TxtEstadoAutentique.Text = $"Autentique: {estado}" +
+                (string.IsNullOrWhiteSpace(contrato.IdDocumentoAutentique) ? string.Empty : $" — ID: {contrato.IdDocumentoAutentique}");
+            TxtEstadoAutentique.ToolTip = TxtEstadoAutentique.Text;
+        }
+
+        private async void BtnConsultarDocumentosAutentique_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_idContratoVisualizado.HasValue)
+            {
+                MessageBox.Show("Selecione um contrato para consultar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnConsultarDocumentosAutentique.IsEnabled = false;
+            BtnEnviarContratoAssinatura.IsEnabled = false;
+            BtnFecharModalContratosVisualizar.IsEnabled = false;
+            BtnSalvarContratoVisualizar.IsEnabled = false;
+            try
+            {
+                var contrato = await ContratoDAO.GetContratoPorId(_idContratoVisualizado.Value, HttpClientFixo);
+                if (contrato == null || contrato.Id != _idContratoVisualizado.Value)
+                    throw new InvalidOperationException("Contrato não encontrado.");
+                var documentos = await new Imob.Services.AutentiqueService().ObterDocumentosAsync(HttpClientFixo, contrato.Id);
+                AtualizarEstadoAutentique(contrato);
+                new Imob.Views.Modals.DocumentosAutentiqueWindow(contrato, documentos) { Owner = this }.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao consultar registros de assinatura: " + ex.Message, "Assinatura", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnConsultarDocumentosAutentique.IsEnabled = true;
+                BtnEnviarContratoAssinatura.IsEnabled = true;
+                BtnFecharModalContratosVisualizar.IsEnabled = true;
+                BtnSalvarContratoVisualizar.IsEnabled = true;
+            }
+        }
+
+        private async void BtnEnviarContratoAssinatura_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_idContratoVisualizado.HasValue)
+            {
+                MessageBox.Show("Selecione um contrato para enviar.", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            BtnEnviarContratoAssinatura.IsEnabled = false;
+            BtnConsultarDocumentosAutentique.IsEnabled = false;
+            BtnFecharModalContratosVisualizar.IsEnabled = false;
+            BtnSalvarContratoVisualizar.IsEnabled = false;
+            var tentativaDeEnvio = false;
+            try
+            {
+                var contrato = await ContratoDAO.GetContratoPorId(_idContratoVisualizado.Value, HttpClientFixo);
+                if (contrato == null || contrato.Id != _idContratoVisualizado.Value)
+                    throw new InvalidOperationException("O contrato selecionado não foi encontrado na resposta da API.");
+
+                AtualizarEstadoAutentique(contrato);
+                var signatarios = Imob.Services.AutentiqueService.ObterSignatarios(contrato);
+                var destinatarios = string.Join("\n", signatarios.Select(s => $"• {s.Nome} — {s.Email.Trim()}"));
+                var testemunhas = new[] { contrato.Testemunha1, contrato.Testemunha2, contrato.Testemunha3 }
+                    .Where(email => !string.IsNullOrWhiteSpace(email)).Select(email => email.Trim());
+                var listaTestemunhas = string.Join("\n", testemunhas.Select(email => $"• {email}"));
+                if (string.IsNullOrEmpty(listaTestemunhas)) listaTestemunhas = "Nenhuma";
+                var confirmacao = MessageBox.Show(
+                    $"Será enviado o contrato salvo \"{contrato.Nome}\" para assinatura por e-mail:\n\n{destinatarios}\n\nTestemunhas adicionadas pela API:\n{listaTestemunhas}\n\n" +
+                    "Alterações não salvas não serão incluídas. Documentos reais podem consumir créditos. Deseja continuar?",
+                    "Enviar para assinatura", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (confirmacao != MessageBoxResult.Yes)
+                    return;
+
+                var pdf = new GeradorContratoPdf().GerarContratoLocacao(contrato);
+                tentativaDeEnvio = true;
+                var resultado = await new Imob.Services.AutentiqueService().EnviarAsync(HttpClientFixo, contrato, pdf, signatarios);
+                var ambiente = resultado.Value<bool>("sandbox") ? "sandbox" : "produção";
+                var documento = resultado["documento"] as Newtonsoft.Json.Linq.JObject;
+                var id = documento?["id"]?.ToString() ?? documento?["Id"]?.ToString();
+                var identificacao = string.IsNullOrWhiteSpace(id) ? string.Empty : $"\nIdentificador: {id}";
+                TxtEstadoAutentique.Text = $"Autentique: documento criado — ID: {id}";
+                TxtEstadoAutentique.ToolTip = TxtEstadoAutentique.Text;
+                MessageBox.Show($"Documento criado na Autentique ({ambiente}).{identificacao}", "Assinatura", MessageBoxButton.OK, MessageBoxImage.Information);
+                try
+                {
+                    var atualizado = await ContratoDAO.GetContratoPorId(contrato.Id, HttpClientFixo);
+                    if (atualizado == null || atualizado.Id != contrato.Id)
+                        throw new InvalidOperationException("Contrato não encontrado na resposta da API.");
+                    AtualizarEstadoAutentique(atualizado);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Documento criado, mas não foi possível atualizar o estado do contrato: " + ex.Message + "\nConsulte os registros antes de qualquer novo envio.", "Assinatura", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (tentativaDeEnvio)
+                {
+                    TxtEstadoAutentique.Text = "Autentique: envio não confirmado — consulte os registros";
+                    TxtEstadoAutentique.ToolTip = TxtEstadoAutentique.Text;
+                }
+                MessageBox.Show("Não foi possível enviar o contrato para assinatura: " + ex.Message, "Assinatura", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                BtnEnviarContratoAssinatura.IsEnabled = true;
+                BtnConsultarDocumentosAutentique.IsEnabled = true;
+                BtnFecharModalContratosVisualizar.IsEnabled = true;
+                BtnSalvarContratoVisualizar.IsEnabled = true;
             }
         }
 

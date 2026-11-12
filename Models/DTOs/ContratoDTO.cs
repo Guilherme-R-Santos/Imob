@@ -13,6 +13,12 @@ namespace Imob.Models
         public string Nome { get; set; }
         public bool Ativo { get; set; }
         public decimal ValorContrato { get; set; }
+        public bool RepasseAutomatico { get; set; }
+        public ContaRepasse ContaRepasse1 { get; set; }
+        public ContaRepasse ContaRepasse2 { get; set; }
+        public string Testemunha1 { get; set; }
+        public string Testemunha2 { get; set; }
+        public string Testemunha3 { get; set; }
         public UsuarioDAO Cadastrador { get; set; }
         public TipoContratoDAO TipoContrato { get; set; }
         public ClienteDAO Proprietario { get; set; }
@@ -53,6 +59,9 @@ namespace Imob.Models
             {
                 { "Nome", this.Nome },
                 { "ValorContrato", this.ValorContrato },
+                { "RepasseAutomatico", this.RepasseAutomatico },
+                { "ContaRepasse1", this.ContaRepasse1 },
+                { "ContaRepasse2", this.ContaRepasse2 },
                 { "Cadastrador", new { Id = this.Cadastrador.Id } },
                 { "TipoContrato", new { Id = this.TipoContrato.Id } },
                 { "ModalidadeContrato", new { Id = this.ModalidadeContrato.Id } },
@@ -65,7 +74,10 @@ namespace Imob.Models
                 { "PrazoMeses", this.PrazoMeses },
                 { "Vencimento", this.Vencimento },
                 { "PropostaSegFianca", this.PropostaSegFianca },
-                { "ApoliceSegFianca", this.ApoliceSegFianca }
+                { "ApoliceSegFianca", this.ApoliceSegFianca },
+                { "Testemunha1", this.Testemunha1 },
+                { "Testemunha2", this.Testemunha2 },
+                { "Testemunha3", this.Testemunha3 }
             };
 
             if (this.Contratante2 != null)
@@ -134,6 +146,9 @@ namespace Imob.Models
                 { "Id", this.Id },
                 { "Nome", this.Nome },
                 { "ValorContrato", this.ValorContrato },
+                { "RepasseAutomatico", this.RepasseAutomatico },
+                { "ContaRepasse1", this.ContaRepasse1 },
+                { "ContaRepasse2", this.ContaRepasse2 },
                 { "TipoContrato", new { Id = this.TipoContrato.Id } },
                 { "ModalidadeContrato", new { Id = this.ModalidadeContrato.Id } },
                 { "ObjetoContrato", new { Id = this.ObjetoContrato.Id } },
@@ -145,7 +160,10 @@ namespace Imob.Models
                 { "PrazoMeses", this.PrazoMeses },
                 { "Vencimento", this.Vencimento },
                 { "PropostaSegFianca", this.PropostaSegFianca },
-                { "ApoliceSegFianca", this.ApoliceSegFianca }
+                { "ApoliceSegFianca", this.ApoliceSegFianca },
+                { "Testemunha1", this.Testemunha1 },
+                { "Testemunha2", this.Testemunha2 },
+                { "Testemunha3", this.Testemunha3 }
             };
 
             if (this.Contratante2 != null)

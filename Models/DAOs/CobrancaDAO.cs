@@ -23,8 +23,9 @@ namespace Imob.Models
         public double valorLiquido { get; set; }
         public string Nome { get; set; }
         public DateTime? Vencimento { get; set; }
-        public bool PartilhaAutomatica { get; set; }
-        public int ContaPartilha { get; set; }
+        public bool RepasseAutomatico { get; set; }
+        public ContaRepasse ContaRepasse1 { get; set; }
+        public ContaRepasse ContaRepasse2 { get; set; }
         public DateTime? DataCadastro { get; set; }
         public DateTime? DataAtualizacao { get; set; }
         public DateTime? DataInativacao { get; set; }

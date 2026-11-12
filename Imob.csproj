@@ -51,6 +51,8 @@
     <None Include="appsettings.Development.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="session-state\files\partilha-test\partilha-test.csproj" />
+    <None Include="session-state\files\repasse-verificacao\repasse-verificacao.csproj" />
   </ItemGroup>
 
 </Project>
