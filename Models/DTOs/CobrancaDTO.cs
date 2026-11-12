@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -124,6 +125,34 @@ namespace Imob.Models
             }
         }
 
+        public async Task<List<ResultadoInativacaoCobranca>> InativarCobrancasEmLote(List<int> ids, HttpClient httpClient)
+        {
+            if (ids == null || ids.Count == 0)
+            {
+                throw new ArgumentException("Informe ao menos um ID de cobrança.", nameof(ids));
+            }
+
+            var json = JsonConvert.SerializeObject(ids);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await httpClient.PutAsync("Cobranca/InativarLista", content);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Erro ao inativar cobranças em lote: {response.StatusCode} - {responseBody}");
+            }
+
+            try
+            {
+                return JsonConvert.DeserializeObject<List<ResultadoInativacaoCobranca>>(responseBody)
+                    ?? throw new Exception("A API retornou uma resposta vazia ao inativar cobranças em lote.");
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"Falha ao interpretar resposta da API ao inativar cobranças em lote: {ex.Message}");
+            }
+        }
+
         public async Task AtivarCobranca(int id, HttpClient httpClient)
         {
             var content = new StringContent(string.Empty);
@@ -147,5 +176,14 @@ namespace Imob.Models
                 throw new Exception($"Erro ao retentar sincronização com o Asaas: {response.StatusCode} - {respBody}");
             }
         }
+    }
+
+    public class ResultadoInativacaoCobranca
+    {
+        public int Id { get; set; }
+        public bool Inativada { get; set; }
+        public bool? SincronizadoAsaas { get; set; }
+        public string Mensagem { get; set; }
+        public string Detalhes { get; set; }
     }
 }

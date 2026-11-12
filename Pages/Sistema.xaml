@@ -641,20 +641,57 @@
                         <TextBlock Text="Listagem de cobranças" Style="{StaticResource ModernLabel}"/>
                     </StackPanel>
                     <TextBox x:Name="SearchBarCobrancas" Grid.Row="0" Grid.Column="1" Style="{StaticResource PanelSearchBox}" Tag="Pesquisar..." KeyDown="SearchBarCobrancas_KeyDown"/>
-                    <Button x:Name="BtnAtualizarCobrancas" Grid.Row="0" Grid.Column="2" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarCobrancas_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnInativarCobrancasSelecionadas" Style="{StaticResource ModernButton}" Width="190" Height="40" VerticalAlignment="Center" Click="BtnInativarCobrancasSelecionadas_Click" Content="Inativar selecionadas" Margin="0,0,10,0" Visibility="Collapsed"/>
+                        <Button x:Name="BtnAtualizarCobrancas" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAtualizarCobrancas_Click" Content="Atualizar listagem" Margin="0,0,10,0"/>
+                    </StackPanel>
                     <Button x:Name="BtnAdicionarCobranca" Grid.Row="0" Grid.Column="3" Style="{StaticResource ModernButton}" Width="170" Height="40" VerticalAlignment="Center" Click="BtnAdicionarCobranca_Click">Nova Cobrança</Button>
                 </Grid>
 
-                <DataGrid x:Name="CobrancasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid x:Name="CobrancasDataGrid" Grid.Row="1" Margin="4,12,4,4" AutoGenerateColumns="False" HeadersVisibility="Column" RowHeight="52" CanUserResizeRows="False" CanUserAddRows="False" CanUserResizeColumns="True" SelectionMode="Single" AlternatingRowBackground="#FFF8F8F8" GridLinesVisibility="None" Grid.ColumnSpan="2" IsReadOnly="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50"/>
-                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*"/>
-                        <DataGridTextColumn Header="Contrato" Binding="{Binding NomeContrato}" Width="2*"/>
-                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoCobranca}" Width="*"/>
-                        <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat=C}" Width="120"/>
-                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120"/>
-                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
-                        <DataGridTemplateColumn Header="Ações" Width="160">
+                        <DataGridTemplateColumn Header="Selecionar" Width="85">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding Selecionada, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Checked="CobrancaSelecao_Changed" Unchecked="CobrancaSelecao_Changed"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="#" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Nome" Binding="{Binding Nome}" Width="2*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Contrato" Binding="{Binding NomeContrato}" Width="2*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Tipo" Binding="{Binding NomeTipoCobranca}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Valor" Binding="{Binding Valor, StringFormat=C}" Width="120" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Vencimento" Binding="{Binding Vencimento, StringFormat=d}" Width="120" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*" IsReadOnly="True"/>
+                        <DataGridTemplateColumn Header="Pagamento recebido?" Width="140" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Ellipse Width="14" Height="14" HorizontalAlignment="Center" VerticalAlignment="Center" ToolTip="{Binding Status}">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="Red"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="RECEIVED">
+                                                        <Setter Property="Fill" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="CONFIRMED">
+                                                        <Setter Property="Fill" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="RECEIVED_IN_CASH">
+                                                        <Setter Property="Fill" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status}" Value="DUNNING_RECEIVED">
+                                                        <Setter Property="Fill" Value="Green"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Ações" Width="160" IsReadOnly="True">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">

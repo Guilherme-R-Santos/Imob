@@ -80,6 +80,7 @@ namespace Imob
         private List<ClienteDAO> _proprietariosContratoCriar = new List<ClienteDAO>();
         private List<ImovelDAO> _imoveisContratoCriar = new List<ImovelDAO>();
         private List<ClienteDAO> _locatariosContratoCriar = new List<ClienteDAO>();
+        private List<ClienteDAO> _fiadoresContratoCriar = new List<ClienteDAO>();
 
         private List<ClienteDAO> _proprietariosContratoVisualizar = new List<ClienteDAO>();
         private List<ImovelDAO> _imoveisContratoVisualizar = new List<ImovelDAO>();
@@ -313,7 +314,13 @@ namespace Imob
             try
             {
                 var listaCobrancas = await CobrancaDAO.GetCobrancas(HttpClientFixo);
+                foreach (var cobranca in listaCobrancas)
+                {
+                    cobranca.Selecionada = false;
+                }
+
                 CobrancasDataGrid.ItemsSource = listaCobrancas;
+                AtualizarAcaoInativacaoCobrancasEmLote();
             }
             catch (Exception ex)
             {
@@ -629,11 +636,16 @@ namespace Imob
             var habilitaSeguro = ModalidadeEhSeguroFianca(modalidade);
 
             ComboContratoFiadorCriar.IsEnabled = habilitaFiador;
+            ComboContratoFiador2Criar.IsEnabled = habilitaFiador;
             if (!habilitaFiador)
             {
                 ComboContratoFiadorCriar.SelectedItem = null;
                 ComboContratoFiadorCriar.Text = string.Empty;
+                ComboContratoFiador2Criar.SelectedItem = null;
+                ComboContratoFiador2Criar.Text = string.Empty;
             }
+
+            AtualizarFiltroFiadoresCriar();
 
             TxtContratoPropostaSegFiancaCriar.IsReadOnly = !habilitaSeguro;
             TxtContratoApoliceSegFiancaCriar.IsReadOnly = !habilitaSeguro;
@@ -867,6 +879,43 @@ namespace Imob
             }
         }
 
+        private void AtualizarFiltroFiadoresCriar()
+        {
+            if (_atualizandoCombosContratoCriar)
+            {
+                return;
+            }
+
+            _atualizandoCombosContratoCriar = true;
+            try
+            {
+                var combos = new[] { ComboContratoFiadorCriar, ComboContratoFiador2Criar };
+                var selecionados = combos
+                    .Select(combo => combo.SelectedItem as ClienteDAO)
+                    .ToArray();
+
+                for (var i = 0; i < combos.Length; i++)
+                {
+                    var idAtual = selecionados[i]?.Id;
+                    var idsOutros = selecionados
+                        .Where((selecionado, indice) => indice != i && selecionado != null)
+                        .Select(selecionado => selecionado.Id)
+                        .ToHashSet();
+
+                    var itens = _fiadoresContratoCriar
+                        .Where(fiador => !idsOutros.Contains(fiador.Id) || (idAtual.HasValue && fiador.Id == idAtual.Value))
+                        .ToList();
+
+                    combos[i].ItemsSource = itens;
+                    RestaurarSelecaoPorId<ClienteDAO>(combos[i], idAtual);
+                }
+            }
+            finally
+            {
+                _atualizandoCombosContratoCriar = false;
+            }
+        }
+
         private static void AtualizarItensContratante(
             List<ClienteDAO> baseLocatarios,
             ComboBox combo1,
@@ -975,6 +1024,8 @@ namespace Imob
             ComboContratoContratante2Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
             ComboContratoContratante3Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
             ComboContratoContratante4Criar.SelectionChanged += ComboContratanteCriar_SelectionChanged;
+            ComboContratoFiadorCriar.SelectionChanged += (_, __) => AtualizarFiltroFiadoresCriar();
+            ComboContratoFiador2Criar.SelectionChanged += (_, __) => AtualizarFiltroFiadoresCriar();
             ComboContratoContratante1Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
             ComboContratoContratante2Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
             ComboContratoContratante3Visualizar.SelectionChanged += ComboContratanteVisualizar_SelectionChanged;
@@ -1755,6 +1806,87 @@ namespace Imob
             }
         }
 
+        private void CobrancaSelecao_Changed(object sender, RoutedEventArgs e)
+        {
+            if (sender is CheckBox checkBox && checkBox.DataContext is CobrancaDAO cobranca)
+            {
+                cobranca.Selecionada = checkBox.IsChecked == true;
+                AtualizarAcaoInativacaoCobrancasEmLote();
+            }
+        }
+
+        private void AtualizarAcaoInativacaoCobrancasEmLote()
+        {
+            var quantidadeSelecionada = CobrancasDataGrid.Items.OfType<CobrancaDAO>().Count(cobranca => cobranca.Selecionada);
+            BtnInativarCobrancasSelecionadas.Content = $"Inativar selecionadas ({quantidadeSelecionada})";
+            BtnInativarCobrancasSelecionadas.Visibility = quantidadeSelecionada > 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private async void BtnInativarCobrancasSelecionadas_Click(object sender, RoutedEventArgs e)
+        {
+            var ids = CobrancasDataGrid.Items.OfType<CobrancaDAO>()
+                .Where(cobranca => cobranca.Selecionada)
+                .Select(cobranca => cobranca.Id)
+                .ToList();
+
+            if (ids.Count == 0)
+            {
+                AtualizarAcaoInativacaoCobrancasEmLote();
+                return;
+            }
+
+            var confirmacao = MessageBox.Show(
+                $"Tem certeza que deseja inativar {ids.Count} cobrança(s) selecionada(s)?",
+                "Inativar cobranças",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+            if (confirmacao != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            try
+            {
+                var cobrancaDto = new CobrancaDTO();
+                var resultados = await cobrancaDto.InativarCobrancasEmLote(ids, HttpClientFixo);
+                var quantidadeInativada = resultados.Count(resultado => resultado.Inativada);
+                var falhas = resultados
+                    .Where(resultado => !resultado.Inativada || resultado.SincronizadoAsaas == false)
+                    .ToList();
+
+                await AdicionarItensGridCobrancas();
+
+                var mensagem = $"Processamento concluído: {quantidadeInativada} de {ids.Count} cobrança(s) inativada(s).";
+                if (resultados.Count != ids.Count)
+                {
+                    mensagem += $" A API retornou {resultados.Count} de {ids.Count} resultado(s).";
+                }
+
+                if (falhas.Count > 0)
+                {
+                    mensagem += Environment.NewLine + Environment.NewLine + string.Join(
+                        Environment.NewLine,
+                        falhas.Select(resultado =>
+                        {
+                            var status = resultado.Inativada ? "inativada localmente, mas sem sincronização no Asaas" : "não inativada";
+                            var detalhe = resultado.Detalhes ?? resultado.Mensagem;
+                            return $"Cobrança {resultado.Id}: {status}.{(string.IsNullOrWhiteSpace(detalhe) ? string.Empty : " " + detalhe)}";
+                        }));
+                }
+
+                var houveFalha = falhas.Count > 0 || resultados.Count != ids.Count;
+                MessageBox.Show(
+                    mensagem,
+                    houveFalha ? "Inativação parcial" : "Sucesso",
+                    MessageBoxButton.OK,
+                    houveFalha ? MessageBoxImage.Warning : MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao inativar cobranças em lote: " + ex.Message, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private async void BtnAdicionarContrato_Click(object sender, RoutedEventArgs e)
         {
             await CarregarCombosContratoCriarAsync();
@@ -1822,15 +1954,18 @@ namespace Imob
                 ComboContratoContratante4Criar.SelectedValuePath = "Id";
                 ComboContratoContratante4Criar.ItemsSource = _locatariosContratoCriar;
 
+                _fiadoresContratoCriar = fiadoresTask.Result?.ToList() ?? new List<ClienteDAO>();
+
                 ComboContratoFiadorCriar.DisplayMemberPath = "Nome";
                 ComboContratoFiadorCriar.SelectedValuePath = "Id";
-                ComboContratoFiadorCriar.ItemsSource = fiadoresTask.Result;
+                ComboContratoFiadorCriar.ItemsSource = _fiadoresContratoCriar;
 
                 ComboContratoFiador2Criar.DisplayMemberPath = "Nome";
                 ComboContratoFiador2Criar.SelectedValuePath = "Id";
-                ComboContratoFiador2Criar.ItemsSource = fiadoresTask.Result;
+                ComboContratoFiador2Criar.ItemsSource = _fiadoresContratoCriar;
 
                 AtualizarPermissoesModalidadeCriar();
+                AtualizarFiltroFiadoresCriar();
                 AtualizarFiltroProprietarioImovelCriar(true);
                 AtualizarFiltroContratantesCriar();
             }
@@ -1950,6 +2085,7 @@ namespace Imob
             AtualizarPermissoesModalidadeCriar();
             AtualizarFiltroProprietarioImovelCriar(true);
             AtualizarFiltroContratantesCriar();
+            AtualizarFiltroFiadoresCriar();
         }
 
         private void SearchBarContratos_KeyDown(object sender, KeyEventArgs e)

@@ -188,6 +188,22 @@ namespace Imob.Services.Pdf
         {
             const double origemX = 12;
             const double origemY = 8;
+            const double larguraMaxima = 100;
+            const double alturaMaxima = 84;
+            var recursoLogo = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/LogoImob.png"));
+            if (recursoLogo is null)
+            {
+                throw new InvalidOperationException("Não foi possível carregar o recurso LogoImob.png.");
+            }
+
+            using var streamLogo = recursoLogo.Stream;
+            using var logo = XImage.FromStream(streamLogo);
+            var escala = Math.Min(larguraMaxima / logo.PointWidth, alturaMaxima / logo.PointHeight);
+            var larguraLogo = logo.PointWidth * escala;
+            var alturaLogo = logo.PointHeight * escala;
+            contexto.Graphics.DrawImage(logo, origemX, origemY, larguraLogo, alturaLogo);
+
+            /* Desenho original da marca, mantido comentado para referência.
             var dourado = XColor.FromArgb(201, 176, 106);
             var douradoClaro = XColor.FromArgb(214, 191, 126);
 
@@ -246,6 +262,7 @@ namespace Imob.Services.Pdf
 
             contexto.Graphics.DrawString("Rosimeri Ribeiro", FonteMarca, brushDourado,
                 new XRect(origemX + 20, origemY + 74, 90, 10), XStringFormats.TopCenter);
+            */
         }
 
         private static List<string> QuebrarTexto(XGraphics graphics, string texto, XFont fonte, double larguraMaxima)

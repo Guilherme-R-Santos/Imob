@@ -31,6 +31,8 @@ namespace Imob.Models
         public bool Ativo { get; set; }
         public bool SincronizadoAsaas { get; set; } = true;
         public string ErroSincronizacaoAsaas { get; set; }
+        [JsonIgnore]
+        public bool Selecionada { get; set; }
 
         public string NomeContrato
         {
