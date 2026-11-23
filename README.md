@@ -96,6 +96,7 @@ O `Imob` é um cliente desktop que centraliza rotinas comuns de imobiliária:
 - Proprietário, contratantes e fiadores do contrato são convidados por e-mail. As até três testemunhas cadastradas são incluídas automaticamente pela API; seus e-mails devem ser válidos e distintos dos demais signatários.
 - A API limita o PDF a 20 MiB; o limite da Autentique depende do plano (5 MB no gratuito e 20 MB no profissional). O sandbox e a chave são configurados exclusivamente na API.
 - A consulta de registros mostra dados salvos na API, não o status atual na Autentique; não há webhook de atualização em tempo real.
+- **Baixar contrato da Autentique**, na visualização do contrato, obtém o PDF disponível pela ImobAPI e permite escolher onde salvá-lo. O arquivo não comprova que todas as assinaturas foram concluídas. Documentos de sandbox são temporários e podem ser apagados após alguns dias.
 - A migração da integração deve ser aplicada no banco da ImobAPI antes do uso. Após isso, é necessário validar o fluxo em sandbox real.
 - Em caso de falha ou tempo limite, verifique o painel da Autentique e os logs da API antes de reenviar: o documento pode ter sido criado e o contrato pode estar bloqueado para conciliação.
 

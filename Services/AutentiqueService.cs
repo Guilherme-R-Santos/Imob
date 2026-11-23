@@ -148,6 +148,73 @@ namespace Imob.Services
             return new InvalidOperationException($"API HTTP {codigo}: {explicacao}{detalhe}{aviso}");
         }
 
+        public async Task<byte[]> BaixarDocumentoAsync(HttpClient client, int contratoId)
+        {
+            ArgumentNullException.ThrowIfNull(client);
+            if (contratoId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(contratoId));
+
+            try
+            {
+                using var request = new HttpRequestMessage(HttpMethod.Get, $"Autentique/Contratos/{contratoId}/DocumentoAssinado");
+                request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/pdf"));
+                using var response = await client.SendAsync(request);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var body = await response.Content.ReadAsStringAsync();
+                    var mensagem = (int)response.StatusCode switch
+                    {
+                        401 => "Sessão expirada ou autenticação necessária. Entre novamente no sistema.",
+                        403 => "Você não tem permissão para baixar este contrato.",
+                        404 => "Contrato não encontrado ou sem documento vinculado à Autentique.",
+                        409 => "A Autentique ainda não disponibilizou o PDF para download. Tente novamente mais tarde.",
+                        503 => "A integração com a Autentique não está configurada na API.",
+                        502 => "Não foi possível obter um PDF válido da Autentique.",
+                        504 => "O tempo limite para obter o documento foi excedido.",
+                        _ => "Não foi possível baixar o documento."
+                    };
+                    string detalhe = null;
+                    if (!string.IsNullOrWhiteSpace(body))
+                    {
+                        try
+                        {
+                            var json = JToken.Parse(body);
+                            if (json.Type == JTokenType.String)
+                                detalhe = json.Value<string>();
+                            else if (json is JObject objeto && objeto["mensagem"]?.Type == JTokenType.String)
+                                detalhe = objeto.Value<string>("mensagem");
+                        }
+                        catch (JsonException)
+                        {
+                            detalhe = body;
+                        }
+                    }
+                    throw new InvalidOperationException($"{mensagem} (HTTP {(int)response.StatusCode})" +
+                        (string.IsNullOrWhiteSpace(detalhe) ? string.Empty : $"\n{detalhe}"));
+                }
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK ||
+                    !string.Equals(response.Content.Headers.ContentType?.MediaType, "application/pdf", StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidOperationException("A API retornou uma resposta inesperada em vez de um PDF. Nenhum arquivo foi salvo.");
+                var pdf = await response.Content.ReadAsByteArrayAsync();
+                if (pdf.Length < 5 || !pdf.AsSpan(0, 5).SequenceEqual("%PDF-"u8))
+                    throw new InvalidOperationException("A API retornou um arquivo PDF inválido. Nenhum arquivo foi salvo.");
+                return pdf;
+            }
+            catch (HttpRequestException ex)
+            {
+                throw new InvalidOperationException("Não foi possível conectar à API para baixar o contrato. Verifique a conexão e tente novamente.", ex);
+            }
+            catch (System.IO.IOException ex)
+            {
+                throw new InvalidOperationException("A conexão foi interrompida durante o download. Tente novamente.", ex);
+            }
+            catch (OperationCanceledException ex)
+            {
+                throw new InvalidOperationException("O tempo limite para baixar o contrato foi excedido. Tente novamente.", ex);
+            }
+        }
+
         public async Task<IReadOnlyList<DocumentoAutentique>> ObterDocumentosAsync(HttpClient client, int contratoId)
         {
             if (contratoId <= 0)

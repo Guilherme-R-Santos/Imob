@@ -4356,6 +4356,55 @@ namespace Imob
             TxtEstadoAutentique.ToolTip = TxtEstadoAutentique.Text;
         }
 
+        private async void BtnBaixarContratoAutentique_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_idContratoVisualizado.HasValue)
+            {
+                MessageBox.Show("Selecione um contrato para baixar.", "Contrato da Autentique", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var contratoId = _idContratoVisualizado.Value;
+            BtnBaixarContratoAutentique.IsEnabled = false;
+            BtnConsultarDocumentosAutentique.IsEnabled = false;
+            BtnEnviarContratoAssinatura.IsEnabled = false;
+            BtnFecharModalContratosVisualizar.IsEnabled = false;
+            BtnSalvarContratoVisualizar.IsEnabled = false;
+            TxtProgressoDownloadAutentique.Visibility = Visibility.Visible;
+            try
+            {
+                var pdf = await new Imob.Services.AutentiqueService().BaixarDocumentoAsync(HttpClientFixo, contratoId);
+                TxtProgressoDownloadAutentique.Text = "Escolha onde salvar o arquivo.";
+                var dialogo = new Microsoft.Win32.SaveFileDialog
+                {
+                    Title = "Salvar contrato da Autentique",
+                    Filter = "Documento PDF (*.pdf)|*.pdf",
+                    DefaultExt = ".pdf",
+                    AddExtension = true,
+                    FileName = $"contrato-{contratoId}-assinado.pdf",
+                    OverwritePrompt = true
+                };
+                if (dialogo.ShowDialog(this) != true) return;
+                TxtProgressoDownloadAutentique.Text = "Salvando contrato...";
+                await File.WriteAllBytesAsync(dialogo.FileName, pdf);
+                MessageBox.Show("Contrato salvo com sucesso. O arquivo disponível não confirma que todas as assinaturas foram concluídas.", "Contrato da Autentique", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException || ex is IOException || ex is UnauthorizedAccessException || ex is System.Security.SecurityException)
+            {
+                MessageBox.Show("Não foi possível baixar ou salvar o contrato: " + ex.Message, "Contrato da Autentique", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                TxtProgressoDownloadAutentique.Visibility = Visibility.Collapsed;
+                TxtProgressoDownloadAutentique.Text = "Baixando contrato...";
+                BtnBaixarContratoAutentique.IsEnabled = true;
+                BtnConsultarDocumentosAutentique.IsEnabled = true;
+                BtnEnviarContratoAssinatura.IsEnabled = true;
+                BtnFecharModalContratosVisualizar.IsEnabled = true;
+                BtnSalvarContratoVisualizar.IsEnabled = true;
+            }
+        }
+
         private async void BtnConsultarDocumentosAutentique_Click(object sender, RoutedEventArgs e)
         {
             if (!_idContratoVisualizado.HasValue)
@@ -4366,6 +4415,7 @@ namespace Imob
 
             BtnConsultarDocumentosAutentique.IsEnabled = false;
             BtnEnviarContratoAssinatura.IsEnabled = false;
+            BtnBaixarContratoAutentique.IsEnabled = false;
             BtnFecharModalContratosVisualizar.IsEnabled = false;
             BtnSalvarContratoVisualizar.IsEnabled = false;
             try
@@ -4385,6 +4435,7 @@ namespace Imob
             {
                 BtnConsultarDocumentosAutentique.IsEnabled = true;
                 BtnEnviarContratoAssinatura.IsEnabled = true;
+                BtnBaixarContratoAutentique.IsEnabled = true;
                 BtnFecharModalContratosVisualizar.IsEnabled = true;
                 BtnSalvarContratoVisualizar.IsEnabled = true;
             }
@@ -4400,6 +4451,7 @@ namespace Imob
 
             BtnEnviarContratoAssinatura.IsEnabled = false;
             BtnConsultarDocumentosAutentique.IsEnabled = false;
+            BtnBaixarContratoAutentique.IsEnabled = false;
             BtnFecharModalContratosVisualizar.IsEnabled = false;
             BtnSalvarContratoVisualizar.IsEnabled = false;
             var tentativaDeEnvio = false;
@@ -4458,6 +4510,7 @@ namespace Imob
             {
                 BtnEnviarContratoAssinatura.IsEnabled = true;
                 BtnConsultarDocumentosAutentique.IsEnabled = true;
+                BtnBaixarContratoAutentique.IsEnabled = true;
                 BtnFecharModalContratosVisualizar.IsEnabled = true;
                 BtnSalvarContratoVisualizar.IsEnabled = true;
             }

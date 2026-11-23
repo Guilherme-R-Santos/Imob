@@ -1223,7 +1223,9 @@
                     </ScrollViewer>
 
                     <StackPanel Grid.Row="2" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                        <Button x:Name="BtnRepasseContratoVisualizar" Content="Configurar repasses" Style="{StaticResource ModernButton}" Width="190" Height="36" Click="BtnRepasseContratoVisualizar_Click" Visibility="Collapsed"/>
+                        <Button x:Name="BtnRepasseContratoVisualizar" Content="Configurar repasses" Style="{StaticResource ModernButton}" Width="190" Height="36" Margin="0,0,12,0" Click="BtnRepasseContratoVisualizar_Click" Visibility="Collapsed"/>
+                        <Button x:Name="BtnBaixarContratoAutentique" Content="Baixar contrato da Autentique" Style="{StaticResource ModernButton}" Width="240" Height="36" FontSize="12" Click="BtnBaixarContratoAutentique_Click"/>
+                        <TextBlock x:Name="TxtProgressoDownloadAutentique" Text="Baixando contrato..." VerticalAlignment="Center" Margin="12,0,0,0" Visibility="Collapsed"/>
                     </StackPanel>
                     <Grid Grid.Row="3" Grid.ColumnSpan="3">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
